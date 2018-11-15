@@ -1,0 +1,45 @@
+{
+  "name": "koa-backend-server",
+  "version": "2018.11.15",
+  "description": "Koa Backend Server.",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "ts-node src",
+    "test": "ts-node test",
+    "build": "tsc"
+  },
+  "keywords": [
+    "koa",
+    "backend",
+    "server"
+  ],
+  "homepage": "https://github.com/DevinDon/koa-backend-server",
+  "author": "Devin Don",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "axios": "^0.18.0",
+    "koa": "^2.6.2",
+    "koa-body": "^4.0.4",
+    "koa-router": "^7.4.0",
+    "koa-session": "^5.10.0"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.0.46",
+    "@types/koa-router": "^7.0.33",
+    "@types/koa-session": "^5.7.4",
+    "@types/node": "^10.12.5",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.1.6"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/DevinDon/koa-backend-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DevinDon/koa-backend-server/issues"
+  }
+}
