@@ -1,9 +1,9 @@
 import KoaBody from 'koa-body';
-import Router from 'koa-router';
-import { RouterPaths, AllPaths } from '../type';
+import KoaRouter from 'koa-router';
+import { AllPaths, RouterPaths } from '../type';
 import { now } from '../util';
 
-export class KoaRouter extends Router {
+export class Router extends KoaRouter {
 
   constructor(
     allPaths: AllPaths = {}
@@ -55,4 +55,4 @@ export class KoaRouter extends Router {
 
 }
 
-export default KoaRouter;
+export default Router;
