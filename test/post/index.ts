@@ -1,4 +1,4 @@
-import { IWare, RouterPaths, Root } from '../../dist';
+import { IWare, RouterPaths } from '../../dist';
 import test from './test';
 import time from './time';
 

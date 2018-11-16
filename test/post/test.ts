@@ -1,4 +1,4 @@
-import { IWare, Test } from '../../dist';
+import { IWare } from '../../dist';
 
 export const test: IWare = async (c, next) => {
   c.response.body = { text: 'ok' };
