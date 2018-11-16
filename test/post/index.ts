@@ -1,16 +1,13 @@
-import { IWare, RouterPaths } from '../../dist';
-import test from './test';
-import time from './time';
+import { IMiddleware } from 'koa-router';
+import { Middleware } from 'koa';
 
-const index: IWare = async (c, next) => {
-  c.response.body = new Date().toLocaleTimeString() || 'no data';
+const index: Middleware = async (c: any, next) => {
+  c.body = c.request.body.index || 'no data';
   await next();
+}
+
+export const POSTPATHS = {
+  '/': index
 };
 
-const postPaths: RouterPaths = {
-  '/': index,
-  '/test': test,
-  '/time': time
-};
-
-export default postPaths;
+export default POSTPATHS;
