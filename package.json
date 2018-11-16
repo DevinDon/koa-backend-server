@@ -1,6 +1,6 @@
 {
   "name": "koa-backend-server",
-  "version": "2018.11.15",
+  "version": "2018.11.17",
   "description": "Koa Backend Server.",
   "main": "dist/index.js",
   "scripts": {
