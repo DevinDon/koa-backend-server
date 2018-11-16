@@ -6,7 +6,8 @@
   "scripts": {
     "start": "ts-node src",
     "test": "ts-node test",
-    "build": "tsc"
+    "build": "tsc",
+    "server": "ts-node test/server"
   },
   "keywords": [
     "koa",
@@ -18,13 +19,13 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "axios": "^0.18.0",
     "koa": "^2.6.2",
     "koa-body": "^4.0.4",
     "koa-router": "^7.4.0",
     "koa-session": "^5.10.0"
   },
   "devDependencies": {
+    "axios": "^0.18.0",
     "@types/koa": "^2.0.46",
     "@types/koa-router": "^7.0.33",
     "@types/koa-session": "^5.7.4",
