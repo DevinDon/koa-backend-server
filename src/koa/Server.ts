@@ -43,13 +43,12 @@ export class Server {
    * @param keys Session Key.
    * @param port HTTP(2/S) port.
    */
-  public default(paths: AllPaths = {}, keys: string[] = ['default'], port: number = 80): void {
+  public default(paths: AllPaths = {}, keys: string[] = ['default'], port: number = 80): Server {
     const session = new Session(this.application, keys);
     const router = new Router(paths);
-
     this.use(session.ware, router.ware);
-
     this.listen(port);
+    return this;
   }
 
   /**
