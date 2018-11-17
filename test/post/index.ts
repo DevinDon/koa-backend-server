@@ -1,13 +1,17 @@
-import { IMiddleware } from 'koa-router';
-import { Middleware } from 'koa';
+import { AMiddleware, RouterPaths } from '../../dist';
 
-const index: Middleware = async (c: any, next) => {
+const index: AMiddleware = async (c, next) => {
   c.body = c.request.body.index || 'no data';
+  if (c.session) {
+    let n = c.session.n || 0;
+    c.session.n = ++n;
+    c.body += n;
+  }
   await next();
 };
 
-export const POSTPATHS = {
+export const postPaths: RouterPaths = {
   '/': index
 };
 
-export default POSTPATHS;
+export default postPaths;
