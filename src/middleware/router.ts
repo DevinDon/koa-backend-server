@@ -1,3 +1,4 @@
+import { Middleware } from 'koa';
 import KoaBody from 'koa-body';
 import KoaRouter from 'koa-router';
 import { AllPaths, RouterPaths } from '../type';
@@ -51,6 +52,10 @@ export class Router extends KoaRouter {
         console.log(`${now()}: Register Router PUT: ${key}`);
       }
     }
+  }
+
+  public get ware(): Middleware {
+    return this.routes();
   }
 
 }
