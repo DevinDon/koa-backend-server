@@ -10,7 +10,24 @@
 
 // server.listen(80);
 
-import { Server } from '../dist';
+import { Server, Database } from '../dist';
 import { postPaths } from './post';
+import { User } from './entity';
+
+const database = new Database({
+  name: 'default',
+  type: 'mysql',
+  host: 'localhost',
+  port: 3306,
+  username: 'docker',
+  password: 'docker',
+  database: 'docker',
+  entities: [
+    User
+  ],
+  synchronize: true,
+  logging: true
+});
+
 const server = new Server();
 server.default({ POST: postPaths });

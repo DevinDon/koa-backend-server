@@ -1,13 +1,15 @@
 import { AMiddleware, RouterPaths } from '../../dist';
+import { User } from '../entity';
 
 const index: AMiddleware = async (c, next) => {
-  c.body = c.request.body.index || 'no data';
-  if (c.session) {
-    let n = c.session.n || 0;
-    c.session.n = ++n;
-    c.body += n;
+  const name = c.request.body.name;
+  const user = await User.findOne({ name });
+  if (user) {
+    c.body = 'welcome';
+  } else {
+    c.body = 'sorry I do not know you';
   }
-  await next();
+  next();
 };
 
 export const postPaths: RouterPaths = {
