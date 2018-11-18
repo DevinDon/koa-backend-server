@@ -1,3 +1,3 @@
-# Koa Backend Server
+# Koa Backend Server Source
 
-[README.md](dist/README.md)
+Source code of Koa Backend Server.
