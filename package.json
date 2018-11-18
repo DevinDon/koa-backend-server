@@ -1,7 +1,7 @@
 {
-  "name": "koa-backend-server",
-  "version": "2018.11.17-update-2",
-  "description": "Koa Backend Server.",
+  "name": "koa-backend-server.source",
+  "version": "0.1.0",
+  "description": "Source code of Koa Backend Server.",
   "main": "dist/index.js",
   "scripts": {
     "start": "ts-node src",
@@ -22,14 +22,17 @@
     "koa": "^2.6.2",
     "koa-body": "^4.0.4",
     "koa-router": "^7.4.0",
-    "koa-session": "^5.10.0"
+    "koa-session": "^5.10.0",
+    "reflect-metadata": "^0.1.12",
+    "typeorm": "^0.2.9"
   },
   "devDependencies": {
-    "axios": "^0.18.0",
     "@types/koa": "^2.0.46",
     "@types/koa-router": "^7.0.33",
     "@types/koa-session": "^5.7.4",
     "@types/node": "^10.12.5",
+    "axios": "^0.18.0",
+    "mysql": "^2.16.0",
     "ts-node": "^7.0.1",
     "typescript": "^3.1.6"
   },
