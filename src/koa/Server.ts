@@ -68,7 +68,7 @@ export class Server {
    * @param host 监听主机, 默认为 localhost.
    * @returns 返回该服务器实例.
    */
-  public listen(port: number, host: string = 'localhost'): HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server {
+  public listen(port: number, host: string = '0.0.0.0'): HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server {
     return this.server.listen(port, host, () => console.log(`${now()}: Server online, address is ${host}:${port}.`));
   }
 
