@@ -1,14 +1,13 @@
-import { AMiddleware, RouterPaths } from '../../dist';
+import { AMiddleware, RouterPaths, now } from '../../dist';
 import { User } from '../entity';
 
 const index: AMiddleware = async (c, next) => {
-  const name = c.request.body.name;
-  const user = await User.findOne({ name });
-  if (user) {
-    c.body = 'welcome';
-  } else {
-    c.body = 'sorry I do not know you';
-  }
+  const insert = await User.insert({ name: now(), password: 'any' });
+  const user = await User.find();
+  c.body = {
+    status: insert ? true : false,
+    data: user
+  };
   next();
 };
 
