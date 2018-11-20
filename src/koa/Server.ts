@@ -2,58 +2,64 @@ import HTTP from 'http';
 import HTTP2 from 'http2';
 import HTTPS from 'https';
 import Koa, { Middleware } from 'koa';
-import { now } from '../util';
 import { Router, Session } from '../middleware';
-import { AllPaths } from '../type';
+import { KBSConfig } from '../type';
+import { now } from '../util';
 
-/** Koa Server. */
+/** KBS, Koa Backend Server. */
 export class Server {
 
   /** Koa. */
   private application: Koa;
   /** Server. */
   private server: HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server;
+  /** Session. */
+  private session: Session;
+  /** Router. */
+  private router: Router;
 
   /**
-   * 创建一个指定类型的服务器.
-   * @param type 服务器类型, HTTP | HTTPS | HTTP2.
+   * Create a KBS.
+   * @param config KBS Server options, include:
+   *
+   * type?: 'HTTP' | 'HTTPS' | 'HTTP2'; // Type of KBS, default to 'HTTP'.
+   *
+   * keys?: string[]; // Cookie & Session secret keys, default to ['default'].
+   *
+   * options?: ServerOptions | SecureServerOptions; // HTTPS / HTTP2 options, default to undefined.
+   *
+   * paths?: AllPaths; // Router paths, default to {}.
+   *
+   * port?: number; // Listening port, default to 80.
+   *
+   * host?: string; // Listening host, default to 0.0.0.0.
    */
-  constructor(type: 'HTTP' | 'HTTP2' | 'HTTPS' = 'HTTP', options?: HTTP2.ServerOptions | HTTPS.ServerOptions) {
+  constructor(config: KBSConfig = {}) {
     this.application = new Koa();
-    switch (type) {
+    switch (config.type) {
       case 'HTTP':
         this.server = HTTP.createServer(this.application.callback());
         break;
       case 'HTTP2':
-        this.server = HTTP2.createSecureServer(<HTTP2.ServerOptions>options, this.application.callback());
+        this.server = HTTP2.createSecureServer(config.options || {}, this.application.callback());
         break;
       case 'HTTPS':
-        this.server = HTTPS.createServer(<HTTPS.ServerOptions>options, this.application.callback());
+        this.server = HTTPS.createServer(config.options || {}, this.application.callback());
         break;
       default:
         this.server = HTTP.createServer(this.application.callback());
-        console.error(`No such server type: ${type}, use default HTTP server.`);
+        console.log(`No such server type or unset type: ${config.type}, use default HTTP server.`);
         break;
     }
+    this.session = new Session(this.application, config.keys || ['default']);
+    this.router = new Router(config.paths);
+    this.use(this.session.ware, this.router.ware);
+    this.listen(config.port, config.host);
   }
 
   /**
-   * Default setting.
-   * @param paths Router paths.
-   * @param keys Session Key.
-   * @param port HTTP(2/S) port.
-   */
-  public default(paths: AllPaths = {}, keys: string[] = ['default'], port: number = 80): Server {
-    const session = new Session(this.application, keys);
-    const router = new Router(paths);
-    this.use(session.ware, router.ware);
-    this.listen(port);
-    return this;
-  }
-
-  /**
-   * 使用 Koa 中间件.
-   * @param middlewares Koa 中间件.
+   * Use middlewares.
+   * @param middlewares Middlewares.
    */
   public use(...middlewares: Middleware[]): void {
     for (const middleware of middlewares) {
@@ -63,20 +69,21 @@ export class Server {
   }
 
   /**
-   * 服务器开启监听.
-   * @param port 监听端口.
-   * @param host 监听主机, 默认为 localhost.
-   * @returns 返回该服务器实例.
+   * Listening on some where.
+   * @param port Listening port, default to 80.
+   * @param host The listening host, default to 0.0.0.0.
+   * @returns This instance.
    */
-  public listen(port: number, host: string = '0.0.0.0'): HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server {
+  public listen(port: number = 80, host: string = '0.0.0.0'): HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server {
     return this.server.listen(port, host, () => console.log(`${now()}: Server online, address is ${host}:${port}.`));
   }
 
-
+  /**
+   * Get the koa instance.
+   */
   public get app(): Koa {
     return this.application;
   }
-
 
 }
 
