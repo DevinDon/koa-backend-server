@@ -1,23 +1,11 @@
-// import { Router, Server, Session } from '../dist';
-// import { postPaths } from './post';
-
-// const server = new Server();
-// const router = new Router({ POST: postPaths });
-// const session = new Session(server.app);
-
-// server.use(session.ware);
-// server.use(router.ware);
-
-// server.listen(80);
-
-import { Server, Database } from '../dist';
-import { postPaths } from './post';
+import { Database, Server } from '../dist';
 import { User } from './entity';
+import { postPaths } from './post';
 
 const database = new Database({
   name: 'default',
   type: 'mysql',
-  host: 'localhost',
+  host: '106.14.179.192',
   port: 3306,
   username: 'docker',
   password: 'docker',
@@ -29,5 +17,8 @@ const database = new Database({
   logging: true
 });
 
-const server = new Server();
-server.default({ POST: postPaths });
+const server = new Server({
+  type: 'HTTP',
+  keys: ['test'],
+  paths: { POST: postPaths }
+});
