@@ -10,9 +10,17 @@ export class Router extends KoaRouter {
     allPaths: AllPaths = {}
   ) {
     super();
-    this.loadGetPaths(allPaths.GET || {});
-    this.loadPostPaths(allPaths.POST || {});
-    this.loadPutPaths(allPaths.PUT || {});
+    this.loadAllPaths(allPaths);
+  }
+
+  /**
+   * Load all router paths.
+   * @param paths All router pahts.
+   */
+  public loadAllPaths(paths: AllPaths) {
+    this.loadGetPaths(paths.GET || {});
+    this.loadPostPaths(paths.POST || {});
+    this.loadPutPaths(paths.PUT || {});
   }
 
   /**
