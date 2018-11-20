@@ -5,7 +5,7 @@ import { postPaths } from './post';
 const database = new Database({
   name: 'default',
   type: 'mysql',
-  host: '106.14.179.192',
+  host: 'localhost',
   port: 3306,
   username: 'docker',
   password: 'docker',
