@@ -2,4 +2,6 @@
 
 Source code of Koa Backend Server.
 
-[Read me](https://github.com/devindon/koa-backend-server#koa-backend-server)
+[Change log](dist/CHANGELOG.md)
+
+[Read me](dist/README.md)
