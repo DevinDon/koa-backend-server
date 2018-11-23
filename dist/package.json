@@ -1,0 +1,29 @@
+{
+  "name": "koa-backend-server",
+  "version": "0.2.1",
+  "description": "Koa Backend Server.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/devindon/koa-backend-server.git"
+  },
+  "keywords": [
+    "koa",
+    "backend",
+    "server"
+  ],
+  "author": "Devin Don <DevinDon@Foxmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.6.2",
+    "koa-body": "^4.0.4",
+    "koa-router": "^7.4.0",
+    "koa-session": "^5.10.0",
+    "reflect-metadata": "^0.1.12",
+    "typeorm": "^0.2.9"
+  },
+  "bugs": {
+    "url": "https://github.com/devindon/koa-backend-server/issues"
+  },
+  "homepage": "https://github.com/devindon/koa-backend-server/dist#readme"
+}
