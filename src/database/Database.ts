@@ -1,14 +1,24 @@
 import { Connection, createConnection, ConnectionOptions } from 'typeorm';
 
-/** 数据库环境. */
+/**
+ * Package database.
+ */
 export class Database {
 
+  /** Default connection. */
   private con: Promise<Connection>;
 
+  /**
+   * Create a database connection instance.
+   * @param {ConnectionOptions} options Typeorm database connection options.
+   */
   constructor(options: ConnectionOptions) {
     this.con = createConnection(options);
   }
 
+  /**
+   * @returns {Promise<Connection>} This connection with promise.
+   */
   public get connection(): Promise<Connection> {
     return this.con;
   }

@@ -4,20 +4,27 @@ import KoaRouter from 'koa-router';
 import { AllPaths, RouterPaths } from '../type';
 import { now } from '../util';
 
+/**
+ * Package KoaRouter.
+ * @extends {KoaRouter} KoaRouter
+ */
 export class Router extends KoaRouter {
 
-  constructor(
-    allPaths: AllPaths = {}
-  ) {
+  /**
+   * Generate router.
+   * @param {AllPaths} allPaths All router paths.
+   */
+  constructor(allPaths: AllPaths = {}) {
     super();
     this.loadAllPaths(allPaths);
   }
 
   /**
    * Load all router paths.
-   * @param paths All router pahts.
+   * @param {AllPaths} paths All router pahts.
+   * @returns {void} void.
    */
-  public loadAllPaths(paths: AllPaths) {
+  public loadAllPaths(paths: AllPaths): void {
     this.loadGetPaths(paths.GET || {});
     this.loadPostPaths(paths.POST || {});
     this.loadPutPaths(paths.PUT || {});
@@ -25,9 +32,10 @@ export class Router extends KoaRouter {
 
   /**
    * Load Get Method Paths.
-   * @param paths Get Mothod Paths.
+   * @param {RouterPaths} paths Get Mothod Paths.
+   * @returns {void} void.
    */
-  public loadGetPaths(paths: RouterPaths) {
+  public loadGetPaths(paths: RouterPaths): void {
     for (const key in paths) {
       if (paths.hasOwnProperty(key)) {
         this.get(key, paths[key]);
@@ -38,9 +46,10 @@ export class Router extends KoaRouter {
 
   /**
    * Load Post Method Paths.
-   * @param paths Post Mothod Paths.
+   * @param {RouterPaths} paths Post Mothod Paths.
+   * @returns {void} void.
    */
-  public loadPostPaths(paths: RouterPaths) {
+  public loadPostPaths(paths: RouterPaths): void {
     for (const key in paths) {
       if (paths.hasOwnProperty(key)) {
         this.post(key, KoaBody(), paths[key]);
@@ -51,9 +60,10 @@ export class Router extends KoaRouter {
 
   /**
    * Load Put Method Paths.
-   * @param paths Put Mothod Paths.
+   * @param {RouterPaths} paths Put Mothod Paths.
+   * @returns {void} void.
    */
-  public loadPutPaths(paths: RouterPaths) {
+  public loadPutPaths(paths: RouterPaths): void {
     for (const key in paths) {
       if (paths.hasOwnProperty(key)) {
         this.post(key, paths[key]);
@@ -62,6 +72,9 @@ export class Router extends KoaRouter {
     }
   }
 
+  /**
+   * @returns {Middleware} Middleware of router.
+   */
   public get ware(): Middleware {
     return this.routes();
   }

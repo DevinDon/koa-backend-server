@@ -7,7 +7,9 @@ import { KBSConfig } from '../type';
 import { now } from '../util';
 import { Database } from '../database';
 
-/** KBS, Koa Backend Server. */
+/**
+ * KBS, Koa Backend Server.
+ */
 export class Server {
 
   /** Koa. */
@@ -72,7 +74,8 @@ export class Server {
 
   /**
    * Use middlewares.
-   * @param middlewares Middlewares.
+   * @param {Middleware[]} middlewares Middlewares.
+   * @returns {void} void.
    */
   public use(...middlewares: Middleware[]): void {
     for (const middleware of middlewares) {
@@ -83,16 +86,16 @@ export class Server {
 
   /**
    * Listening on some where.
-   * @param port Listening port, default to 80.
-   * @param host The listening host, default to 0.0.0.0.
-   * @returns This instance.
+   * @param {number} port Listening port, default to 80.
+   * @param {string} host The listening host, default to 0.0.0.0.
+   * @returns {HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server} This server instance.
    */
   public listen(port: number = 80, host: string = '0.0.0.0'): HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server {
     return this.server.listen(port, host, () => console.log(`${now()}: Server online, address is ${host}:${port}.`));
   }
 
   /**
-   * Get the koa instance.
+   * @returns {Koa} This Koa instance.
    */
   public get app(): Koa {
     return this.application;
