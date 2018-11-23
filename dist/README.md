@@ -1,30 +1,42 @@
 # Koa Backend Server
 
-KBS, Koa Backend Server.
+[![NPM](https://nodei.co/npm/koa-backend-server.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/koa-backend-server/)
+
+KBS, Koa Backend Server with **TypeScript**.
 
 ## Version
 
-[0.2.1](https://www.npmjs.com/package/koa-backend-server/v/0.2.1)
+**WARNING: This project is currently in an *UNSTABLE* version.**
 
-## Change Log
+[Latest Version 0.2.2](https://www.npmjs.com/package/koa-backend-server/v/0.2.2)
+
+## Change log
 
 [Full Change Log](CHANGELOG.md)
 
-### 0.2.0 => 0.2.1
+### 0.2.1 => 0.2.2
 
-- Use constructor to connect database.
+- Nothing, just update this document.
 
 ## Installation
 
-Run `npm i --save koa-backend-server` to install this package.
+- *This package*
 
-You just need to run `npm i --save-dev @types/node @types/koa @types/koa-router @types/koa-session typescript ts-node` to install dev dependencies.
+```shell
+npm i --save koa-backend-server
+```
 
-**DO NOT install koa again!**
+- *Development dependencies*
+
+```shell
+npm i --save-dev @types/node @types/koa @types/koa-router @types/koa-session typescript ts-node
+```
+
+- **DO NOT install koa again!**
 
 ## Usage
 
-### Quick start
+### **Quick start**
 
 It will create a HTTP server which is listening on port 80, and set POST Router `postPaths`.
 
@@ -35,9 +47,9 @@ import { postPaths } from './post';
 
 const server = new Server({
   database: {
-    name: 'default', // use 'default'
+    name: 'default', // use 'default' unless you know what are you doing
     type: 'mysql', // database type
-    host: 'localhost', // database host
+    host: '0.0.0.0', // database host
     port: 3306, // database port
     username: 'user', // database user
     password: 'password', // database password
@@ -49,9 +61,9 @@ const server = new Server({
     logging: false // show query logs
   },
   host: 0.0.0.0, // default to 0.0.0.0
-  keys: ['test'], // default to ['default']
+  keys: ['test'], // if undefined, it will disable session middleware
   // options: { /* ... */ }, // only need in HTTPS / HTTP2 mode
-  paths: { POST: postPaths }, // default to {}
+  paths: { POST: postPaths }, // if undefined, it will disable router middleware
   port: 80, // default to 80
   type: 'HTTP' // default to 'HTTP'
 });
@@ -59,7 +71,7 @@ const server = new Server({
 
 ### **Step by step config**
 
-#### 0. The KBS config
+#### 0. First of all, you should know about the KBS config
 
 - *Here is the KBS config interface.*
 
@@ -203,9 +215,23 @@ const server: Server = new Server({
 
 ```
 
+### Advanced usage
+
+#### Use your own middlewares.
+
+```typescript
+server.use(middlewareA, middlewareB, middlewareC, /* ... */);
+```
+
+#### Some others
+
+Emmm, maybe later?
+
+OK, deal.
+
 ## Author
 
-Devin Don, [Email](mailto:DevinDon@Foxmail.com), [Github](https://github.com/devindon/koa-backend-server), [My Home Page](https://don.red).
+Devin Don, [Email](mailto:DevinDon@Foxmail.com), [Github](https://github.com/devindon/koa-backend-server), [My Home Page(Under construction)](https://don.red).
 
 ## License
 
