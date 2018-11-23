@@ -4,6 +4,7 @@ import { Files } from 'formidable';
 import { Context, Request } from 'koa';
 import { ServerOptions } from 'https';
 import { SecureServerOptions } from 'http2';
+import { ConnectionOptions } from 'typeorm';
 
 /** Router path 中间件, 包含 Session 和 Post data. */
 export type AMiddleware = Middleware<AContext>;
@@ -19,8 +20,10 @@ interface ARequest extends Request {
 
 /** KBS config. */
 export interface KBSConfig {
-  /** Type of KBS, default to 'HTTP'. */
-  type?: 'HTTP' | 'HTTPS' | 'HTTP2';
+  /** Database. */
+  database?: ConnectionOptions;
+  /** Host. */
+  host?: string;
   /** Cookie & Session secret keys. */
   keys?: string[];
   /** HTTPS / HTTP2 options. */
@@ -29,8 +32,8 @@ export interface KBSConfig {
   paths?: AllPaths;
   /** Port. */
   port?: number;
-  /** Host. */
-  host?: string;
+  /** Type of KBS, default to 'HTTP'. */
+  type?: 'HTTP' | 'HTTPS' | 'HTTP2';
 }
 
 /** 路径名: 路径处理方式. */

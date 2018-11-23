@@ -5,6 +5,7 @@ import Koa, { Middleware } from 'koa';
 import { Router, Session } from '../middleware';
 import { KBSConfig } from '../type';
 import { now } from '../util';
+import { Database } from '../database';
 
 /** KBS, Koa Backend Server. */
 export class Server {
@@ -14,25 +15,29 @@ export class Server {
   /** Server. */
   private server: HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server;
   /** Session. */
-  private session: Session;
+  private session?: Session;
   /** Router. */
-  private router: Router;
+  private router?: Router;
+  /** Database. */
+  private database?: Database;
 
   /**
    * Create a KBS.
-   * @param config KBS Server options, include:
+   * @param {KBSConfig} config KBS Server options, include:
    *
-   * type?: 'HTTP' | 'HTTPS' | 'HTTP2'; // Type of KBS, default to 'HTTP'.
+   * database?: ConnectionOptions; // Database connection, if undefined it will disable database connection.
    *
-   * keys?: string[]; // Cookie & Session secret keys, default to ['default'].
+   * host?: string; // Listening host, default to 0.0.0.0.
+   *
+   * keys?: string[]; // Cookie & Session secret keys, if undefined it will disable session middleware.
    *
    * options?: ServerOptions | SecureServerOptions; // HTTPS / HTTP2 options, default to undefined.
    *
-   * paths?: AllPaths; // Router paths, default to {}.
+   * paths?: AllPaths; // Router paths, if undefined it will disable router middleware.
    *
    * port?: number; // Listening port, default to 80.
    *
-   * host?: string; // Listening host, default to 0.0.0.0.
+   * type?: 'HTTP' | 'HTTPS' | 'HTTP2'; // Type of KBS, default to 'HTTP'.
    */
   constructor(config: KBSConfig = {}) {
     this.application = new Koa();
@@ -51,9 +56,17 @@ export class Server {
         console.log(`No such server type or unset type: ${config.type}, use default HTTP server.`);
         break;
     }
-    this.session = new Session(this.application, config.keys || ['default']);
-    this.router = new Router(config.paths);
-    this.use(this.session.ware, this.router.ware);
+    if (config.database) {
+      this.database = new Database(config.database);
+    }
+    if (config.keys) {
+      this.session = new Session(this.application, config.keys);
+      this.use(this.session.ware);
+    }
+    if (config.paths) {
+      this.router = new Router(config.paths);
+      this.use(this.router.ware);
+    }
     this.listen(config.port, config.host);
   }
 
