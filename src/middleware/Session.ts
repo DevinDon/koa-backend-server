@@ -1,6 +1,9 @@
 import Koa, { Middleware } from 'koa';
 import KoaSession, { opts } from 'koa-session';
 
+/**
+ * Package KoaSession.
+ */
 export class Session {
 
   /** Session middleware. */
@@ -8,9 +11,9 @@ export class Session {
 
   /**
    * Create a new session instance.
-   * @param app Koa instance.
-   * @param keys Koa.keys, default is ['default'].
-   * @param config Session config, default is { key: 'session', rolling: true }.
+   * @param {Koa} app Koa instance.
+   * @param {string[]} keys Koa.keys, default is ['default'].
+   * @param {Partial<opts>} config Session config, default is { key: 'session', rolling: true }.
    */
   constructor(
     app: Koa,
@@ -21,6 +24,9 @@ export class Session {
     app.keys = keys;
   }
 
+  /**
+   * @returns {Middleware} Middleware of session.
+   */
   public get ware(): Middleware {
     return this.session;
   }
