@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.2.1 => 0.2.2
+
+- Nothing, just update this document.
+
 ## 0.2.0 => 0.2.1
 
 - Use constructor to connect database.
