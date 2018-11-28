@@ -8,15 +8,15 @@ KBS, Koa Backend Server with **TypeScript**.
 
 **WARNING: This project is currently in an *UNSTABLE* version.**
 
-[Latest Version 0.2.2](https://www.npmjs.com/package/koa-backend-server/v/0.2.2)
+[Latest Version 0.2.3](https://www.npmjs.com/package/koa-backend-server/v/0.2.3)
 
 ## Change log
 
-[Full Change Log](CHANGELOG.md)
+[Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-### 0.2.1 => 0.2.2
+### 0.2.2 => 0.2.3
 
-- Nothing, just update this document.
+- Use [ormconfig.json](https://www.npmjs.com/package/typeorm#quick-start) to save the database information.
 
 ## Installation
 
@@ -29,7 +29,7 @@ npm i --save koa-backend-server
 - *Development dependencies*
 
 ```shell
-npm i --save-dev @types/node @types/koa @types/koa-router @types/koa-session typescript ts-node
+npm i --save-dev @types/node typescript ts-node
 ```
 
 - **DO NOT install koa again!**
@@ -46,20 +46,7 @@ import { User } from './entity';
 import { postPaths } from './post';
 
 const server = new Server({
-  database: {
-    name: 'default', // use 'default' unless you know what are you doing
-    type: 'mysql', // database type
-    host: '0.0.0.0', // database host
-    port: 3306, // database port
-    username: 'user', // database user
-    password: 'password', // database password
-    database: 'database', // database name
-    entities: [ // entites, means table(SQL) or document(NOSQL)
-      User
-    ],
-    synchronize: false, // only turn on when you're in dev
-    logging: false // show query logs
-  },
+  database: true, // use ormconfig.json to create connection, or use ConnectionOptions
   host: 0.0.0.0, // default to 0.0.0.0
   keys: ['test'], // if undefined, it will disable session middleware
   // options: { /* ... */ }, // only need in HTTPS / HTTP2 mode
@@ -73,13 +60,13 @@ const server = new Server({
 
 #### 0. First of all, you should know about the KBS config
 
-- *Here is the KBS config interface.*
+- *Here is the [KBS config interface](https://github.com/DevinDon/koa-backend-server/blob/master/src/type/index.ts).*
 
 ```typescript
 /** KBS config. */
 interface KBSConfig {
   /** Database. */
-  database?: ConnectionOptions;
+  database?: ConnectionOptions | boolean;
   /** Host. */
   host?: string;
   /** Cookie & Session secret keys. */
@@ -97,20 +84,46 @@ interface KBSConfig {
 
 #### 1. (Optional) Connect database by [typeorm](https://www.npmjs.com/package/typeorm).
 
+- *Using [ormconfig.json](https://www.npmjs.com/package/typeorm#quick-start) to create connection.*
+
+```typescript
+const database: boolean = true;
+```
+- *and you should create ormconfig.json file in root dir like this (DO NOT forget to remove comment):*
+```json
+{
+  "type": "mysql", // database type
+  "host": "localhost", // database host
+  "port": 3306, // database port
+  "username": "username", // database username
+  "password": "password", // database password
+  "database": "database", // database name
+  "synchronize": false, // only turn on when you wanna create database, if true you will lost all data of this database
+  "logging": true, // show query logs
+  "entities": [ // entites, means table(SQL) or document(NOSQL)
+    "src/entity/**/*.entity.ts"
+  ],
+  "migrations": [],
+  "subscribers": []
+}
+```
+
+- *Or using ConnectionOptions to create connection.*
+
 ```typescript
 const database: ConnectionOptions = {
   name: 'default', // use 'default'
   type: 'mysql', // database type
   host: 'localhost', // database host
   port: 3306, // database port
-  username: 'user', // database user
+  username: 'username', // database username
   password: 'password', // database password
   database: 'database', // database name
+  synchronize: false, // only turn on when you're in dev
+  logging: true, // show query logs
   entities: [ // entites, means table(SQL) or document(NOSQL)
     User
-  ],
-  synchronize: false, // only turn on when you're in dev
-  logging: false // show query logs
+  ]
 };
 ```
 
@@ -122,7 +135,7 @@ const keys: string[] = ['your', 'secret', 'keys'];
 
 #### 3. (Optional) Create router path handlers.
 
-- *Here is the router path interface.*
+- *Here is the [router path interface](https://github.com/DevinDon/koa-backend-server/blob/master/src/type/index.ts).*
 
 ```typescript
 interface RouterPaths {
@@ -140,18 +153,23 @@ interface AllPaths {
 }
 ```
 
-- And the paths look like this.
+- *And the paths look like this*.
 
 ```typescript
+import postPaths from './post';
+
 const paths: AllPaths = {
   GET: {
-    '/path/you/wanna/get': (ctx, next) => { /* ... */ },
-    '/path/other': (ctx, next) => { /* ... */ }
-  }, POST: {
-    '/path/you/wanna/post': (ctx, next) => { /* ... */ }
-  }, PUT: {
-    /* ... */
-  }
+    '/': async (c, next) => {
+      const result = User.find();
+      c.body = {
+        status: result ? true : false,
+        data: result
+      };
+      next();
+    }
+  },
+  POST: postPaths // in other source file
 };
 ```
 
@@ -179,30 +197,34 @@ const port: number = 8080;
 
 #### 6. And now, it looks like this.
 
-```typescript
-import { ConnectionOptions } from 'typeorm';
-import { AllPaths, Server } from 'koa-backend-server';
-import { User } from './entity';
+- *Enter point: index.ts*
 
-const database: ConnectionOptions = { /* ... */ };
+```typescript
+import { AllPaths, Server } from '../dist';
+import { User } from './entity';
+import postPaths from './post';
+
+const database: boolean = true;
 
 const keys: string[] = ['your', 'secret', 'keys'];
 
 const paths: AllPaths = {
   GET: {
-    '/path/you/wanna/get': (ctx, next) => { /* ... */ },
-    '/path/other': (ctx, next) => { /* ... */ }
-  }, POST: {
-    '/path/you/wanna/post': (ctx, next) => { /* ... */ }
-  }, PUT: {
-    /* ... */
-  }
+    '/': async (c, next) => {
+      const result = User.find();
+      c.body = {
+        status: result ? true : false,
+        data: result
+      };
+      next();
+    }
+  },
+  POST: postPaths
 };
 
-const type: 'HTTP' | 'HTTPS' | 'HTTP2' = 'HTTP';
-
 const host: string = 'localhost';
-const port: number = 8080;
+const port: number = 80;
+const type: 'HTTP' | 'HTTPS' | 'HTTP2' = 'HTTP';
 
 const server: Server = new Server({
   database,
@@ -212,7 +234,26 @@ const server: Server = new Server({
   port,
   type
 });
+```
 
+- *[Work tree](https://github.com/DevinDon/koa-backend-server/)*
+
+```text
+┏━ src/
+┃   ┣━ entity/
+┃   ┃   ┣━ index.ts
+┃   ┃   ┗━ user.entity.ts
+┃   ┣━ post/
+┃   ┃   ┗━ index.ts
+┃   ┗━ index.ts
+┣━ .gitignore
+┣━ LICENSE
+┣━ ormconfig.json
+┣━ package-lock.json
+┣━ package.json
+┣━ README.md
+┣━ tsconfig.json
+┗━ tslint.json
 ```
 
 ### Advanced usage
@@ -236,3 +277,15 @@ Devin Don, [Email](mailto:DevinDon@Foxmail.com), [Github](https://github.com/dev
 ## License
 
 [MIT License](LICENSE)
+
+## Thanks
+
+[Koa](https://www.npmjs.com/package/koa)
+
+[Koa Body](https://www.npmjs.com/package/koa-body)
+
+[Koa Router](https://www.npmjs.com/package/koa-router)
+
+[Koa Session](https://www.npmjs.com/package/koa-session)
+
+[TypeORM](https://www.npmjs.com/package/typeorm)

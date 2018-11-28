@@ -22,7 +22,9 @@ export declare class Server {
      * Create a KBS.
      * @param {KBSConfig} config KBS Server options, include:
      *
-     * database?: ConnectionOptions; // Database connection, if undefined it will disable database connection.
+     * database?: ConnectionOptions | boolean; // Database connection, if undefined it will disable database connection;
+     * if true, it will use ormconfig.json to create connection;
+     * if ConnectionOptions, it will use your own config to create connection.
      *
      * host?: string; // Listening host, default to 0.0.0.0.
      *

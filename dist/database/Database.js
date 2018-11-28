@@ -10,7 +10,12 @@ class Database {
      * @param {ConnectionOptions} options Typeorm database connection options.
      */
     constructor(options) {
-        this.con = typeorm_1.createConnection(options);
+        if (options) {
+            this.con = typeorm_1.createConnection(options);
+        }
+        else {
+            this.con = typeorm_1.createConnection();
+        }
     }
     /**
      * @returns {Promise<Connection>} This connection with promise.

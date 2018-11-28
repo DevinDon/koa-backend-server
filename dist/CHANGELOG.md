@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.2.2 => 0.2.3
+
+- Use [ormconfig.json](https://www.npmjs.com/package/typeorm#quick-start) to save the database information.
+
 ## 0.2.1 => 0.2.2
 
 - Nothing, just update this document.
