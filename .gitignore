@@ -1,1 +1,2 @@
 /node_modules
+# /ormconfig.json # You should add ormconfig.json to git ignore file list in production mode.
