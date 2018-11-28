@@ -1,6 +1,6 @@
 {
   "name": "koa-backend-server.source",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Source code of Koa Backend Server.",
   "main": "dist/index.js",
   "scripts": {
