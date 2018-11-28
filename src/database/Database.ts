@@ -12,8 +12,12 @@ export class Database {
    * Create a database connection instance.
    * @param {ConnectionOptions} options Typeorm database connection options.
    */
-  constructor(options: ConnectionOptions) {
-    this.con = createConnection(options);
+  constructor(options?: ConnectionOptions) {
+    if (options) {
+      this.con = createConnection(options);
+    } else {
+      this.con = createConnection();
+    }
   }
 
   /**
