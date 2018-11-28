@@ -3,8 +3,9 @@ import { User } from './entity';
 import postPaths from './post';
 
 const database: boolean = true;
-const host: string = 'localhost';
+
 const keys: string[] = ['your', 'secret', 'keys'];
+
 const paths: AllPaths = {
   GET: {
     '/': async (c, next) => {
@@ -18,7 +19,9 @@ const paths: AllPaths = {
   },
   POST: postPaths
 };
-const port: number = 8080;
+
+const host: string = 'localhost';
+const port: number = 80;
 const type: 'HTTP' | 'HTTPS' | 'HTTP2' = 'HTTP';
 
 const server: Server = new Server({
