@@ -9,7 +9,7 @@ export declare class Database {
      * Create a database connection instance.
      * @param {ConnectionOptions} options Typeorm database connection options.
      */
-    constructor(options: ConnectionOptions);
+    constructor(options?: ConnectionOptions);
     /**
      * @returns {Promise<Connection>} This connection with promise.
      */

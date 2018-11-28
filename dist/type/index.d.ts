@@ -19,7 +19,7 @@ interface ARequest extends Request {
 /** KBS config. */
 export interface KBSConfig {
     /** Database. */
-    database?: ConnectionOptions;
+    database?: ConnectionOptions | boolean;
     /** Host. */
     host?: string;
     /** Cookie & Session secret keys. */
