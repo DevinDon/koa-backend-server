@@ -1,22 +1,11 @@
-import { AllPaths, Server } from '../dist';
-import { User } from './entity';
+import { AllPaths, Server } from '../src';
 import postPaths from './post';
 
-const database: boolean = true;
+const database: boolean = false;
 
 const keys: string[] = ['your', 'secret', 'keys'];
 
 const paths: AllPaths = {
-  GET: {
-    '/': async (c, next) => {
-      const result = User.find();
-      c.body = {
-        status: result ? true : false,
-        data: result
-      };
-      next();
-    }
-  },
   POST: postPaths
 };
 
@@ -30,5 +19,6 @@ const server: Server = new Server({
   keys,
   paths,
   port,
-  type
+  type,
+  version: 'v1'
 });
