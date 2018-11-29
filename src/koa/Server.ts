@@ -42,8 +42,10 @@ export class Server {
    * port?: number; // Listening port, default to 80.
    *
    * type?: 'HTTP' | 'HTTPS' | 'HTTP2'; // Type of KBS, default to 'HTTP'.
+   *
+   * version?: string; // API version.
    */
-  constructor(config: KBSConfig = {}) {
+  constructor(config: KBSConfig) {
     this.application = new Koa();
     switch (config.type) {
       case 'HTTP':
@@ -57,7 +59,7 @@ export class Server {
         break;
       default:
         this.server = HTTP.createServer(this.application.callback());
-        console.log(`No such server type or unset type: ${config.type}, use default HTTP server.`);
+        console.log(`${now()}\tNo such server type or unset type: ${config.type}, use default HTTP server`);
         break;
     }
     if (config.database === true) { // use ormconfig.json
@@ -70,7 +72,7 @@ export class Server {
       this.use(this.session.ware);
     }
     if (config.paths) {
-      this.router = new Router(config.paths);
+      this.router = new Router(config.paths, config.version);
       this.use(this.router.ware);
     }
     this.listen(config.port, config.host);
@@ -84,7 +86,7 @@ export class Server {
   public use(...middlewares: Middleware[]): void {
     for (const middleware of middlewares) {
       this.application.use(middleware);
-      console.log(`${now()}: Use middleware: ${middleware.name || middleware.toString()}.`);
+      console.log(`${now()}\tUse middleware: ${middleware.name || middleware.toString()}`);
     }
   }
 
@@ -95,7 +97,7 @@ export class Server {
    * @returns {HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server} This server instance.
    */
   public listen(port: number = 80, host: string = '0.0.0.0'): HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server {
-    return this.server.listen(port, host, () => console.log(`${now()}: Server online, address is ${host}:${port}.`));
+    return this.server.listen(port, host, () => console.log(`${now()}\tServer online, address is ${host}:${port}`));
   }
 
   /**

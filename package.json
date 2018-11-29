@@ -1,13 +1,12 @@
 {
   "name": "koa-backend-server.source",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Source code of Koa Backend Server.",
   "main": "dist/index.js",
   "scripts": {
     "start": "ts-node src",
     "test": "ts-node test",
-    "build": "tsc",
-    "server": "ts-node test/server"
+    "build": "tsc"
   },
   "keywords": [
     "koa",
