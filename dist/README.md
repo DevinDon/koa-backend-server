@@ -8,15 +8,16 @@ KBS, Koa Backend Server with **TypeScript**.
 
 **WARNING: This project is currently in an *UNSTABLE* version.**
 
-[Latest Version 0.2.3](https://www.npmjs.com/package/koa-backend-server/v/0.2.3)
+[Latest Version 0.2.4](https://www.npmjs.com/package/koa-backend-server/v/0.2.4)
 
 ## Change log
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-### 0.2.2 => 0.2.3
+### 0.2.3 => 0.2.4
 
-- Use [ormconfig.json](https://www.npmjs.com/package/typeorm#quick-start) to save the database information.
+- Now you can set your API version as the perfix.
+- RESTful methods supported.
 
 ## Installation
 
@@ -52,7 +53,8 @@ const server = new Server({
   // options: { /* ... */ }, // only need in HTTPS / HTTP2 mode
   paths: { POST: postPaths }, // if undefined, it will disable router middleware
   port: 80, // default to 80
-  type: 'HTTP' // default to 'HTTP'
+  type: 'HTTP', // default to 'HTTP'
+  version: 'v1' // API version
 });
 ```
 
@@ -79,6 +81,8 @@ interface KBSConfig {
   port?: number;
   /** Type of KBS, default to 'HTTP'. */
   type?: 'HTTP' | 'HTTPS' | 'HTTP2';
+  /** API version. */
+  version?: string;
 }
 ```
 
@@ -173,13 +177,19 @@ const paths: AllPaths = {
 };
 ```
 
-#### 4. Choose a type of server.
+#### 4. (Optional) Set your API version.
+
+```typescript
+const version: string = 'v1';
+```
+
+#### 5. Choose a type of server.
 
 ```typescript
 const type: 'HTTP' | 'HTTPS' | 'HTTP2' = 'HTTP';
 ```
 
-#### 5. Listening on somewhere.
+#### 6. Listening on somewhere.
 
 - *Anywhere you want.*
 
@@ -195,7 +205,7 @@ const port: number = 8080;
 // port is default to 80
 ```
 
-#### 6. And now, it looks like this.
+#### 7. And now, it looks like this.
 
 - *Enter point: index.ts*
 
@@ -225,6 +235,7 @@ const paths: AllPaths = {
 const host: string = 'localhost';
 const port: number = 80;
 const type: 'HTTP' | 'HTTPS' | 'HTTP2' = 'HTTP';
+const version: string = 'v1';
 
 const server: Server = new Server({
   database,
@@ -232,7 +243,8 @@ const server: Server = new Server({
   keys,
   paths,
   port,
-  type
+  type,
+  version
 });
 ```
 
@@ -267,8 +279,6 @@ server.use(middlewareA, middlewareB, middlewareC, /* ... */);
 #### Some others
 
 Emmm, maybe later?
-
-OK, deal.
 
 ## Author
 

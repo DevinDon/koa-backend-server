@@ -33,8 +33,10 @@ class Server {
      * port?: number; // Listening port, default to 80.
      *
      * type?: 'HTTP' | 'HTTPS' | 'HTTP2'; // Type of KBS, default to 'HTTP'.
+     *
+     * version?: string; // API version.
      */
-    constructor(config = {}) {
+    constructor(config) {
         this.application = new koa_1.default();
         switch (config.type) {
             case 'HTTP':
@@ -48,7 +50,7 @@ class Server {
                 break;
             default:
                 this.server = http_1.default.createServer(this.application.callback());
-                console.log(`No such server type or unset type: ${config.type}, use default HTTP server.`);
+                console.log(`${util_1.now()}\tNo such server type or unset type: ${config.type}, use default HTTP server`);
                 break;
         }
         if (config.database === true) { // use ormconfig.json
@@ -62,7 +64,7 @@ class Server {
             this.use(this.session.ware);
         }
         if (config.paths) {
-            this.router = new middleware_1.Router(config.paths);
+            this.router = new middleware_1.Router(config.paths, config.version);
             this.use(this.router.ware);
         }
         this.listen(config.port, config.host);
@@ -75,7 +77,7 @@ class Server {
     use(...middlewares) {
         for (const middleware of middlewares) {
             this.application.use(middleware);
-            console.log(`${util_1.now()}: Use middleware: ${middleware.name || middleware.toString()}.`);
+            console.log(`${util_1.now()}\tUse middleware: ${middleware.name || middleware.toString()}`);
         }
     }
     /**
@@ -85,7 +87,7 @@ class Server {
      * @returns {HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server} This server instance.
      */
     listen(port = 80, host = '0.0.0.0') {
-        return this.server.listen(port, host, () => console.log(`${util_1.now()}: Server online, address is ${host}:${port}.`));
+        return this.server.listen(port, host, () => console.log(`${util_1.now()}\tServer online, address is ${host}:${port}`));
     }
     /**
      * @returns {Koa} This Koa instance.

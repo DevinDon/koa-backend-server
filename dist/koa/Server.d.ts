@@ -37,8 +37,10 @@ export declare class Server {
      * port?: number; // Listening port, default to 80.
      *
      * type?: 'HTTP' | 'HTTPS' | 'HTTP2'; // Type of KBS, default to 'HTTP'.
+     *
+     * version?: string; // API version.
      */
-    constructor(config?: KBSConfig);
+    constructor(config: KBSConfig);
     /**
      * Use middlewares.
      * @param {Middleware[]} middlewares Middlewares.

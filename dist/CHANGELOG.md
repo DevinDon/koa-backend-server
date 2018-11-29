@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.2.3 => 0.2.4
+
+- Now you can set your API version as the perfix.
+- RESTful methods supported.
+
 ## 0.2.2 => 0.2.3
 
 - Use [ormconfig.json](https://www.npmjs.com/package/typeorm#quick-start) to save the database information.
