@@ -32,6 +32,8 @@ export interface KBSConfig {
     port?: number;
     /** Type of KBS, default to 'HTTP'. */
     type?: 'HTTP' | 'HTTPS' | 'HTTP2';
+    /** API version. */
+    version?: string;
 }
 /** 路径名: 路径处理方式. */
 export interface RouterPaths {
