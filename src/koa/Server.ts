@@ -2,10 +2,10 @@ import HTTP from 'http';
 import HTTP2 from 'http2';
 import HTTPS from 'https';
 import Koa, { Middleware } from 'koa';
+import { Database } from '../database';
 import { Router, Session } from '../middleware';
 import { KBSConfig } from '../type';
 import { now } from '../util';
-import { Database } from '../database';
 
 /**
  * KBS, Koa Backend Server.
@@ -47,35 +47,39 @@ export class Server {
    */
   constructor(config: KBSConfig) {
     this.application = new Koa();
-    switch (config.type) {
+    switch (config.address.portocol) {
       case 'HTTP':
         this.server = HTTP.createServer(this.application.callback());
         break;
       case 'HTTP2':
-        this.server = HTTP2.createSecureServer(config.options || {}, this.application.callback());
+        this.server = HTTP2.createSecureServer(config.address.ssl || {}, this.application.callback());
         break;
       case 'HTTPS':
-        this.server = HTTPS.createServer(config.options || {}, this.application.callback());
+        this.server = HTTPS.createServer(config.address.ssl || {}, this.application.callback());
         break;
       default:
         this.server = HTTP.createServer(this.application.callback());
-        console.log(`${now()}\tNo such server type or unset type: ${config.type}, use default HTTP server`);
+        console.log(`${now()}\tNo such portocol or unset portocol: ${config.address.portocol}, use default portocol HTTP`);
         break;
     }
-    if (config.database === true) { // use ormconfig.json
-      this.database = new Database();
-    } else if (config.database) { // use own connection config
-      this.database = new Database(config.database);
+    if (config.database) {
+      if (config.database.ormconfig) {
+        this.database = new Database();
+      } else if (config.database.options) {
+        this.database = new Database(config.database.options);
+      } else {
+        console.warn(`There is no connection has been connected.`);
+      }
     }
-    if (config.keys) {
-      this.session = new Session(this.application, config.keys);
+    if (config.session) {
+      this.session = new Session(this.application, config.session.keys);
       this.use(this.session.ware);
     }
-    if (config.paths) {
-      this.router = new Router(config.paths, config.version);
+    if (config.router) {
+      this.router = new Router(config.router.paths, config.router.version);
       this.use(this.router.ware);
     }
-    this.listen(config.port, config.host);
+    this.listen(config.address.host, config.address.port);
   }
 
   /**
@@ -96,7 +100,7 @@ export class Server {
    * @param {string} host The listening host, default to 0.0.0.0.
    * @returns {HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server} This server instance.
    */
-  public listen(port: number = 80, host: string = '0.0.0.0'): HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server {
+  public listen(host: string = '0.0.0.0', port: number = 80): HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server {
     return this.server.listen(port, host, () => console.log(`${now()}\tServer online, address is ${host}:${port}`));
   }
 
