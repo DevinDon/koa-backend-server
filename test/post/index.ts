@@ -1,13 +1,14 @@
-import { AMiddleware, RouterPaths, now } from '../../src';
+import { AMiddleware, now, RouterPaths } from '../../src';
 import { User } from '../entity';
 import test from './test';
 
 const index: AMiddleware = async (c, next) => {
-  // const insert = await User.insert({ name: now(), password: 'any' });
-  // const user = await User.find();
+  const request = c.request.body;
+  const insert = await User.insert({ name: now(), password: 'any' });
+  const data = await User.find();
   c.body = {
     status: true,
-    data: c.request.body.name
+    data
   };
   next();
 };
