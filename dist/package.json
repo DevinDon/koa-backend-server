@@ -1,6 +1,6 @@
 {
   "name": "koa-backend-server",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "Koa Backend Server.",
   "main": "index.js",
   "repository": {
@@ -25,5 +25,5 @@
   "bugs": {
     "url": "https://github.com/devindon/koa-backend-server/issues"
   },
-  "homepage": "https://github.com/devindon/koa-backend-server/dist#readme"
+  "homepage": "https://github.com/DevinDon/koa-backend-server/tree/master/dist#koa-backend-server"
 }
