@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.3.0 => 0.3.1
+
+- Correct CORS OPTIONS status code.
+
 ## 0.2.4 => 0.3.0
 
 - Rewrite interface KBSConfig.

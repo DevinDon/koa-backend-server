@@ -12,11 +12,15 @@ KBS, Koa Backend Server with **TypeScript**.
 
 **WARNING: This project is currently in an *UNSTABLE* version.**
 
-[Latest Version 0.3.0](https://www.npmjs.com/package/koa-backend-server/v/0.3.0)
+[Latest Version 0.3.1](https://www.npmjs.com/package/koa-backend-server/v/0.3.1)
 
 ## Change log
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
+
+### 0.3.0 => 0.3.1
+
+- Correct CORS OPTIONS status code.
 
 ### 0.2.4 => 0.3.0
 

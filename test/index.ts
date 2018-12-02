@@ -5,7 +5,7 @@ const server = new Server({
   address: {
     portocol: 'HTTP', // required, HTTP, HTTPS or HTTP2
     host: '0.0.0.0', // optional, default to 0.0.0.0
-    port: 80, // optional, default to 80
+    port: 8080, // optional, default to 80
     // ssl: {cert: 'CERT', key: 'KEY'} // required if portocol is HTTPS or HTTP2
   },
   database: { // if undefined, it will disable database connection
