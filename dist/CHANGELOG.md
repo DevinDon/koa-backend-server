@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.2.4 => 0.3.0
+
+- Rewrite interface KBSConfig.
+- Rewrite interface RouterPaths.
+  - Add regular expression support.
+  - Add CORS (Cross-origin resource sharing) support.
+  - Optimized loadPaths method.
+- Use a separate file to define interfaces or types.
+
 ## 0.2.3 => 0.2.4
 
 - Now you can set your API version as the perfix.
