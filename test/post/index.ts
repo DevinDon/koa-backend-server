@@ -15,7 +15,12 @@ const index: AMiddleware = async (c, next) => {
 export const postPaths: RouterPaths = {
   '/test': {
     path: '/test',
-    ware: test
+    ware: test,
+    cors: {
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Methods': ['POST', 'OPTIONS', 'GET'],
+      'Access-Control-Allow-Origin': '*'
+    }
   },
   'all': {
     path: /\/.*/,
