@@ -1,7 +1,7 @@
 import { Middleware } from 'koa';
 import KoaBody from 'koa-body';
 import KoaRouter from 'koa-router';
-import { AllPaths, RouterPaths } from '../type';
+import { AllPaths, AMiddleware, CORS, Methods, RouterPaths } from '../type';
 import { now } from '../util';
 
 /**
@@ -14,16 +14,33 @@ export class Router extends KoaRouter {
    * Generate router.
    * @param {AllPaths} allPaths All router paths.
    */
-  constructor(allPaths?: AllPaths, version?: string) {
+  constructor(
+    allPaths?: AllPaths,
+    private version?: string
+  ) {
     super();
+    if (version) {
+      console.log(`${now()}\tAPI version: ${version}, now you can access your router paths with prefix /${version}`);
+    } else {
+      console.warn(`${now()}\tThere is no version has been set.`);
+    }
     if (allPaths) {
       this.loadAllPaths(allPaths);
       console.log(`${now()}\tLoaded router paths`);
+    } else {
+      console.warn(`${now()}\tThere is no router path has been set.`);
     }
-    if (version) {
-      this.prefix(`/${version}`);
-      console.log(`${now()}\tAPI version: ${version}, now you can access your router paths with prefix /${version}`);
-    }
+  }
+
+  public static cors(options: CORS): AMiddleware {
+    return async (c, next) => {
+      c.set({
+        'Access-Control-Allow-Headers': options['Access-Control-Allow-Headers'],
+        'Access-Control-Allow-Methods': options['Access-Control-Allow-Methods'].join(', '),
+        'Access-Control-Allow-Origin': options['Access-Control-Allow-Origin']
+      });
+      next();
+    };
   }
 
   /**
@@ -32,109 +49,52 @@ export class Router extends KoaRouter {
    * @returns {void} void.
    */
   public loadAllPaths(paths: AllPaths): void {
-    this.loadDeletePaths(paths.DELETE || {});
-    this.loadGetPaths(paths.GET || {});
-    this.loadHeadPaths(paths.HEAD || {});
-    this.loadOptionsPaths(paths.OPTIONS || {});
-    this.loadPatchPaths(paths.PATCH || {});
-    this.loadPostPaths(paths.POST || {});
-    this.loadPutPaths(paths.PUT || {});
+    this.loadPaths('DELETE', paths.DELETE || {});
+    this.loadPaths('GET', paths.GET || {});
+    this.loadPaths('HEAD', paths.HEAD || {});
+    this.loadPaths('OPTIONS', paths.OPTIONS || {});
+    this.loadPaths('PATCH', paths.PATCH || {});
+    this.loadPaths('POST', paths.POST || {});
+    this.loadPaths('PUT', paths.PUT || {});
   }
 
   /**
-   * Load Delete Method Paths.
-   * @param {RouterPaths} paths Delete Method Paths.
-   * @returns {void} void.
+   * Load router paths of special method.
+   * @param {Methods} type Type of method.
+   * @param {RouterPaths} paths Router paths.
+   * @returns {void} void
    */
-  public loadDeletePaths(paths: RouterPaths): void {
-    for (const key in paths) {
-      if (paths.hasOwnProperty(key)) {
-        this.delete(key, paths[key]);
-        console.log(`${now()}\tRegister Router Delete: ${key}`);
-      }
+  public loadPaths(type: Methods, paths: RouterPaths): void {
+    let action: any;
+    switch (type.toUpperCase()) {
+      case 'DELETE': action = this.delete.bind(this); break;
+      case 'GET': action = this.get.bind(this); break;
+      case 'HEAD': action = this.head.bind(this); break;
+      case 'OPTIONS': action = this.options.bind(this); break;
+      case 'PATCH': action = this.patch.bind(this); break;
+      case 'POST': action = this.post.bind(this); break;
+      case 'PUT': action = this.put.bind(this); break;
+      default: console.warn(`${now()}\tUnknown method: ${type.toUpperCase()}`); return;
     }
-  }
-
-  /**
-   * Load Get Method Paths.
-   * @param {RouterPaths} paths Get Mothod Paths.
-   * @returns {void} void.
-   */
-  public loadGetPaths(paths: RouterPaths): void {
     for (const key in paths) {
       if (paths.hasOwnProperty(key)) {
-        this.get(key, paths[key]);
-        console.log(`${now()}\tRegister Router GET: ${key}`);
-      }
-    }
-  }
-
-  /**
-   * Load Head Method Paths.
-   * @param {RouterPaths} paths Head Mothod Paths.
-   * @returns {void} void.
-   */
-  public loadHeadPaths(paths: RouterPaths): void {
-    for (const key in paths) {
-      if (paths.hasOwnProperty(key)) {
-        this.head(key, paths[key]);
-        console.log(`${now()}\tRegister Router Head: ${key}`);
-      }
-    }
-  }
-
-  /**
-   * Load Options Method Paths.
-   * @param {RouterPaths} paths Options Mothod Paths.
-   * @returns {void} void.
-   */
-  public loadOptionsPaths(paths: RouterPaths): void {
-    for (const key in paths) {
-      if (paths.hasOwnProperty(key)) {
-        this.options(key, paths[key]);
-        console.log(`${now()}\tRegister Router Options: ${key}`);
-      }
-    }
-  }
-
-  /**
-   * Load Patch Method Paths.
-   * @param {RouterPaths} paths Patch Mothod Paths.
-   * @returns {void} void.
-   */
-  public loadPatchPaths(paths: RouterPaths): void {
-    for (const key in paths) {
-      if (paths.hasOwnProperty(key)) {
-        this.patch(key, paths[key]);
-        console.log(`${now()}\tRegister Router Patch: ${key}`);
-      }
-    }
-  }
-
-  /**
-   * Load Post Method Paths.
-   * @param {RouterPaths} paths Post Mothod Paths.
-   * @returns {void} void.
-   */
-  public loadPostPaths(paths: RouterPaths): void {
-    for (const key in paths) {
-      if (paths.hasOwnProperty(key)) {
-        this.post(key, KoaBody(), paths[key]);
-        console.log(`${now()}\tRegister Router POST: ${key}`);
-      }
-    }
-  }
-
-  /**
-   * Load Put Method Paths.
-   * @param {RouterPaths} paths Put Mothod Paths.
-   * @returns {void} void.
-   */
-  public loadPutPaths(paths: RouterPaths): void {
-    for (const key in paths) {
-      if (paths.hasOwnProperty(key)) {
-        this.post(key, paths[key]);
-        console.log(`${now()}\tRegister Router PUT: ${key}`);
+        /** Router paths with string or RegExp. */
+        let path = paths[key].path;
+        /** API version prefix. */
+        const prefix = this.version ? '/' + this.version : '';
+        // If the path instanceof RegExp, slice reg and add the prefix to this reg.
+        if (path instanceof RegExp) {
+          path = RegExp(prefix + String(path).slice(1, -1));
+        } else {
+          path = prefix + path;
+        }
+        // If CORS is true, set the same path of method OPTIONS.
+        if (paths[key].cors) {
+          this.options(path, Router.cors(paths[key].cors as CORS) as any);
+          console.log(`${now()}\tLoaded OPTIONS path: ${path} with CORS`);
+        }
+        action(path, KoaBody(), paths[key].ware, Router.cors(paths[key].cors as CORS) as any);
+        console.log(`${now()}\tLoaded ${type.toUpperCase()} path: ${path}`);
       }
     }
   }
