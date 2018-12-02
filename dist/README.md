@@ -18,10 +18,10 @@ KBS, Koa Backend Server with **TypeScript**.
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-### 0.3.1 => 0.3.2
+### 0.3.2 => 0.3.3
 
-- Correct wrong override response.
-- If no necessary, don't call next() method in middleware.
+- Use next() method in CORS middleware.
+- Finally, it works!
 
 ### 0.2.4 => 0.3.0
 

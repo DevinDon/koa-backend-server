@@ -5,6 +5,7 @@ export const test: AMiddleware = async (c, next) => {
     status: true,
     data: 'string path'
   };
+  next();
 };
 
 export default test;
