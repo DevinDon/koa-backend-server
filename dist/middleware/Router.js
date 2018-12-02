@@ -40,16 +40,16 @@ class Router extends koa_router_1.default {
             console.warn(`${util_1.now()}\tThere is no router path has been set.`);
         }
     }
-    static cors(options) {
+    static cors(options, isOpt = false) {
         return (c, next) => __awaiter(this, void 0, void 0, function* () {
             c.set({
                 'Access-Control-Allow-Headers': options['Access-Control-Allow-Headers'],
                 'Access-Control-Allow-Methods': options['Access-Control-Allow-Methods'].join(', '),
                 'Access-Control-Allow-Origin': options['Access-Control-Allow-Origin']
             });
-            c.body = {
-                status: true
-            };
+            if (isOpt) {
+                c.body = {};
+            }
             next();
         });
     }
@@ -116,10 +116,13 @@ class Router extends koa_router_1.default {
                 }
                 // If CORS is true, set the same path of method OPTIONS.
                 if (paths[key].cors) {
-                    this.options(path, Router.cors(paths[key].cors));
+                    this.options(path, Router.cors(paths[key].cors, true));
+                    action(path, koa_body_1.default(), Router.cors(paths[key].cors), paths[key].ware);
                     console.log(`${util_1.now()}\tLoaded OPTIONS path: ${path} with CORS`);
                 }
-                action(path, koa_body_1.default(), paths[key].ware, Router.cors(paths[key].cors));
+                else {
+                    action(path, koa_body_1.default(), paths[key].ware);
+                }
                 console.log(`${util_1.now()}\tLoaded ${type.toUpperCase()} path: ${path}`);
             }
         }

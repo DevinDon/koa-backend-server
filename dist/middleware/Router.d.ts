@@ -12,7 +12,7 @@ export declare class Router extends KoaRouter {
      * @param {AllPaths} allPaths All router paths.
      */
     constructor(allPaths?: AllPaths, version?: string | undefined);
-    static cors(options: CORS): AMiddleware;
+    static cors(options: CORS, isOpt?: boolean): AMiddleware;
     /**
      * Load all router paths.
      * @param {AllPaths} paths All router pahts.

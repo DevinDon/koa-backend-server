@@ -8,21 +8,21 @@ const server = new Server({
     port: 8080, // optional, default to 80
     // ssl: {cert: 'CERT', key: 'KEY'} // required if portocol is HTTPS or HTTP2
   },
-  database: { // if undefined, it will disable database connection
-    ormconfig: true, // if true, it will use ormconfig.json to connect database, and the connection options will be ignore
-    options: {
-      name: 'default',
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      database: 'database',
-      username: 'username',
-      password: 'password',
-      synchronize: true, // auto generate database table (or document), but you may lost all data of this database
-      logging: true, // log all query statements
-      entities: [/** your own entities */]
-    }
-  },
+  // database: { // if undefined, it will disable database connection
+  //   ormconfig: true, // if true, it will use ormconfig.json to connect database, and the connection options will be ignore
+  //   options: {
+  //     name: 'default',
+  //     type: 'mysql',
+  //     host: 'localhost',
+  //     port: 3306,
+  //     database: 'database',
+  //     username: 'username',
+  //     password: 'password',
+  //     synchronize: true, // auto generate database table (or document), but you may lost all data of this database
+  //     logging: true, // log all query statements
+  //     entities: [/** your own entities */]
+  //   }
+  // },
   router: { // if undefined, it will disable koa router
     paths: { // router paths
       POST: postPaths

@@ -32,14 +32,16 @@ export class Router extends KoaRouter {
     }
   }
 
-  public static cors(options: CORS): AMiddleware {
+  public static cors(options: CORS, isOpt = false): AMiddleware {
     return async (c, next) => {
       c.set({
         'Access-Control-Allow-Headers': options['Access-Control-Allow-Headers'],
         'Access-Control-Allow-Methods': options['Access-Control-Allow-Methods'].join(', '),
         'Access-Control-Allow-Origin': options['Access-Control-Allow-Origin']
       });
-      c.status = 200;
+      if (isOpt) {
+        c.body = {};
+      }
       next();
     };
   }
@@ -91,10 +93,12 @@ export class Router extends KoaRouter {
         }
         // If CORS is true, set the same path of method OPTIONS.
         if (paths[key].cors) {
-          this.options(path, Router.cors(paths[key].cors as CORS) as any);
+          this.options(path, Router.cors(paths[key].cors as CORS, true) as any);
+          action(path, KoaBody(), Router.cors(paths[key].cors as CORS) as any, paths[key].ware);
           console.log(`${now()}\tLoaded OPTIONS path: ${path} with CORS`);
+        } else {
+          action(path, KoaBody(), paths[key].ware);
         }
-        action(path, KoaBody(), paths[key].ware, Router.cors(paths[key].cors as CORS) as any);
         console.log(`${now()}\tLoaded ${type.toUpperCase()} path: ${path}`);
       }
     }
