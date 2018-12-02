@@ -47,6 +47,9 @@ class Router extends koa_router_1.default {
                 'Access-Control-Allow-Methods': options['Access-Control-Allow-Methods'].join(', '),
                 'Access-Control-Allow-Origin': options['Access-Control-Allow-Origin']
             });
+            c.body = {
+                status: true
+            };
             next();
         });
     }

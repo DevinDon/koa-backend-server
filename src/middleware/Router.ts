@@ -39,6 +39,7 @@ export class Router extends KoaRouter {
         'Access-Control-Allow-Methods': options['Access-Control-Allow-Methods'].join(', '),
         'Access-Control-Allow-Origin': options['Access-Control-Allow-Origin']
       });
+      c.status = 200;
       next();
     };
   }
