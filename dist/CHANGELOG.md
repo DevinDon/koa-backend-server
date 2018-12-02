@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.3.1 => 0.3.2
+
+- Correct wrong override response.
+- If no necessary, don't call next() method in middleware.
+
 ## 0.3.0 => 0.3.1
 
 - Correct CORS OPTIONS status code.

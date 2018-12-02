@@ -3,15 +3,17 @@ import { User } from '../entity';
 import test from './test';
 
 const index: AMiddleware = async (c, next) => {
-  const request = c.request.body;
-  const insert = await User.insert({ name: now(), password: 'any' });
-  const data = await User.find();
+  // const request = c.request.body;
+  // const insert = await User.insert({ name: now(), password: 'any' });
+  // const data = await User.find();
   c.body = {
     status: true,
-    data
+    data: 'working'
   };
   next();
 };
+
+const test1: AMiddleware = async (c, next) => { c.body = { wtf: 'wtf???' }; next(); };
 
 export const postPaths: RouterPaths = {
   '/test': {
@@ -22,6 +24,10 @@ export const postPaths: RouterPaths = {
       'Access-Control-Allow-Methods': ['POST', 'OPTIONS', 'GET'],
       'Access-Control-Allow-Origin': '*'
     }
+  },
+  '/test1': {
+    path: '/test',
+    ware: test1
   },
   'all': {
     path: /\/.*/,
