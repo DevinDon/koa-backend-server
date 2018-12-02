@@ -1,4 +1,4 @@
-import { Connection, createConnection, ConnectionOptions } from 'typeorm';
+import { Connection, ConnectionOptions, createConnection } from 'typeorm';
 
 /**
  * Package database.
