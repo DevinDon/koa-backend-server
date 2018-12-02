@@ -25,10 +25,6 @@ export const postPaths: RouterPaths = {
       'Access-Control-Allow-Origin': '*'
     }
   },
-  '/test1': {
-    path: '/test',
-    ware: test1
-  },
   'all': {
     path: /\/.*/,
     ware: index

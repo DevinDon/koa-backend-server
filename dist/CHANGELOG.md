@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.3.2 => 0.3.3
+
+- Use next() method in CORS middleware.
+- Finally, it works!
+
 ## 0.3.1 => 0.3.2
 
 - Correct wrong override response.
