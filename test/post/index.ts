@@ -1,5 +1,6 @@
-import { AMiddleware, RouterPaths, now } from '../../dist';
+import { AMiddleware, RouterPaths, now } from '../../src';
 import { User } from '../entity';
+import test from './test';
 
 const index: AMiddleware = async (c, next) => {
   // const insert = await User.insert({ name: now(), password: 'any' });
@@ -12,7 +13,14 @@ const index: AMiddleware = async (c, next) => {
 };
 
 export const postPaths: RouterPaths = {
-  '/': index
+  '/test': {
+    path: '/test',
+    ware: test
+  },
+  'all': {
+    path: /\/.*/,
+    ware: index
+  }
 };
 
 export default postPaths;
