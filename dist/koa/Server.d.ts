@@ -53,7 +53,7 @@ export declare class Server {
      * @param {string} host The listening host, default to 0.0.0.0.
      * @returns {HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server} This server instance.
      */
-    listen(port?: number, host?: string): HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server;
+    listen(host?: string, port?: number): HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server;
     /**
      * @returns {Koa} This Koa instance.
      */

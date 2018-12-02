@@ -8,16 +8,24 @@ KBS, Koa Backend Server with **TypeScript**.
 
 **WARNING: This project is currently in an *UNSTABLE* version.**
 
-[Latest Version 0.2.4](https://www.npmjs.com/package/koa-backend-server/v/0.2.4)
+**WARNING: This project is currently in an *UNSTABLE* version.**
+
+**WARNING: This project is currently in an *UNSTABLE* version.**
+
+[Latest Version 0.3.0](https://www.npmjs.com/package/koa-backend-server/v/0.3.0)
 
 ## Change log
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-### 0.2.3 => 0.2.4
+### 0.2.4 => 0.3.0
 
-- Now you can set your API version as the perfix.
-- RESTful methods supported.
+- Rewrite interface KBSConfig.
+- Rewrite interface RouterPaths.
+  - Add regular expression support.
+  - Add CORS, Cross-origin resource sharing support.
+  - Optimized loadPaths method.
+- Use a separate file to define interfaces or types.
 
 ## Installation
 
@@ -30,7 +38,7 @@ npm i --save koa-backend-server
 - *Development dependencies*
 
 ```shell
-npm i --save-dev @types/node typescript ts-node
+npm i --save-dev @types/node @types/koa @types/koa-router @types/koa-session typescript ts-node
 ```
 
 - **DO NOT install koa again!**
@@ -39,61 +47,85 @@ npm i --save-dev @types/node typescript ts-node
 
 ### **Quick start**
 
-It will create a HTTP server which is listening on port 80, and set POST Router `postPaths`.
+*It will create a HTTP server which is listening on port 80.*
 
 ```typescript
 import { Server } from 'koa-backend-server';
-import { User } from './entity';
-import { postPaths } from './post';
+import postPaths from './post';
 
 const server = new Server({
-  database: true, // use ormconfig.json to create connection, or use ConnectionOptions
-  host: 0.0.0.0, // default to 0.0.0.0
-  keys: ['test'], // if undefined, it will disable session middleware
-  // options: { /* ... */ }, // only need in HTTPS / HTTP2 mode
-  paths: { POST: postPaths }, // if undefined, it will disable router middleware
-  port: 80, // default to 80
-  type: 'HTTP', // default to 'HTTP'
-  version: 'v1' // API version
+  address: {
+    portocol: 'HTTP', // required, HTTP, HTTPS or HTTP2
+    host: '0.0.0.0', // optional, default to 0.0.0.0
+    port: 80, // optional, default to 80
+    // ssl: {cert: 'CERT', key: 'KEY'} // required if portocol is HTTPS or HTTP2
+  },
+  database: { // if undefined, it will disable database connection
+    ormconfig: true, // if true, it will use ormconfig.json to connect database, and the connection options will be ignore
+    options: {
+      name: 'default',
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      database: 'database',
+      username: 'username',
+      password: 'password',
+      synchronize: true, // auto generate database table (or document), but you may lost all data of this database
+      logging: true, // log all query statements
+      entities: [/** your own entities */]
+    }
+  },
+  router: { // if undefined, it will disable koa router
+    paths: { // router paths
+      POST: postPaths
+    },
+    version: 'v1' // API version, the prefix of all paths
+  },
+  session: { // if undefined, it will disable koa session
+    keys: ['your', 'secret', 'keys'] // session keys to encrypt the cookies
+  }
 });
 ```
 
-### **Step by step config**
+### **Step by step**
 
-#### 0. First of all, you should know about the KBS config
-
-- *Here is the [KBS config interface](https://github.com/DevinDon/koa-backend-server/blob/master/src/type/index.ts).*
+#### 0. Know about the [interface KBSConfig](https://github.com/DevinDon/koa-backend-server/blob/master/src/type/server.ts).
 
 ```typescript
 /** KBS config. */
 interface KBSConfig {
-  /** Database. */
-  database?: ConnectionOptions | boolean;
-  /** Host. */
-  host?: string;
-  /** Cookie & Session secret keys. */
-  keys?: string[];
-  /** HTTPS / HTTP2 options. */
-  options?: ServerOptions | SecureServerOptions;
-  /** Router paths. */
-  paths?: AllPaths;
-  /** Port. */
-  port?: number;
-  /** Type of KBS, default to 'HTTP'. */
-  type?: 'HTTP' | 'HTTPS' | 'HTTP2';
-  /** API version. */
-  version?: string;
+  /** KBS address. */
+  address: KBSAddress;
+  /** KBS database connection, if undefined it will disable the typeorm connection. */
+  database?: KBSDatabase;
+  /** KBS router, if undefined it will disable the koa router. */
+  router?: KBSRouter;
+  /** KBS session, if undefined it will disable the koa session. */
+  session?: KBSSession;
 }
 ```
 
-#### 1. (Optional) Connect database by [typeorm](https://www.npmjs.com/package/typeorm).
+#### 1. Set your address information.
+
+```typescript
+const address: KBSAddress = {
+  portocol: 'HTTP', // required, HTTP, HTTPS or HTTP2
+  host: '0.0.0.0', // optional, default to 0.0.0.0
+  port: 80, // optional, default to 80
+  // ssl: {cert: 'CERT', key: 'KEY'} // required if portocol is HTTPS or HTTP2
+};
+```
+
+#### 2. (Optional) Connect database via [TypeORM](https://www.npmjs.com/package/typeorm).
 
 - *Using [ormconfig.json](https://www.npmjs.com/package/typeorm#quick-start) to create connection.*
 
 ```typescript
-const database: boolean = true;
+const database: KBSDatabase = {
+  ormconfig: true
+};
 ```
-- *and you should create ormconfig.json file in root dir like this (DO NOT forget to remove comment):*
+- *and you should create ormconfig.json file in root dir like this **(DO NOT forget to remove comment)**:*
 ```json
 {
   "type": "mysql", // database type
@@ -102,7 +134,7 @@ const database: boolean = true;
   "username": "username", // database username
   "password": "password", // database password
   "database": "database", // database name
-  "synchronize": false, // only turn on when you wanna create database, if true you will lost all data of this database
+  "synchronize": true, // auto generate database table (or document), but you may lost all data of this database
   "logging": true, // show query logs
   "entities": [ // entites, means table(SQL) or document(NOSQL)
     "src/entity/**/*.entity.ts"
@@ -115,35 +147,33 @@ const database: boolean = true;
 - *Or using ConnectionOptions to create connection.*
 
 ```typescript
-const database: ConnectionOptions = {
-  name: 'default', // use 'default'
-  type: 'mysql', // database type
-  host: 'localhost', // database host
-  port: 3306, // database port
-  username: 'username', // database username
-  password: 'password', // database password
-  database: 'database', // database name
-  synchronize: false, // only turn on when you're in dev
-  logging: true, // show query logs
-  entities: [ // entites, means table(SQL) or document(NOSQL)
-    User
-  ]
+const database: KBSDatabase = {
+  options: {
+    name: 'default',
+    type: 'mysql',
+    host: 'localhost',
+    port: 3306,
+    database: 'database',
+    username: 'username',
+    password: 'password',
+    synchronize: true, // auto generate database table (or document), but you may lost all data of this database
+    logging: true, // log all query statements
+    entities: [/** your own entities */]
+  }
 };
 ```
 
-#### 2. (Optional) Set the session keys.
+#### 3. (Optional) Set router paths and API version.
 
-```typescript
-const keys: string[] = ['your', 'secret', 'keys'];
-```
-
-#### 3. (Optional) Create router path handlers.
-
-- *Here is the [router path interface](https://github.com/DevinDon/koa-backend-server/blob/master/src/type/index.ts).*
+- *Here is the [router path interface](https://github.com/DevinDon/koa-backend-server/blob/master/src/type/router.ts).*
 
 ```typescript
 interface RouterPaths {
-  [index: string]: IMiddleware | AMiddleware | any;
+  [index: string]: {
+    path: string | RegExp | (string | RegExp)[];
+    ware: any;
+    cors?: CORS;
+  };
 }
 
 interface AllPaths {
@@ -160,49 +190,59 @@ interface AllPaths {
 - *And the paths look like this*.
 
 ```typescript
-import postPaths from './post';
+// post/index.ts
+import { AMiddleware, now, RouterPaths } from 'koa-backend-server';
+import { User } from '../entity';
+import test from './test';
 
-const paths: AllPaths = {
-  GET: {
-    '/': async (c, next) => {
-      const result = User.find();
-      c.body = {
-        status: result ? true : false,
-        data: result
-      };
-      next();
+const index: AMiddleware = async (c, next) => {
+  const request = c.request.body;
+  const insert = await User.insert({ name: now(), password: 'any' });
+  const data = await User.find();
+  c.body = {
+    status: true,
+    data
+  };
+  next();
+};
+
+export const postPaths: RouterPaths = {
+  '/test': {
+    path: '/test',
+    ware: test,
+    cors: {
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Methods': ['POST', 'OPTIONS', 'GET'],
+      'Access-Control-Allow-Origin': '*'
     }
   },
-  POST: postPaths // in other source file
+  'all': {
+    path: /\/.*/,
+    ware: index
+  }
 };
+
+export default postPaths;
 ```
 
-#### 4. (Optional) Set your API version.
+- *Don't forget to define router.*
 
 ```typescript
-const version: string = 'v1';
+// index.ts
+const router: KBSRouter = { // if undefined, it will disable koa router
+  paths: { // router paths
+    POST: postPaths
+  },
+  version: 'v1' // API version, the prefix of all paths
+}
 ```
 
-#### 5. Choose a type of server.
+#### 4. (Optional) Set the session keys.
 
 ```typescript
-const type: 'HTTP' | 'HTTPS' | 'HTTP2' = 'HTTP';
-```
-
-#### 6. Listening on somewhere.
-
-- *Anywhere you want.*
-
-```typescript
-const host: string = 'localhost';
-const port: number = 8080;
-```
-
-- *Or use default value.*
-
-```typescript
-// host is default to '0.0.0.0'
-// port is default to 80
+const keys: KBSSession = {
+  keys: ['your', 'secret', 'keys']
+};
 ```
 
 #### 7. And now, it looks like this.
@@ -210,41 +250,47 @@ const port: number = 8080;
 - *Enter point: index.ts*
 
 ```typescript
-import { AllPaths, Server } from '../dist';
-import { User } from './entity';
+import { KBSAddress, KBSDatabase, KBSRouter, KBSSession, Server } from 'koa-backend-server';
 import postPaths from './post';
 
-const database: boolean = true;
-
-const keys: string[] = ['your', 'secret', 'keys'];
-
-const paths: AllPaths = {
-  GET: {
-    '/': async (c, next) => {
-      const result = User.find();
-      c.body = {
-        status: result ? true : false,
-        data: result
-      };
-      next();
-    }
-  },
-  POST: postPaths
+const address: KBSAddress = {
+  portocol: 'HTTP', // required, HTTP, HTTPS or HTTP2
+  host: '0.0.0.0', // optional, default to 0.0.0.0
+  port: 80, // optional, default to 80
+  // ssl: {cert: 'CERT', key: 'KEY'} // required if portocol is HTTPS or HTTP2
 };
 
-const host: string = 'localhost';
-const port: number = 80;
-const type: 'HTTP' | 'HTTPS' | 'HTTP2' = 'HTTP';
-const version: string = 'v1';
+const database: KBSDatabase = {
+  options: {
+    name: 'default',
+    type: 'mysql',
+    host: 'localhost',
+    port: 3306,
+    database: 'database',
+    username: 'username',
+    password: 'password',
+    synchronize: true, // auto generate database table (or document), but you may lost all data of this database
+    logging: true, // log all query statements
+    entities: [/** your own entities */]
+  }
+};
+
+const router: KBSRouter = { // if undefined, it will disable koa router
+  paths: { // router paths
+    POST: postPaths
+  },
+  version: 'v1' // API version, the prefix of all paths
+};
+
+const session: KBSSession = { // if undefined, it will disable koa session
+  keys: ['your', 'secret', 'keys'] // session keys to encrypt the cookies
+};
 
 const server: Server = new Server({
+  address,
   database,
-  host,
-  keys,
-  paths,
-  port,
-  type,
-  version
+  router,
+  session
 });
 ```
 
@@ -268,7 +314,7 @@ const server: Server = new Server({
 ┗━ tslint.json
 ```
 
-### Advanced usage
+### **Advanced usage**
 
 #### Use your own middlewares.
 
