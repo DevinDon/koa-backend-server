@@ -7,6 +7,7 @@ const http_1 = __importDefault(require("http"));
 const http2_1 = __importDefault(require("http2"));
 const https_1 = __importDefault(require("https"));
 const koa_1 = __importDefault(require("koa"));
+const koa_static_1 = __importDefault(require("koa-static"));
 const database_1 = require("../database");
 const middleware_1 = require("../middleware");
 const util_1 = require("../util");
@@ -71,6 +72,9 @@ class Server {
         if (config.router) {
             this.router = new middleware_1.Router(config.router.paths, config.router.version);
             this.use(this.router.ware);
+            if (config.router.static) {
+                this.use(koa_static_1.default(config.router.static.path, config.router.static.options));
+            }
         }
         this.listen(config.address.host, config.address.port);
     }

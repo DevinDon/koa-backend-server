@@ -27,6 +27,9 @@ const server = new Server({
     paths: { // router paths
       POST: postPaths
     },
+    static: {
+      path: 'test/'
+    },
     version: 'v1' // API version, the prefix of all paths
   },
   session: { // if undefined, it will disable koa session

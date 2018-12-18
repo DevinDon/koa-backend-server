@@ -2,6 +2,7 @@ import HTTP from 'http';
 import HTTP2 from 'http2';
 import HTTPS from 'https';
 import Koa, { Middleware } from 'koa';
+import KoaStatic from 'koa-static';
 import { Database } from '../database';
 import { Router, Session } from '../middleware';
 import { KBSConfig } from '../type';
@@ -78,6 +79,9 @@ export class Server {
     if (config.router) {
       this.router = new Router(config.router.paths, config.router.version);
       this.use(this.router.ware);
+      if (config.router.static) {
+        this.use(KoaStatic(config.router.static.path, config.router.static.options));
+      }
     }
     this.listen(config.address.host, config.address.port);
   }
