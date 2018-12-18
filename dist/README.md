@@ -12,16 +12,14 @@ KBS, Koa Backend Server with **TypeScript**.
 
 **WARNING: This project is currently in an *UNSTABLE* version.**
 
-[Latest Version 0.3.2](https://www.npmjs.com/package/koa-backend-server/v/0.3.2)
-
 ## Change log
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-### 0.3.2 => 0.3.3
+### 0.3.3 => 0.3.4
 
-- Use next() method in CORS middleware.
-- Finally, it works!
+- Update dependencies.
+- Add static files supported(Without version prefix).
 
 ### 0.2.4 => 0.3.0
 
@@ -83,6 +81,10 @@ const server = new Server({
   router: { // if undefined, it will disable koa router
     paths: { // router paths
       POST: postPaths
+    },
+    static: { // static files dir, without version prefix
+      path: 'static/files/dir',
+      options: { /* Some options. */ }
     },
     version: 'v1' // API version, the prefix of all paths
   },
@@ -238,6 +240,10 @@ const router: KBSRouter = { // if undefined, it will disable koa router
   paths: { // router paths
     POST: postPaths
   },
+  static: { // static files dir, without version prefix
+    path: 'static/files/dir',
+    options: { /* Some options. */ }
+  },
   version: 'v1' // API version, the prefix of all paths
 }
 ```
@@ -250,7 +256,7 @@ const keys: KBSSession = {
 };
 ```
 
-#### 7. And now, it looks like this.
+#### 5. And now, it looks like this.
 
 - *Enter point: index.ts*
 
@@ -283,6 +289,10 @@ const database: KBSDatabase = {
 const router: KBSRouter = { // if undefined, it will disable koa router
   paths: { // router paths
     POST: postPaths
+  },
+  static: { // static files dir, without version prefix
+    path: 'static/files/dir',
+    options: { /* Some options. */ }
   },
   version: 'v1' // API version, the prefix of all paths
 };

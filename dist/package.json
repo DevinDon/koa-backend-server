@@ -1,6 +1,6 @@
 {
   "name": "koa-backend-server",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Koa Backend Server.",
   "main": "index.js",
   "repository": {
@@ -18,17 +18,18 @@
     "koa": "^2.6.2",
     "koa-body": "^4.0.4",
     "koa-router": "^7.4.0",
-    "koa-session": "^5.10.0",
-    "reflect-metadata": "^0.1.12",
-    "typeorm": "^0.2.9"
+    "koa-session": "^5.10.1",
+    "koa-static": "^5.0.0",
+    "mysql": "^2.16.0",
+    "typeorm": "^0.2.9",
+    "typescript": "^3.2.2"
   },
   "devDependencies": {
-    "@types/koa": "^2.0.46",
-    "@types/koa-router": "^7.0.33",
+    "@types/koa": "^2.0.47",
+    "@types/koa-router": "^7.0.35",
     "@types/koa-session": "^5.7.4",
-    "@types/node": "^10.12.5",
-    "ts-node": "^7.0.1",
-    "typescript": "^3.1.6"
+    "@types/koa-static": "^4.0.0",
+    "ts-node": "^7.0.1"
   },
   "bugs": {
     "url": "https://github.com/devindon/koa-backend-server/issues"
