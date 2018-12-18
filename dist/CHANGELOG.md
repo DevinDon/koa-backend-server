@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.3.3 => 0.3.4
+
+- Update dependencies.
+- Add static files supported.
+
 ## 0.3.2 => 0.3.3
 
 - Use next() method in CORS middleware.
