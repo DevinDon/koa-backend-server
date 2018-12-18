@@ -1,6 +1,7 @@
 /// <reference types="node" />
 import { SecureServerOptions } from 'http2';
 import { ServerOptions } from 'https';
+import KoaStatic from 'koa-static';
 import { ConnectionOptions } from 'typeorm';
 import { AllPaths } from './router';
 /** KBS address. */
@@ -25,6 +26,11 @@ export interface KBSDatabase {
 export interface KBSRouter {
     /** All paths of KBS router. */
     paths: AllPaths;
+    /** Static files root dir path. */
+    static?: {
+        path: string;
+        options?: KoaStatic.Options;
+    };
     /** API version, prefix of all paths. */
     version?: string;
 }
