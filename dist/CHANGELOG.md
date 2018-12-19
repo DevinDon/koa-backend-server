@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.3.4 => 0.3.5
+
+- Add types declare into dependencies so that you don't need to install them by yourself.
+
 ## 0.3.3 => 0.3.4
 
 - Update dependencies.

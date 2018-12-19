@@ -16,10 +16,9 @@ KBS, Koa Backend Server with **TypeScript**.
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-### 0.3.3 => 0.3.4
+### 0.3.4 => 0.3.5
 
-- Update dependencies.
-- Add static files supported(Without version prefix).
+- Add types declare into dependencies so that you don't need to install them by yourself.
 
 ### 0.2.4 => 0.3.0
 
