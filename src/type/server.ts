@@ -1,9 +1,12 @@
 import { SecureServerOptions } from 'http2';
 import { ServerOptions } from 'https';
 import KoaStatic from 'koa-static';
+import { Options } from 'redisession';
 import { ConnectionOptions } from 'typeorm';
 import { AllPaths } from './router';
-import { Session, Options } from 'redisession';
+
+/** RediSession options. */
+export type KBSSession = Options;
 
 /** KBS address. */
 export interface KBSAddress {
@@ -47,5 +50,5 @@ export interface KBSConfig {
   /** KBS router, if undefined it will disable the koa router. */
   router?: KBSRouter;
   /** KBS session, if undefined it will disable the koa session. */
-  session?: Options;
+  session?: KBSSession;
 }
