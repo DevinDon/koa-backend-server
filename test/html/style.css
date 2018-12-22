@@ -1,0 +1,10 @@
+html {
+  font-family: 'Segoe UI', '微软雅黑', '黑体', sans-serif;
+  transition: all;
+  transition-duration: 250ms;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
