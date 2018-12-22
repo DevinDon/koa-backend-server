@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style.css">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    body>div {
+      display: flex;
+      flex-direction: column;
+      margin: 0.25rem;
+    }
+  </style>
+  <script src="./jquery-3.3.1.min.js"></script>
+  <title>AJAX</title>
+</head>
+
+<body>
+  <div>
+    <label for="">Name:</label>
+    <input type="text" id="name" placeholder="Name">
+  </div>
+  <div>
+    <label for="">Password:</label>
+    <input type="password" id="password">
+  </div>
+  <div>
+    <button id="submit" onclick="submit()">Submit</button>
+  </div>
+  <div id="message"></div>
+</body>
+
+<script>
+  const $name = $('#name');
+  const $password = $('#password');
+  const $submit = $('#submit');
+  const $message = $('#message');
+
+  function submit() {
+    $.post(
+      'v1/submit',
+      { name: $name.val(), password: $password.val() },
+      data => console.log(data)
+    );
+  }
+
+  $(document).ready(() => {
+    $('body').on('keyup', () => {
+      $submit.attr('disabled', true);
+      if (!$name.val()) {
+        $message.text('用户名不能为空');
+      } else if ($name.val().length < 3 || $name.val().length > 10) {
+        $message.text('用户名长度不符.');
+      } else if (!$password.val()) {
+        $message.text('密码不能为空');
+      } else if ($password.val().length < 3 || $password.val().length > 10) {
+        $message.text('密码长度不符');
+      } else {
+        $message.text('');
+        $submit.attr('disabled', false);
+      }
+    });
+  });
+
+</script>
+
+</html>
