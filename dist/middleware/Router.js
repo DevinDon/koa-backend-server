@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -22,6 +14,7 @@ class Router extends koa_router_1.default {
     /**
      * Generate router.
      * @param {AllPaths} allPaths All router paths.
+     * @param {string} version API version prefix.
      */
     constructor(allPaths, version) {
         super();
@@ -40,18 +33,24 @@ class Router extends koa_router_1.default {
             console.warn(`${util_1.now()}\tThere is no router path has been set.`);
         }
     }
-    static cors(options, isOpt = false) {
-        return (c, next) => __awaiter(this, void 0, void 0, function* () {
+    /**
+     * Generate CORS middleware.
+     * @param {CORS} options CORS options.
+     * @param {boolean} isOPTIONS Is OPTIONS method or not.
+     * @returns {Middleware} CORS middleware.
+     */
+    static CORS(options, isOPTIONS = false) {
+        return async (c, next) => {
             c.set({
                 'Access-Control-Allow-Headers': options['Access-Control-Allow-Headers'],
                 'Access-Control-Allow-Methods': options['Access-Control-Allow-Methods'].join(', '),
                 'Access-Control-Allow-Origin': options['Access-Control-Allow-Origin']
             });
-            if (isOpt) {
+            if (isOPTIONS) {
                 c.body = {};
             }
-            next();
-        });
+            await next();
+        };
     }
     /**
      * Load all router paths.
@@ -71,7 +70,7 @@ class Router extends koa_router_1.default {
      * Load router paths of special method.
      * @param {Methods} type Type of method.
      * @param {RouterPaths} paths Router paths.
-     * @returns {void} void
+     * @returns {void} void.
      */
     loadPaths(type, paths) {
         let action;
@@ -116,9 +115,9 @@ class Router extends koa_router_1.default {
                 }
                 // If CORS is true, set the same path of method OPTIONS.
                 if (paths[key].cors) {
-                    this.options(path, Router.cors(paths[key].cors, true));
+                    this.options(path, Router.CORS(paths[key].cors, true));
                     // console.log(`${now()}\tLoaded OPTIONS path: ${path} with CORS`);
-                    action(path, koa_body_1.default(), paths[key].ware, Router.cors(paths[key].cors));
+                    action(path, koa_body_1.default(), paths[key].ware, Router.CORS(paths[key].cors));
                     console.log(`${util_1.now()}\tLoaded ${type.toUpperCase()} path: ${path} with CORS`);
                 }
                 else {

@@ -8,6 +8,7 @@ import { KBSConfig } from '../type';
  * KBS, Koa Backend Server.
  */
 export declare class Server {
+    private config;
     /** Koa. */
     private application;
     /** Server. */
@@ -19,26 +20,8 @@ export declare class Server {
     /** Database. */
     private database?;
     /**
-     * Create a KBS.
-     * @param {KBSConfig} config KBS Server options, include:
-     *
-     * database?: ConnectionOptions | boolean; // Database connection, if undefined it will disable database connection;
-     * if true, it will use ormconfig.json to create connection;
-     * if ConnectionOptions, it will use your own config to create connection.
-     *
-     * host?: string; // Listening host, default to 0.0.0.0.
-     *
-     * keys?: string[]; // Cookie & Session secret keys, if undefined it will disable session middleware.
-     *
-     * options?: ServerOptions | SecureServerOptions; // HTTPS / HTTP2 options, default to undefined.
-     *
-     * paths?: AllPaths; // Router paths, if undefined it will disable router middleware.
-     *
-     * port?: number; // Listening port, default to 80.
-     *
-     * type?: 'HTTP' | 'HTTPS' | 'HTTP2'; // Type of KBS, default to 'HTTP'.
-     *
-     * version?: string; // API version.
+     * Create a KBS, Koa Backend Server.
+     * @param {KBSConfig} config KBS Server options.
      */
     constructor(config: KBSConfig);
     /**
