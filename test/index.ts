@@ -23,21 +23,22 @@ const server = new Server({
     //   entities: [/** your own entities */]
     // }
   },
-  router: { // If undefined, it will disable koa router.
+  router: { // if undefined, it will disable koa router
     paths: { // router paths
       POST: postPaths
     },
-    static: { // Static files path.
-      path: 'test/html/'
+    static: { // static files dir, without version prefix
+      path: 'static/files/dir',
+      options: { /* Some options. */ }
     },
-    version: 'v1' // API version, the prefix of all paths.
+    version: 'v1' // API version, the prefix of all paths
   },
   session: { // If undefined, it will disable redisession.
-    name: 'session.id',
-    domain: 'your.domain',
+    name: 'session.id', // cookie name
+    domain: 'your.domain', // domain
     httpOnly: true,
-    secert: ['keys'],
-    redis: {
+    secert: ['keys'], // secert keys
+    redis: { // redis connection options
       host: 'your.redis.address',
       port: 6379
     }
