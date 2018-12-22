@@ -3,6 +3,7 @@ import { ServerOptions } from 'https';
 import KoaStatic from 'koa-static';
 import { ConnectionOptions } from 'typeorm';
 import { AllPaths } from './router';
+import { Session, Options } from 'redisession';
 
 /** KBS address. */
 export interface KBSAddress {
@@ -37,12 +38,6 @@ export interface KBSRouter {
   version?: string;
 }
 
-/** KBS session, if undefined it will disable the koa session. */
-export interface KBSSession {
-  /** KBS session keys, encrypted cookies. */
-  keys: string[];
-}
-
 /** KBS config. */
 export interface KBSConfig {
   /** KBS address. */
@@ -52,5 +47,5 @@ export interface KBSConfig {
   /** KBS router, if undefined it will disable the koa router. */
   router?: KBSRouter;
   /** KBS session, if undefined it will disable the koa session. */
-  session?: KBSSession;
+  session?: Options;
 }
