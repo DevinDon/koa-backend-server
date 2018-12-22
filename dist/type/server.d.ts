@@ -2,8 +2,11 @@
 import { SecureServerOptions } from 'http2';
 import { ServerOptions } from 'https';
 import KoaStatic from 'koa-static';
+import { Options } from 'redisession';
 import { ConnectionOptions } from 'typeorm';
 import { AllPaths } from './router';
+/** RediSession options. */
+export declare type KBSSession = Options;
 /** KBS address. */
 export interface KBSAddress {
     /** KBS portocol. */
@@ -33,11 +36,6 @@ export interface KBSRouter {
     };
     /** API version, prefix of all paths. */
     version?: string;
-}
-/** KBS session, if undefined it will disable the koa session. */
-export interface KBSSession {
-    /** KBS session keys, encrypted cookies. */
-    keys: string[];
 }
 /** KBS config. */
 export interface KBSConfig {
