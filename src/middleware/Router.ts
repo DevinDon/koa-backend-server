@@ -1,7 +1,7 @@
 import { Middleware } from 'koa';
 import KoaBody from 'koa-body';
 import KoaRouter from 'koa-router';
-import { AllPaths, AMiddleware, CORS, Methods, RouterPaths } from '../type';
+import { AllPaths, CORS, Methods, RouterPaths } from '../type';
 import { now } from '../util';
 
 /**
@@ -13,6 +13,7 @@ export class Router extends KoaRouter {
   /**
    * Generate router.
    * @param {AllPaths} allPaths All router paths.
+   * @param {string} version API version prefix.
    */
   constructor(
     allPaths?: AllPaths,
@@ -32,17 +33,23 @@ export class Router extends KoaRouter {
     }
   }
 
-  public static cors(options: CORS, isOpt = false): AMiddleware {
+  /**
+   * Generate CORS middleware.
+   * @param {CORS} options CORS options.
+   * @param {boolean} isOPTIONS Is OPTIONS method or not.
+   * @returns {Middleware} CORS middleware.
+   */
+  public static CORS(options: CORS, isOPTIONS = false): Middleware {
     return async (c, next) => {
       c.set({
         'Access-Control-Allow-Headers': options['Access-Control-Allow-Headers'],
         'Access-Control-Allow-Methods': options['Access-Control-Allow-Methods'].join(', '),
         'Access-Control-Allow-Origin': options['Access-Control-Allow-Origin']
       });
-      if (isOpt) {
+      if (isOPTIONS) {
         c.body = {};
       }
-      next();
+      await next();
     };
   }
 
@@ -65,7 +72,7 @@ export class Router extends KoaRouter {
    * Load router paths of special method.
    * @param {Methods} type Type of method.
    * @param {RouterPaths} paths Router paths.
-   * @returns {void} void
+   * @returns {void} void.
    */
   public loadPaths(type: Methods, paths: RouterPaths): void {
     let action: any;
@@ -93,9 +100,9 @@ export class Router extends KoaRouter {
         }
         // If CORS is true, set the same path of method OPTIONS.
         if (paths[key].cors) {
-          this.options(path, Router.cors(paths[key].cors as CORS, true) as any);
+          this.options(path, Router.CORS(paths[key].cors as CORS, true) as any);
           // console.log(`${now()}\tLoaded OPTIONS path: ${path} with CORS`);
-          action(path, KoaBody(), paths[key].ware, Router.cors(paths[key].cors as CORS) as any);
+          action(path, KoaBody(), paths[key].ware, Router.CORS(paths[key].cors as CORS) as any);
           console.log(`${now()}\tLoaded ${type.toUpperCase()} path: ${path} with CORS`);
         } else {
           action(path, KoaBody(), paths[key].ware);
