@@ -4,7 +4,7 @@
 
 KBS, Koa Backend Server with **TypeScript**.
 
-## Version
+# Version
 
 **WARNING: This project is currently in an *UNSTABLE* version.**
 
@@ -12,24 +12,19 @@ KBS, Koa Backend Server with **TypeScript**.
 
 **WARNING: This project is currently in an *UNSTABLE* version.**
 
-## Change log
+# Change log
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-### 0.3.4 => 0.3.5
+## 0.3.5 => 0.4.0
 
-- Add types declare into dependencies so that you don't need to install them by yourself.
+- Remove koa-session package.
+- Use redisession package with redis supported.
+**- Remove interface AMiddleware, use default interface Middleware.**
+- Rewrite CORS middleware.
+- Now you should use the KBS.listen() method to start listening.
 
-### 0.2.4 => 0.3.0
-
-- Rewrite interface KBSConfig.
-- Rewrite interface RouterPaths.
-  - Add regular expression support.
-  - Add CORS, Cross-origin resource sharing support.
-  - Optimized loadPaths method.
-- Use a separate file to define interfaces or types.
-
-## Installation
+# Installation
 
 - *This package*
 
@@ -37,69 +32,72 @@ KBS, Koa Backend Server with **TypeScript**.
 npm i --save koa-backend-server
 ```
 
-- *Development dependencies*
+- **DO NOT install koa and other dependencies again!**
 
-```shell
-npm i --save-dev @types/node @types/koa @types/koa-router @types/koa-session typescript ts-node
-```
+# Usage
 
-- **DO NOT install koa again!**
-
-## Usage
-
-### **Quick start**
+## **Quick start**
 
 *It will create a HTTP server which is listening on port 80.*
 
 ```typescript
-import { Server } from 'koa-backend-server';
+import { Server } from '../src';
 import postPaths from './post';
 
 const server = new Server({
   address: {
-    portocol: 'HTTP', // required, HTTP, HTTPS or HTTP2
-    host: '0.0.0.0', // optional, default to 0.0.0.0
-    port: 80, // optional, default to 80
-    // ssl: {cert: 'CERT', key: 'KEY'} // required if portocol is HTTPS or HTTP2
+    portocol: 'HTTP', // Required, HTTP, HTTPS or HTTP2.
+    host: '0.0.0.0', // Optional, default to 0.0.0.0.
+    port: 80, // Optional, default to 80.
+    // ssl: {cert: 'CERT', key: 'KEY'} // Required if portocol is HTTPS or HTTP2.
   },
-  database: { // if undefined, it will disable database connection
-    ormconfig: true, // if true, it will use ormconfig.json to connect database, and the connection options will be ignore
-    options: {
-      name: 'default',
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      database: 'database',
-      username: 'username',
-      password: 'password',
-      synchronize: true, // auto generate database table (or document), but you may lost all data of this database
-      logging: true, // log all query statements
-      entities: [/** your own entities */]
-    }
+  database: { // If undefined, it will disable database connection
+    ormconfig: true, // If true, it will use ormconfig.json to connect database, and the connection options will be ignore
+    // options: { // Your own database options.
+    //   name: 'default',
+    //   type: 'mysql',
+    //   host: 'localhost',
+    //   port: 3306,
+    //   database: 'database',
+    //   username: 'username',
+    //   password: 'password',
+    //   synchronize: true, // auto generate database table (or document), but you may lost all data of this database
+    //   logging: true, // log all query statements
+    //   entities: [/** your own entities */]
+    // }
   },
-  router: { // if undefined, it will disable koa router
+  router: { // If undefined, it will disable koa router.
     paths: { // router paths
       POST: postPaths
     },
-    static: { // static files dir, without version prefix
-      path: 'static/files/dir',
-      options: { /* Some options. */ }
+    static: { // Static files path.
+      path: 'test/html/'
     },
-    version: 'v1' // API version, the prefix of all paths
+    version: 'v1' // API version, the prefix of all paths.
   },
-  session: { // if undefined, it will disable koa session
-    keys: ['your', 'secret', 'keys'] // session keys to encrypt the cookies
+  session: { // If undefined, it will disable redisession.
+    name: 'session.id',
+    domain: 'your.domain',
+    httpOnly: true,
+    secert: ['keys'],
+    redis: {
+      host: 'your.redis.address',
+      port: 6379
+    }
   }
 });
+
+// Start listening.
+server.listen();
 ```
 
-### **Step by step**
+## **Step by step**
 
-#### 0. Know about the [interface KBSConfig](https://github.com/DevinDon/koa-backend-server/blob/master/src/type/server.ts).
+### 0. Know about the [interface KBSConfig](https://github.com/DevinDon/koa-backend-server/blob/master/src/type/server.ts).
 
 ```typescript
 /** KBS config. */
-interface KBSConfig {
+export interface KBSConfig {
   /** KBS address. */
   address: KBSAddress;
   /** KBS database connection, if undefined it will disable the typeorm connection. */
@@ -107,11 +105,11 @@ interface KBSConfig {
   /** KBS router, if undefined it will disable the koa router. */
   router?: KBSRouter;
   /** KBS session, if undefined it will disable the koa session. */
-  session?: KBSSession;
+  session?: Options;
 }
 ```
 
-#### 1. Set your address information.
+### 1. Set your address information.
 
 ```typescript
 const address: KBSAddress = {
@@ -122,7 +120,7 @@ const address: KBSAddress = {
 };
 ```
 
-#### 2. (Optional) Connect database via [TypeORM](https://www.npmjs.com/package/typeorm).
+### 2. (Optional) Connect database via [TypeORM](https://www.npmjs.com/package/typeorm).
 
 - *Using [ormconfig.json](https://www.npmjs.com/package/typeorm#quick-start) to create connection.*
 
@@ -169,7 +167,7 @@ const database: KBSDatabase = {
 };
 ```
 
-#### 3. (Optional) Set router paths and API version.
+### 3. (Optional) Set router paths and API version.
 
 - *Here is the [router path interface](https://github.com/DevinDon/koa-backend-server/blob/master/src/type/router.ts).*
 
@@ -205,6 +203,7 @@ const index: AMiddleware = async (c, next) => {
   const request = c.request.body;
   const insert = await User.insert({ name: now(), password: 'any' });
   const data = await User.find();
+  c.session.user = data;
   c.body = {
     status: true,
     data
@@ -244,18 +243,25 @@ const router: KBSRouter = { // if undefined, it will disable koa router
     options: { /* Some options. */ }
   },
   version: 'v1' // API version, the prefix of all paths
-}
-```
-
-#### 4. (Optional) Set the session keys.
-
-```typescript
-const keys: KBSSession = {
-  keys: ['your', 'secret', 'keys']
 };
 ```
 
-#### 5. And now, it looks like this.
+### 4. (Optional) Config your session options.
+
+```typescript
+const session: KBSSession = { // If undefined, it will disable redisession.
+  name: 'session.id', // cookie name
+  domain: 'your.domain', // domain
+  httpOnly: true,
+  secert: ['keys'], // secert keys
+  redis: { // redis connection options
+    host: 'your.redis.address',
+    port: 6379
+  }
+};
+```
+
+### 5. And now, it looks like this.
 
 - *Enter point: index.ts*
 
@@ -296,8 +302,15 @@ const router: KBSRouter = { // if undefined, it will disable koa router
   version: 'v1' // API version, the prefix of all paths
 };
 
-const session: KBSSession = { // if undefined, it will disable koa session
-  keys: ['your', 'secret', 'keys'] // session keys to encrypt the cookies
+const session: KBSSession = { // If undefined, it will disable redisession.
+  name: 'session.id', // cookie name
+  domain: 'your.domain', // domain
+  httpOnly: true,
+  secert: ['keys'], // secert keys
+  redis: { // redis connection options
+    host: 'your.redis.address',
+    port: 6379
+  }
 };
 
 const server: Server = new Server({
@@ -306,6 +319,8 @@ const server: Server = new Server({
   router,
   session
 });
+
+server.listen();
 ```
 
 - *[Work tree](https://github.com/DevinDon/koa-backend-server/)*
@@ -316,7 +331,8 @@ const server: Server = new Server({
 ┃   ┃   ┣━ index.ts
 ┃   ┃   ┗━ user.entity.ts
 ┃   ┣━ post/
-┃   ┃   ┗━ index.ts
+┃   ┃   ┃━ index.ts
+┃   ┃   ┗━ test.ts
 ┃   ┗━ index.ts
 ┣━ .gitignore
 ┣━ LICENSE
@@ -328,27 +344,27 @@ const server: Server = new Server({
 ┗━ tslint.json
 ```
 
-### **Advanced usage**
+## **Advanced usage**
 
-#### Use your own middlewares.
+### Use your own middlewares.
 
 ```typescript
 server.use(middlewareA, middlewareB, middlewareC, /* ... */);
 ```
 
-#### Some others
+### Some others
 
 Emmm, maybe later?
 
-## Author
+# Author
 
 Devin Don, [Email](mailto:DevinDon@Foxmail.com), [Github](https://github.com/devindon/koa-backend-server), [My Home Page(Under construction)](https://don.red).
 
-## License
+# License
 
 [MIT License](LICENSE)
 
-## Thanks
+# Thanks
 
 [Koa](https://www.npmjs.com/package/koa)
 
