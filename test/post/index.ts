@@ -1,33 +1,24 @@
-import { AMiddleware, now, RouterPaths } from '../../src';
-import { User } from '../entity';
+import { Middleware } from 'koa';
+import { RouterPaths } from '../../src';
 import test from './test';
 
-const index: AMiddleware = async (c, next) => {
-  // const request = c.request.body;
-  // const insert = await User.insert({ name: now(), password: 'any' });
-  // const data = await User.find();
+const index: Middleware = async (c, next) => {
+  c.session.data = c.request.body;
   c.body = {
-    status: true,
-    data: 'working'
+    status: Boolean(c.session),
+    data: c.session
   };
-  next();
+  await next();
 };
 
-const test1: AMiddleware = async (c, next) => { c.body = { wtf: 'wtf???' }; next(); };
-
 export const postPaths: RouterPaths = {
-  '/test': {
-    path: '/test',
-    ware: test,
-    cors: {
-      'Access-Control-Allow-Headers': 'Content-Type',
-      'Access-Control-Allow-Methods': ['POST', 'OPTIONS', 'GET'],
-      'Access-Control-Allow-Origin': '*'
-    }
-  },
-  'all': {
-    path: /\/.*/,
+  'index': {
+    path: '/',
     ware: index
+  },
+  'test': {
+    path: '/test',
+    ware: test
   }
 };
 

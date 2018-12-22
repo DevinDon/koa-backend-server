@@ -1,11 +1,10 @@
-import { AMiddleware } from '../../src';
+import { Middleware } from 'koa';
 
-export const test: AMiddleware = async (c, next) => {
+export const test: Middleware = async (c, next) => {
   c.body = {
-    status: true,
-    data: 'string path'
+    data: c.session
   };
-  next();
+  await next();
 };
 
 export default test;
