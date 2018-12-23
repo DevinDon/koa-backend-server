@@ -102,7 +102,7 @@ export class Router extends KoaRouter {
         if (paths[key].cors) {
           this.options(path, Router.CORS(paths[key].cors as CORS, true) as any);
           // console.log(`${now()}\tLoaded OPTIONS path: ${path} with CORS`);
-          action(path, KoaBody(), paths[key].ware, Router.CORS(paths[key].cors as CORS) as any);
+          action(path, KoaBody(), paths[key].ware, Router.CORS(paths[key].cors as CORS));
           console.log(`${now()}\tLoaded ${type.toUpperCase()} path: ${path} with CORS`);
         } else {
           action(path, KoaBody(), paths[key].ware);

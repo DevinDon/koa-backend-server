@@ -16,11 +16,15 @@ KBS, Koa Backend Server with **TypeScript**.
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
+## 0.4.0 => 0.4.2
+
+- Fixed koa body declare.
+
 ## 0.3.5 => 0.4.0
 
 - Remove koa-session package.
 - Use redisession package with redis supported.
-**- Remove interface AMiddleware, use default interface Middleware.**
+- **Remove interface AMiddleware, use default interface Middleware.**
 - Rewrite CORS middleware.
 - Now you should use the KBS.listen() method to start listening.
 
