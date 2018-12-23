@@ -1,6 +1,6 @@
 # Change Log
 
-## 0.4.0 => 0.4.2
+## 0.4.0 => 0.4.3
 
 - Fixed koa body declare.
 
