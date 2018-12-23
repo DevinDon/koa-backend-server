@@ -16,7 +16,7 @@ KBS, Koa Backend Server with **TypeScript**.
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-## 0.4.0 => 0.4.2
+## 0.4.0 => 0.4.3
 
 - Fixed koa body declare.
 
