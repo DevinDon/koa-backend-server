@@ -52,7 +52,7 @@ export class Server {
       } else if (config.database.options) {
         this.database = new Database(config.database.options);
       } else {
-        console.warn(`There is no connection has been connected.`);
+        console.warn(`${now()}\tThere is no database connection has been connected.`);
       }
     }
     if (config.session) {
@@ -64,9 +64,9 @@ export class Server {
       this.use(this.router.ware);
       if (config.router.static) {
         this.use(KoaStatic(config.router.static.path, config.router.static.options));
+        console.log(`${now()}\tStatic resource path: ${config.router.static.path}`);
       }
     }
-    // this.listen(config.address.host, config.address.port);
   }
 
   /**
