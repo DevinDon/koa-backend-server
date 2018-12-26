@@ -16,7 +16,7 @@ KBS, Koa Backend Server with **TypeScript**.
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-## 0.4.4 => 0.4.5
+## 0.4.4 => 0.4.6
 
 - Fixed cookie expires time.
 - Now you can set prefix in optional.

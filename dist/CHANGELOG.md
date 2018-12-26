@@ -1,6 +1,6 @@
 # Change Log
 
-## 0.4.4 => 0.4.5
+## 0.4.4 => 0.4.6
 
 - Fixed cookie expires time.
 - Now you can set prefix in optional.
