@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.4.4 => 0.4.5
+
+- Fixed cookie expires time.
+- Now you can set prefix in optional.
+
+## 0.4.3 => 0.4.4
+
+- Fixed cookie expires time.
+
 ## 0.4.0 => 0.4.3
 
 - Fixed koa body declare.

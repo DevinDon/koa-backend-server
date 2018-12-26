@@ -1,4 +1,4 @@
-import { Server } from '../dist';
+import { Server } from '../src';
 import postPaths from './post';
 
 const server = new Server({
@@ -35,7 +35,8 @@ const server = new Server({
   },
   session: { // If undefined, it will disable redisession.
     name: 'session.id', // cookie name
-    domain: 'your.domain', // domain
+    domain: 'localhost', // domain
+    maxAge: 7200 * 1000, // 2h, default to 1d
     httpOnly: true,
     secert: ['keys'], // secert keys
     redis: { // redis connection options
