@@ -105,7 +105,7 @@ class Router extends koa_router_1.default {
                 /** Router paths with string or RegExp. */
                 let path = paths[key].path;
                 /** API version prefix. */
-                const prefix = this.version ? '/' + this.version : '';
+                const prefix = (this.version && !paths[key].withoutPrefix) ? '/' + this.version : '';
                 // If the path instanceof RegExp, slice reg and add the prefix to this reg.
                 if (path instanceof RegExp) {
                     path = RegExp(prefix + String(path).slice(1, -1));

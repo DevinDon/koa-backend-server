@@ -7,9 +7,10 @@ export interface CORS {
 /** 路径名: 路径处理方式. */
 export interface RouterPaths {
     [index: string]: {
+        cors?: CORS;
         path: string | RegExp | (string | RegExp)[];
         ware: any;
-        cors?: CORS;
+        withoutPrefix?: boolean;
     };
 }
 /** 所有的路由路径. */

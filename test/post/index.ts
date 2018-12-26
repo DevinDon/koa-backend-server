@@ -18,7 +18,8 @@ export const postPaths: RouterPaths = {
   },
   'test': {
     path: '/test',
-    ware: test
+    ware: test,
+    withoutPrefix: true
   }
 };
 

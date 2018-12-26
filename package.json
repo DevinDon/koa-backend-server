@@ -32,11 +32,11 @@
     "@types/koa-router": "^7.0.35",
     "@types/koa-static": "^4.0.0",
     "koa": "^2.6.2",
-    "koa-body": "^4.0.4",
+    "koa-body": "^4.0.6",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "mysql": "^2.16.0",
-    "redisession": "^0.2.3",
+    "redisession": "^0.2.5",
     "ts-node": "^7.0.1",
     "typeorm": "^0.2.9",
     "typescript": "^3.2.2"

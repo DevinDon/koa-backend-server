@@ -16,9 +16,10 @@ KBS, Koa Backend Server with **TypeScript**.
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-## 0.4.0 => 0.4.3
+## 0.4.4 => 0.4.5
 
-- Fixed koa body declare.
+- Fixed cookie expires time.
+- Now you can set prefix in optional.
 
 ## 0.3.5 => 0.4.0
 
