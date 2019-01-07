@@ -1,5 +1,5 @@
 import { Middleware } from 'koa';
-import { RouterPaths } from '../../src';
+import { RouterPaths } from '../../dist';
 import test from './test';
 
 const index: Middleware = async (c, next) => {

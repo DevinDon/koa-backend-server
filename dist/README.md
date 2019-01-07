@@ -16,6 +16,10 @@ KBS, Koa Backend Server with **TypeScript**.
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
+## 0.4.7 => 0.4.8
+
+- Fixed namespace koa.
+
 ## 0.4.6 => 0.4.7
 
 - Now the Server.use method will return the KBS instance.
@@ -45,7 +49,7 @@ npm i --save koa-backend-server
 *It will create a HTTP server which is listening on port 80.*
 
 ```typescript
-import { Server } from '../src';
+import { Server } from 'koa-backend-server';
 import postPaths from './post';
 
 const server = new Server({

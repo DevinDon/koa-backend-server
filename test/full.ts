@@ -1,4 +1,4 @@
-import { KBSAddress, KBSDatabase, KBSRouter, KBSSession, Server } from '../src';
+import { KBSAddress, KBSDatabase, KBSRouter, KBSSession, Server } from '../dist';
 import postPaths from './post';
 
 const address: KBSAddress = {
@@ -31,7 +31,8 @@ const router: KBSRouter = { // if undefined, it will disable koa router
 };
 
 const session: KBSSession = { // if undefined, it will disable koa session
-  keys: ['your', 'secret', 'keys'] // session keys to encrypt the cookies
+  name: 'session.id',
+  secert: ['your', 'secret', 'keys'] // session keys to encrypt the cookies
 };
 
 const server: Server = new Server({

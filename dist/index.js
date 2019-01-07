@@ -7,5 +7,4 @@ __export(require("./database"));
 __export(require("./koa"));
 __export(require("./middleware"));
 __export(require("./util"));
-// import 'koa-body';
-/// <reference path="koa" />
+require("koa-body");
