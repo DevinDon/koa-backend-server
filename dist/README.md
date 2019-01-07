@@ -16,10 +16,9 @@ KBS, Koa Backend Server with **TypeScript**.
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-## 0.4.4 => 0.4.6
+## 0.4.6 => 0.4.7
 
-- Fixed cookie expires time.
-- Now you can set prefix in optional.
+- Now the Server.use method will return the KBS instance.
 
 ## 0.3.5 => 0.4.0
 
@@ -361,14 +360,6 @@ server.use(middlewareA, middlewareB, middlewareC, /* ... */);
 
 Emmm, maybe later?
 
-# Author
-
-Devin Don, [Email](mailto:DevinDon@Foxmail.com), [Github](https://github.com/devindon/koa-backend-server), [My Home Page(Under construction)](https://don.red).
-
-# License
-
-[MIT License](LICENSE)
-
 # Thanks
 
 [Koa](https://www.npmjs.com/package/koa)
@@ -380,3 +371,11 @@ Devin Don, [Email](mailto:DevinDon@Foxmail.com), [Github](https://github.com/dev
 [Koa Session](https://www.npmjs.com/package/koa-session)
 
 [TypeORM](https://www.npmjs.com/package/typeorm)
+
+# License
+
+[MIT License](LICENSE)
+
+# Author
+
+Devin Don, [Email](mailto:DevinDon@Foxmail.com), [Github](https://github.com/devindon/koa-backend-server), [My Home Page(Under construction)](https://don.red).

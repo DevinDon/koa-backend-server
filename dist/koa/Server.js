@@ -23,7 +23,7 @@ class Server {
     constructor(config) {
         this.config = config;
         this.application = new koa_1.default();
-        switch (config.address.portocol) {
+        switch (config.address.portocol) { // Select portocol.
             case 'HTTP':
                 this.server = http_1.default.createServer(this.application.callback());
                 break;
@@ -38,7 +38,7 @@ class Server {
                 console.log(`${util_1.now()}\tNo such portocol or unset portocol: ${config.address.portocol}, use default portocol HTTP`);
                 break;
         }
-        if (config.database) {
+        if (config.database) { // Create database connection or not.
             if (config.database.ormconfig) {
                 this.database = new database_1.Database();
             }
@@ -49,14 +49,14 @@ class Server {
                 console.warn(`${util_1.now()}\tThere is no database connection has been connected.`);
             }
         }
-        if (config.session) {
+        if (config.session) { // Use session middleware or not.
             this.session = new redisession_1.RediSession(this.application, config.session);
             this.use(this.session.ware);
         }
-        if (config.router) {
+        if (config.router) { // Config router.
             this.router = new middleware_1.Router(config.router.paths, config.router.version);
             this.use(this.router.ware);
-            if (config.router.static) {
+            if (config.router.static && config.router.static.path) {
                 this.use(koa_static_1.default(config.router.static.path, config.router.static.options));
                 console.log(`${util_1.now()}\tStatic resource path: ${config.router.static.path}`);
             }
@@ -65,13 +65,14 @@ class Server {
     /**
      * Use middlewares.
      * @param {Middleware[]} middlewares Middlewares.
-     * @returns {void} void.
+     * @returns {Server} This server.
      */
     use(...middlewares) {
         for (const middleware of middlewares) {
             this.application.use(middleware);
             console.log(`${util_1.now()}\tUse middleware: ${middleware.name || middleware.toString()}`);
         }
+        return this;
     }
     /**
      * Listening on some where.
