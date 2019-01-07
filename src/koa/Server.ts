@@ -31,7 +31,7 @@ export class Server {
    */
   constructor(private config: KBSConfig) {
     this.application = new Koa();
-    switch (config.address.portocol) {
+    switch (config.address.portocol) { // Select portocol.
       case 'HTTP':
         this.server = HTTP.createServer(this.application.callback());
         break;
@@ -46,7 +46,7 @@ export class Server {
         console.log(`${now()}\tNo such portocol or unset portocol: ${config.address.portocol}, use default portocol HTTP`);
         break;
     }
-    if (config.database) {
+    if (config.database) { // Create database connection or not.
       if (config.database.ormconfig) {
         this.database = new Database();
       } else if (config.database.options) {
@@ -55,14 +55,14 @@ export class Server {
         console.warn(`${now()}\tThere is no database connection has been connected.`);
       }
     }
-    if (config.session) {
+    if (config.session) { // Use session middleware or not.
       this.session = new RediSession(this.application, config.session);
       this.use(this.session.ware);
     }
-    if (config.router) {
+    if (config.router) { // Config router.
       this.router = new Router(config.router.paths, config.router.version);
       this.use(this.router.ware);
-      if (config.router.static) {
+      if (config.router.static && config.router.static.path) {
         this.use(KoaStatic(config.router.static.path, config.router.static.options));
         console.log(`${now()}\tStatic resource path: ${config.router.static.path}`);
       }
@@ -72,13 +72,14 @@ export class Server {
   /**
    * Use middlewares.
    * @param {Middleware[]} middlewares Middlewares.
-   * @returns {void} void.
+   * @returns {Server} This server.
    */
-  public use(...middlewares: Middleware[]): void {
+  public use(...middlewares: Middleware[]): Server {
     for (const middleware of middlewares) {
       this.application.use(middleware);
       console.log(`${now()}\tUse middleware: ${middleware.name || middleware.toString()}`);
     }
+    return this;
   }
 
   /**

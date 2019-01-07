@@ -27,9 +27,9 @@ export declare class Server {
     /**
      * Use middlewares.
      * @param {Middleware[]} middlewares Middlewares.
-     * @returns {void} void.
+     * @returns {Server} This server.
      */
-    use(...middlewares: Middleware[]): void;
+    use(...middlewares: Middleware[]): Server;
     /**
      * Listening on some where.
      * @param {number} port Listening port, default to 80.

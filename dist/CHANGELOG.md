@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.4.6 => 0.4.7
+
+- Now the Server.use method will return the KBS instance.
+
 ## 0.4.4 => 0.4.6
 
 - Fixed cookie expires time.
