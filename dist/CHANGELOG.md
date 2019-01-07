@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.4.7 => 0.4.8
+
+- Fixed namespace koa.
+
 ## 0.4.6 => 0.4.7
 
 - Now the Server.use method will return the KBS instance.

@@ -4,5 +4,4 @@ export * from './middleware';
 export * from './type';
 export * from './util';
 
-// import 'koa-body';
-/// <reference path="koa" />
+import 'koa-body';
