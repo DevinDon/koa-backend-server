@@ -76,7 +76,8 @@ export class Router extends KoaRouter {
    */
   public loadPaths(type: Methods, paths: RouterPaths): void {
     let action: any;
-    switch (type.toUpperCase()) {
+    const typeUpperCase = type.toUpperCase();
+    switch (typeUpperCase) {
       case 'DELETE': action = this.delete.bind(this); break;
       case 'GET': action = this.get.bind(this); break;
       case 'HEAD': action = this.head.bind(this); break;
@@ -84,7 +85,7 @@ export class Router extends KoaRouter {
       case 'PATCH': action = this.patch.bind(this); break;
       case 'POST': action = this.post.bind(this); break;
       case 'PUT': action = this.put.bind(this); break;
-      default: console.warn(`${now()}\tUnknown method: ${type.toUpperCase()}`); return;
+      default: console.warn(`${now()}\tUnknown method: ${typeUpperCase}`); return;
     }
     for (const key in paths) {
       if (paths.hasOwnProperty(key)) {
@@ -102,12 +103,21 @@ export class Router extends KoaRouter {
         // If CORS is true, set the same path of method OPTIONS.
         if (paths[key].cors) {
           this.options(path, Router.CORS(paths[key].cors as CORS, true) as any);
-          // console.log(`${now()}\tLoaded OPTIONS path: ${path} with CORS`);
-          action(path, KoaBody(), paths[key].ware, Router.CORS(paths[key].cors as CORS));
-          console.log(`${now()}\tLoaded ${type.toUpperCase()} path: ${path} with CORS`);
+          // Never use KoaBody in OPTIONS and HEAD method
+          if (typeUpperCase === 'OPTIONS' || typeUpperCase === 'HEAD') {
+            action(path, paths[key].ware, Router.CORS(paths[key].cors as CORS));
+          } else {
+            action(path, KoaBody(), paths[key].ware, Router.CORS(paths[key].cors as CORS));
+          }
+          console.log(`${now()}\tLoaded ${typeUpperCase} path: ${path} with CORS`);
         } else {
-          action(path, KoaBody(), paths[key].ware);
-          console.log(`${now()}\tLoaded ${type.toUpperCase()} path: ${path}`);
+          // Never use KoaBody in OPTIONS and HEAD method
+          if (typeUpperCase === 'OPTIONS' || typeUpperCase === 'HEAD') {
+            action(path, paths[key].ware);
+          } else {
+            action(path, KoaBody(), paths[key].ware);
+          }
+          console.log(`${now()}\tLoaded ${typeUpperCase} path: ${path}`);
         }
       }
     }
