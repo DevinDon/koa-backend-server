@@ -94,7 +94,8 @@ export class Router extends KoaRouter {
         const prefix = (this.version && !paths[key].withoutPrefix) ? '/' + this.version : '';
         // If the path instanceof RegExp, slice reg and add the prefix to this reg.
         if (path instanceof RegExp) {
-          path = RegExp(prefix + String(path).slice(1, -1));
+          // path.source
+          path = RegExp(prefix + path.source);
         } else {
           path = prefix + path;
         }
