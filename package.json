@@ -6,7 +6,8 @@
   "scripts": {
     "start": "ts-node src",
     "test": "ts-node test",
-    "build": "tsc"
+    "build": "tsc",
+    "watch": "tsc -w"
   },
   "keywords": [
     "koa",
