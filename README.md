@@ -2,6 +2,6 @@
 
 Source code of Koa Backend Server.
 
-[Change log](dist/CHANGELOG.md)
+See [Change log](dist/CHANGELOG.md)
 
-[Read me](dist/README.md)
+See [Read me](dist/README.md)
