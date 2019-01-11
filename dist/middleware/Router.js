@@ -74,7 +74,8 @@ class Router extends koa_router_1.default {
      */
     loadPaths(type, paths) {
         let action;
-        switch (type.toUpperCase()) {
+        const typeUpperCase = type.toUpperCase();
+        switch (typeUpperCase) {
             case 'DELETE':
                 action = this.delete.bind(this);
                 break;
@@ -97,7 +98,7 @@ class Router extends koa_router_1.default {
                 action = this.put.bind(this);
                 break;
             default:
-                console.warn(`${util_1.now()}\tUnknown method: ${type.toUpperCase()}`);
+                console.warn(`${util_1.now()}\tUnknown method: ${typeUpperCase}`);
                 return;
         }
         for (const key in paths) {
@@ -108,7 +109,8 @@ class Router extends koa_router_1.default {
                 const prefix = (this.version && !paths[key].withoutPrefix) ? '/' + this.version : '';
                 // If the path instanceof RegExp, slice reg and add the prefix to this reg.
                 if (path instanceof RegExp) {
-                    path = RegExp(prefix + String(path).slice(1, -1));
+                    // path.source
+                    path = RegExp(prefix + path.source);
                 }
                 else {
                     path = prefix + path;
@@ -116,13 +118,24 @@ class Router extends koa_router_1.default {
                 // If CORS is true, set the same path of method OPTIONS.
                 if (paths[key].cors) {
                     this.options(path, Router.CORS(paths[key].cors, true));
-                    // console.log(`${now()}\tLoaded OPTIONS path: ${path} with CORS`);
-                    action(path, koa_body_1.default(), paths[key].ware, Router.CORS(paths[key].cors));
-                    console.log(`${util_1.now()}\tLoaded ${type.toUpperCase()} path: ${path} with CORS`);
+                    // Never use KoaBody in OPTIONS and HEAD method
+                    if (typeUpperCase === 'OPTIONS' || typeUpperCase === 'HEAD') {
+                        action(path, paths[key].ware, Router.CORS(paths[key].cors));
+                    }
+                    else {
+                        action(path, koa_body_1.default(), paths[key].ware, Router.CORS(paths[key].cors));
+                    }
+                    console.log(`${util_1.now()}\tLoaded ${typeUpperCase} path: ${path} with CORS`);
                 }
                 else {
-                    action(path, koa_body_1.default(), paths[key].ware);
-                    console.log(`${util_1.now()}\tLoaded ${type.toUpperCase()} path: ${path}`);
+                    // Never use KoaBody in OPTIONS and HEAD method
+                    if (typeUpperCase === 'OPTIONS' || typeUpperCase === 'HEAD') {
+                        action(path, paths[key].ware);
+                    }
+                    else {
+                        action(path, koa_body_1.default(), paths[key].ware);
+                    }
+                    console.log(`${util_1.now()}\tLoaded ${typeUpperCase} path: ${path}`);
                 }
             }
         }
