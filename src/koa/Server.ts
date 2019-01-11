@@ -17,6 +17,8 @@ export class Server {
 
   /** Koa. */
   private application: Koa;
+  /** Config. */
+  private config: KBSConfig;
   /** Server. */
   private server: HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server;
   /** Session. */
@@ -30,33 +32,47 @@ export class Server {
    * Create a KBS, Koa Backend Server.
    * @param {KBSConfig} config KBS Server options.
    */
-  constructor(private config: KBSConfig) {
-    this.application = new Koa();
-
+  constructor(config?: KBSConfig) {
+    // Load config from profile.
     try {
-      // Load config from profile.
       const json: KBSConfig = JSON.parse(readFileSync('server.config.json').toString());
       // The profile will cover config.
-      config = Object.assign({}, config, json);
+      this.config = Object.assign({}, json, config);
+      for (const key in this.config) {
+        if (this.config.hasOwnProperty(key)) {
+          Object.assign(this.config[key], json[key]);
+        }
+      }
+      console.log(this.config);
     } catch (err) {
       console.log(`${now()}\tProfile server.config.json not found or cannot be parse, disable it, detail: ${err}`);
     }
+    // Init KBS.
+    this.init();
+  }
 
+  /**
+   * Init KBS.
+   * @returns {Promise<void>} Void.
+   */
+  private async init(): Promise<void> {
+
+    this.application = new Koa();
     // Create server.
-    if (config.address) { // Select portocol.
-      switch (config.address.portocol) {
+    if (this.config.address) { // Select portocol.
+      switch (this.config.address.portocol) {
         case 'HTTP':
           this.server = HTTP.createServer(this.application.callback());
           break;
         case 'HTTP2':
-          this.server = HTTP2.createSecureServer(config.address.ssl || {}, this.application.callback());
+          this.server = HTTP2.createSecureServer(this.config.address.ssl || {}, this.application.callback());
           break;
         case 'HTTPS':
-          this.server = HTTPS.createServer(config.address.ssl || {}, this.application.callback());
+          this.server = HTTPS.createServer(this.config.address.ssl || {}, this.application.callback());
           break;
         default:
           this.server = HTTP.createServer(this.application.callback());
-          console.log(`${now()}\tUnkoown portocol or unset portocol: ${config.address.portocol}, use default portocol HTTP`);
+          console.log(`${now()}\tUnkoown portocol or unset portocol: ${this.config.address.portocol}, use default portocol HTTP`);
           break;
       }
     } else { // Default to HTTP.
@@ -65,34 +81,34 @@ export class Server {
     }
 
     // Create database connection or not.
-    if (config.database) {
-      this.database = new Database(config.database.options);
-      console.log(`${now()}\tDatabase connected.`);
+    if (this.config.database) {
+      this.database = new Database(this.config.database);
     } else {
       console.log(`${now()}\tDatabase not connected.`);
     }
 
     // Use session middleware or not.
-    if (config.session) {
-      this.session = new RediSession(this.application, config.session);
+    if (this.config.session) {
+      this.session = new RediSession(this.application, this.config.session);
       this.use(this.session.ware);
     } else {
       console.log(`${now()}\tSession service not provided.`);
     }
 
     // Config router or not.
-    if (config.router) {
-      this.router = new Router(config.router.paths, config.router.version);
+    if (this.config.router) {
+      this.router = new Router(this.config.router.paths, this.config.router.version);
       this.use(this.router.ware);
-      if (config.router.static && config.router.static.path) {
-        this.use(KoaStatic(config.router.static.path, config.router.static.options));
-        console.log(`${now()}\tStatic resource path: ${config.router.static.path}`);
+      if (this.config.router.static && this.config.router.static.path) {
+        this.use(KoaStatic(this.config.router.static.path, this.config.router.static.options));
+        console.log(`${now()}\tStatic resource path: ${this.config.router.static.path}`);
       } else {
         console.log(`${now()}\tStatic server service not provided.`);
       }
     } else {
       console.warn(`${now()}\tRouting service not provided.`);
     }
+
   }
 
   /**
@@ -110,16 +126,22 @@ export class Server {
 
   /**
    * Listening on some where.
-   * @param {number} port Listening port, default to 80.
+   * @param {number} port Listening port, default to 8080.
    * @param {string} host The listening host, default to 0.0.0.0.
-   * @returns {HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server} This server instance.
+   * @returns {Promise<Server>} This server.
    */
-  public listen(host?: string, port?: number): HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server {
-    return this.server.listen(
-      port = port || (this.config.address && this.config.address.port) || 80,
+  public async listen(host?: string, port?: number): Promise<Server> {
+    if (this.database) {
+      console.log(`${now()}\tConnecting to database, please wait...`);
+      await this.database.connect();
+      console.log(`${now()}\tDatabase connected.`);
+    }
+    this.server.listen(
+      port = port || (this.config.address && this.config.address.port) || 8080,
       host = host || (this.config.address && this.config.address.host) || '0.0.0.0',
       () => console.log(`${now()}\tServer online, address is ${host}:${port}`)
     );
+    return this;
   }
 
   /**

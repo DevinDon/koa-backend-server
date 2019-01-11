@@ -38,6 +38,7 @@ export type KBSSession = Options;
 
 /** KBS config. */
 export interface KBSConfig {
+  [index: string]: any;
   /** KBS address. */
   address?: KBSAddress;
   /** KBS database connection, if undefined it will disable the typeorm connection. */
