@@ -11,21 +11,19 @@ export type KBSSession = Options;
 /** KBS address. */
 export interface KBSAddress {
   /** KBS portocol. */
-  portocol: 'HTTP' | 'HTTPS' | 'HTTP2';
+  portocol?: 'HTTP' | 'HTTPS' | 'HTTP2';
   /** KBS host. */
   host?: string;
   /** KBS port. */
   port?: number;
-  /** KBS ssl options, only need in secure server (HTTPS and HTTP2). */
+  /** KBS ssl options, only required in secure server (HTTPS or HTTP2). */
   ssl?: ServerOptions | SecureServerOptions;
 }
 
 /** KBS database connection, if undefined it will disable the typeorm connection. */
 export interface KBSDatabase {
-  /** Use the ormconfig.json file to connect database. */
-  ormconfig?: boolean;
   /** Use your own options to connect database. */
-  options?: ConnectionOptions;
+  options: ConnectionOptions;
 }
 
 /** KBS router, if undefined it will disable the koa router. */
@@ -44,11 +42,11 @@ export interface KBSRouter {
 /** KBS config. */
 export interface KBSConfig {
   /** KBS address. */
-  address: KBSAddress;
+  address?: KBSAddress;
   /** KBS database connection, if undefined it will disable the typeorm connection. */
   database?: KBSDatabase;
   /** KBS router, if undefined it will disable the koa router. */
   router?: KBSRouter;
-  /** KBS session, if undefined it will disable the koa session. */
+  /** KBS session, if undefined it will disable the KBS session. */
   session?: KBSSession;
 }
