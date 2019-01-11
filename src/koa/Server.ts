@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs';
 import HTTP from 'http';
 import HTTP2 from 'http2';
 import HTTPS from 'https';
@@ -31,41 +32,66 @@ export class Server {
    */
   constructor(private config: KBSConfig) {
     this.application = new Koa();
-    switch (config.address.portocol) { // Select portocol.
-      case 'HTTP':
-        this.server = HTTP.createServer(this.application.callback());
-        break;
-      case 'HTTP2':
-        this.server = HTTP2.createSecureServer(config.address.ssl || {}, this.application.callback());
-        break;
-      case 'HTTPS':
-        this.server = HTTPS.createServer(config.address.ssl || {}, this.application.callback());
-        break;
-      default:
-        this.server = HTTP.createServer(this.application.callback());
-        console.log(`${now()}\tNo such portocol or unset portocol: ${config.address.portocol}, use default portocol HTTP`);
-        break;
+
+    try {
+      // Load config from profile.
+      const json: KBSConfig = JSON.parse(readFileSync('server.config.json').toString());
+      // The profile will cover config.
+      config = Object.assign({}, config, json);
+    } catch (err) {
+      console.log(`${now()}\tProfile server.config.json not found or cannot be parse, disable it, detail: ${err}`);
     }
-    if (config.database) { // Create database connection or not.
-      if (config.database.ormconfig) {
-        this.database = new Database();
-      } else if (config.database.options) {
-        this.database = new Database(config.database.options);
-      } else {
-        console.warn(`${now()}\tThere is no database connection has been connected.`);
+
+    // Create server.
+    if (config.address) { // Select portocol.
+      switch (config.address.portocol) {
+        case 'HTTP':
+          this.server = HTTP.createServer(this.application.callback());
+          break;
+        case 'HTTP2':
+          this.server = HTTP2.createSecureServer(config.address.ssl || {}, this.application.callback());
+          break;
+        case 'HTTPS':
+          this.server = HTTPS.createServer(config.address.ssl || {}, this.application.callback());
+          break;
+        default:
+          this.server = HTTP.createServer(this.application.callback());
+          console.log(`${now()}\tUnkoown portocol or unset portocol: ${config.address.portocol}, use default portocol HTTP`);
+          break;
       }
+    } else { // Default to HTTP.
+      this.server = HTTP.createServer(this.application.callback());
+      console.log(`${now()}\tUse default portocol HTTP`);
     }
-    if (config.session) { // Use session middleware or not.
+
+    // Create database connection or not.
+    if (config.database) {
+      this.database = new Database(config.database.options);
+      console.log(`${now()}\tDatabase connected.`);
+    } else {
+      console.log(`${now()}\tDatabase not connected.`);
+    }
+
+    // Use session middleware or not.
+    if (config.session) {
       this.session = new RediSession(this.application, config.session);
       this.use(this.session.ware);
+    } else {
+      console.log(`${now()}\tSession service not provided.`);
     }
-    if (config.router) { // Config router.
+
+    // Config router or not.
+    if (config.router) {
       this.router = new Router(config.router.paths, config.router.version);
       this.use(this.router.ware);
       if (config.router.static && config.router.static.path) {
         this.use(KoaStatic(config.router.static.path, config.router.static.options));
         console.log(`${now()}\tStatic resource path: ${config.router.static.path}`);
+      } else {
+        console.log(`${now()}\tStatic server service not provided.`);
       }
+    } else {
+      console.warn(`${now()}\tRouting service not provided.`);
     }
   }
 
@@ -90,8 +116,8 @@ export class Server {
    */
   public listen(host?: string, port?: number): HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server {
     return this.server.listen(
-      port = port || this.config.address.port || 80,
-      host = host || this.config.address.host || '0.0.0.0',
+      port = port || (this.config.address && this.config.address.port) || 80,
+      host = host || (this.config.address && this.config.address.host) || '0.0.0.0',
       () => console.log(`${now()}\tServer online, address is ${host}:${port}`)
     );
   }
