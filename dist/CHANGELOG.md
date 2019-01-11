@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.4.7 => 0.5.0
+
+- perf: never use KoaBody in OPTIONS and HEAD method
+- perf: provide more help information
+- feat: support for using server.config.json(cover other) to configure KBS
+- feat: use server.config.json instead of ormconfig.json
+
 ## 0.4.7 => 0.4.8
 
 - Fixed namespace koa.
