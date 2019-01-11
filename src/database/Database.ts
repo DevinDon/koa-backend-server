@@ -6,24 +6,26 @@ import { Connection, ConnectionOptions, createConnection } from 'typeorm';
 export class Database {
 
   /** Default connection. */
-  private con: Promise<Connection>;
+  private con: Connection;
 
   /**
-   * Create a database connection instance.
-   * @param {ConnectionOptions} options Typeorm database connection options.
+   * Create a database connection instance, then you should use connect methode to connect database.
+   * @param {ConnectionOptions} options Typeorm database connection options, in server.config.json or code.
    */
-  constructor(options?: ConnectionOptions) {
-    if (options) {
-      this.con = createConnection(options);
-    } else {
-      this.con = createConnection();
-    }
+  constructor(private options: ConnectionOptions) { }
+
+  /**
+   * <async> Connect to database.
+   * @returns {Promise<Connection>} This connection.
+   */
+  public async connect(): Promise<Connection> {
+    return this.con = await createConnection(this.options);
   }
 
   /**
-   * @returns {Promise<Connection>} This connection with promise.
+   * @returns {Promise<Connection>} This connection.
    */
-  public get connection(): Promise<Connection> {
+  public get connection(): Connection {
     return this.con;
   }
 
