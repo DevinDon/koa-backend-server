@@ -1,6 +1,7 @@
 import { Middleware } from 'koa';
 import { RouterPaths } from '../../dist';
 import test from './test';
+import { User } from '../entity';
 
 const index: Middleware = async (c, next) => {
   c.session.data = c.request.body;
@@ -8,6 +9,12 @@ const index: Middleware = async (c, next) => {
     status: Boolean(c.session),
     data: c.session
   };
+  await User.insert({
+    name: 'test',
+    password: 'password',
+    disable: false,
+    value: 100
+  });
   await next();
 };
 
