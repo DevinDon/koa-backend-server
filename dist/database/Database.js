@@ -6,19 +6,21 @@ const typeorm_1 = require("typeorm");
  */
 class Database {
     /**
-     * Create a database connection instance.
-     * @param {ConnectionOptions} options Typeorm database connection options.
+     * Create a database connection instance, then you should use connect methode to connect database.
+     * @param {ConnectionOptions} options Typeorm database connection options, in server.config.json or code.
      */
     constructor(options) {
-        if (options) {
-            this.con = typeorm_1.createConnection(options);
-        }
-        else {
-            this.con = typeorm_1.createConnection();
-        }
+        this.options = options;
     }
     /**
-     * @returns {Promise<Connection>} This connection with promise.
+     * <async> Connect to database.
+     * @returns {Promise<Connection>} This connection.
+     */
+    async connect() {
+        return this.con = await typeorm_1.createConnection(this.options);
+    }
+    /**
+     * @returns {Promise<Connection>} This connection.
      */
     get connection() {
         return this.con;
