@@ -12,71 +12,86 @@ KBS, Koa Backend Server with **TypeScript**.
 
 **WARNING: This project is currently in an *UNSTABLE* version.**
 
+# Feature
+
+- [ ] feat: support for creating cluster servers
+
 # Change log
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-## 0.4.7 => 0.4.8
+## 0.4.7 => 0.5.0
 
-- Fixed namespace koa.
-
-## 0.4.6 => 0.4.7
-
-- Now the Server.use method will return the KBS instance.
-
-## 0.3.5 => 0.4.0
-
-- Remove koa-session package.
-- Use redisession package with redis supported.
-- **Remove interface AMiddleware, use default interface Middleware.**
-- Rewrite CORS middleware.
-- Now you should use the KBS.listen() method to start listening.
+- perf: never use KoaBody in OPTIONS and HEAD method
+- perf: provide more help information
+- feat: support for using server.config.json(cover other) to configure KBS
+- feat: use server.config.json instead of ormconfig.json
 
 # Installation
 
-- *This package*
+> *Koa Backend Server on [NPM](https://www.npmjs.com/package/koa-backend-server)*
 
 ```shell
 npm i --save koa-backend-server
 ```
 
-- **DO NOT install koa and other dependencies again!**
+> **DO NOT install koa and other dependencies AGAIN!**
 
 # Usage
 
-## **Quick start**
+> See example:
+>
+> - [APP template with client & server](https://github.com/DevinDon/app-template)
+>
+> - [Blog Server](https://github.com/DevinDon/blog-2018)
 
-*It will create a HTTP server which is listening on port 80.*
+## **Full config**
+
+*It will create a HTTP server which is listening on port 8080.*
 
 ```typescript
 import { Server } from 'koa-backend-server';
-import postPaths from './post';
 
 const server = new Server({
   address: {
-    portocol: 'HTTP', // Required, HTTP, HTTPS or HTTP2.
+    portocol: 'HTTP', // Optional, HTTP, HTTPS or HTTP2.
     host: '0.0.0.0', // Optional, default to 0.0.0.0.
-    port: 80, // Optional, default to 80.
-    // ssl: {cert: 'CERT', key: 'KEY'} // Required if portocol is HTTPS or HTTP2.
+    port: 8080, // Optional, default to 8080.
+    ssl: {cert: 'CERT', key: 'KEY'} // Required if portocol is HTTP2 or HTTPS.
   },
   database: { // If undefined, it will disable database connection
-    ormconfig: true, // If true, it will use ormconfig.json to connect database, and the connection options will be ignore
-    // options: { // Your own database options.
-    //   name: 'default',
-    //   type: 'mysql',
-    //   host: 'localhost',
-    //   port: 3306,
-    //   database: 'database',
-    //   username: 'username',
-    //   password: 'password',
-    //   synchronize: true, // auto generate database table (or document), but you may lost all data of this database
-    //   logging: true, // log all query statements
-    //   entities: [/** your own entities */]
-    // }
+    name: 'default',
+    type: 'mysql',
+    host: 'localhost',
+    port: 3306,
+    database: 'database',
+    username: 'username',
+    password: 'password',
+    synchronize: true, // auto generate database table (or document), but you may lost all data of this database
+    logging: true, // log all query statements
+    entities: ['somewhere/entity/**/*.entity.ts'] // your database table(entity)
   },
   router: { // If undefined, it will disable koa router.
     paths: { // router paths
-      POST: postPaths
+      POST: {
+        'index': {
+          path: '/',
+          ware: async (c, next) => {
+            c.session.data = c.request.body;
+            c.body = {
+              status: Boolean(c.session),
+              data: c.session
+            };
+            await User.insert({
+              name: 'test',
+              password: 'password',
+              disable: false,
+              value: 100
+            });
+            await next();
+          }
+        }
+      }
     },
     static: { // Static files path.
       path: 'test/html/'
@@ -84,14 +99,15 @@ const server = new Server({
     version: 'v1' // API version, the prefix of all paths.
   },
   session: { // If undefined, it will disable redisession.
-    name: 'session.id',
     domain: 'your.domain',
     httpOnly: true,
-    secert: ['keys'],
-    redis: {
+    maxAge: 3600, // expire time, second
+    name: 'session.id', // cookie key name
+    redis: { // redis server
       host: 'your.redis.address',
       port: 6379
-    }
+    },
+    secert: ['your', 'secert', 'keys']
   }
 });
 
@@ -119,65 +135,81 @@ export interface KBSConfig {
 
 ### 1. Set your address information.
 
+> **Use [*KBSAddress*](https://github.com/DevinDon/koa-backend-server/blob/master/dist/type/server.d.ts) to configure your address info.**
+
 ```typescript
-const address: KBSAddress = {
-  portocol: 'HTTP', // required, HTTP, HTTPS or HTTP2
+const address: KBSAddress = { // optional, default to http://0.0.0.0:8080
+  portocol: 'HTTP', // optional, HTTP, HTTPS or HTTP2
   host: '0.0.0.0', // optional, default to 0.0.0.0
-  port: 80, // optional, default to 80
-  // ssl: {cert: 'CERT', key: 'KEY'} // required if portocol is HTTPS or HTTP2
+  port: 8080, // optional, default to 8080
+  ssl: {cert: 'CERT', key: 'KEY'} // required if portocol is HTTPS or HTTP2
 };
 ```
 
-### 2. (Optional) Connect database via [TypeORM](https://www.npmjs.com/package/typeorm).
+> **Or use [*server.config.json*](https://github.com/DevinDon/koa-backend-server/blob/master/server.config.json) to do this.**
 
-- *Using [ormconfig.json](https://www.npmjs.com/package/typeorm#quick-start) to create connection.*
-
-```typescript
-const database: KBSDatabase = {
-  ormconfig: true
-};
-```
-- *and you should create ormconfig.json file in root dir like this **(DO NOT forget to remove comment)**:*
 ```json
 {
-  "type": "mysql", // database type
-  "host": "localhost", // database host
-  "port": 3306, // database port
-  "username": "username", // database username
-  "password": "password", // database password
-  "database": "database", // database name
-  "synchronize": true, // auto generate database table (or document), but you may lost all data of this database
-  "logging": true, // show query logs
-  "entities": [ // entites, means table(SQL) or document(NOSQL)
-    "src/entity/**/*.entity.ts"
-  ],
-  "migrations": [],
-  "subscribers": []
+  "address": {
+    "portocol": "HTTP",
+    "host": "0.0.0.0",
+    "port": 8080,
+    "ssl": {
+      "cert": "CERT content here if HTTP2/S",
+      "key": "KEY content here if HTTP2/S"
+    }
+  }
 }
 ```
 
-- *Or using ConnectionOptions to create connection.*
+*It will cover KBSDatabase config.*
+
+### 2. (Optional) Connect database via [TypeORM](https://www.npmjs.com/package/typeorm).
+
+> **Use [*KBSDatabase*](https://github.com/DevinDon/koa-backend-server/blob/master/dist/type/server.d.ts) to create connection.**
 
 ```typescript
-const database: KBSDatabase = {
-  options: {
-    name: 'default',
-    type: 'mysql',
-    host: 'localhost',
-    port: 3306,
-    database: 'database',
-    username: 'username',
-    password: 'password',
-    synchronize: true, // auto generate database table (or document), but you may lost all data of this database
-    logging: true, // log all query statements
-    entities: [/** your own entities */]
-  }
+const database: KBSDatabase = { // If undefined, it will disable database connection
+  name: 'default',
+  type: 'mysql',
+  host: 'localhost',
+  port: 3306,
+  database: 'database',
+  username: 'username',
+  password: 'password',
+  synchronize: true, // auto generate database table (or document), but you may lost all data of this database
+  logging: true, // log all query statements
+  entities: ['somewhere/entity/**/*.entity.ts'] // your database table(entity)
 };
 ```
 
-### 3. (Optional) Set router paths and API version.
+> **Or use [*server.config.json*](https://github.com/DevinDon/koa-backend-server/blob/master/server.config.json) to do this.**
 
-- *Here is the [router path interface](https://github.com/DevinDon/koa-backend-server/blob/master/src/type/router.ts).*
+```json
+{
+  "database": {
+    "type": "mysql",
+    "host": "your.database.host",
+    "port": 3306,
+    "username": "username",
+    "password": "password",
+    "database": "database",
+    "synchronize": true,
+    "logging": true,
+    "entities": [
+      "test/entity/**/*.entity.ts"
+    ],
+    "migrations": [],
+    "subscribers": []
+  }
+}
+```
+
+*It will cover KBSDatabase config.*
+
+### 3. (Optional but **important**) Set router paths and API version.
+
+> **Here is the [*router path interface*](https://github.com/DevinDon/koa-backend-server/blob/master/src/type/router.ts).**
 
 ```typescript
 interface RouterPaths {
@@ -185,21 +217,12 @@ interface RouterPaths {
     path: string | RegExp | (string | RegExp)[];
     ware: any;
     cors?: CORS;
+    withoutPrefix: boolean;
   };
-}
-
-interface AllPaths {
-  DELETE?: RouterPaths;
-  GET?: RouterPaths;
-  HEAD?: RouterPaths;
-  OPTIONS?: RouterPaths;
-  PATCH?: RouterPaths;
-  POST?: RouterPaths;
-  PUT?: RouterPaths;
 }
 ```
 
-- *And the paths look like this*.
+> **And the post path looks like this**.
 
 ```typescript
 // post/index.ts
@@ -216,7 +239,7 @@ const index: AMiddleware = async (c, next) => {
     status: true,
     data
   };
-  next();
+  await next();
 };
 
 export const postPaths: RouterPaths = {
@@ -231,17 +254,17 @@ export const postPaths: RouterPaths = {
   },
   'all': {
     path: /\/.*/,
-    ware: index
+    ware: index,
+    withoutPrefix: true
   }
 };
 
 export default postPaths;
 ```
 
-- *Don't forget to define router.*
+> **Don't forget to define the [*KBSRouter*](https://github.com/DevinDon/koa-backend-server/blob/master/src/type/router.ts).**
 
 ```typescript
-// index.ts
 const router: KBSRouter = { // if undefined, it will disable koa router
   paths: { // router paths
     POST: postPaths
@@ -254,49 +277,54 @@ const router: KBSRouter = { // if undefined, it will disable koa router
 };
 ```
 
+> **The same way to use [*server.config.json*](https://github.com/DevinDon/koa-backend-server/blob/master/server.config.json) to do this.**
+
 ### 4. (Optional) Config your session options.
+
+> **Use [*KBSSession*](https://github.com/DevinDon/koa-backend-server/blob/master/dist/type/server.d.ts) to do this.**
 
 ```typescript
 const session: KBSSession = { // If undefined, it will disable redisession.
-  name: 'session.id', // cookie name
-  domain: 'your.domain', // domain
+  domain: 'your.domain',
   httpOnly: true,
-  secert: ['keys'], // secert keys
-  redis: { // redis connection options
+  maxAge: 3600, // expire time, second
+  name: 'session.id', // cookie key name
+  redis: { // redis server
     host: 'your.redis.address',
     port: 6379
-  }
+  },
+  secert: ['your', 'secert', 'keys']
 };
 ```
 
+> **The same way to use [*server.config.json*](https://github.com/DevinDon/koa-backend-server/blob/master/server.config.json) to do this.**
+
 ### 5. And now, it looks like this.
 
-- *Enter point: index.ts*
+> **Enter point: [*test/index.ts*](https://github.com/DevinDon/koa-backend-server/blob/master/test/index.ts)**
 
 ```typescript
 import { KBSAddress, KBSDatabase, KBSRouter, KBSSession, Server } from 'koa-backend-server';
 import postPaths from './post';
 
-const address: KBSAddress = {
-  portocol: 'HTTP', // required, HTTP, HTTPS or HTTP2
+const address: KBSAddress = { // optional, default to http://0.0.0.0:8080
+  portocol: 'HTTP', // optional, HTTP, HTTPS or HTTP2
   host: '0.0.0.0', // optional, default to 0.0.0.0
-  port: 80, // optional, default to 80
-  // ssl: {cert: 'CERT', key: 'KEY'} // required if portocol is HTTPS or HTTP2
+  port: 8080, // optional, default to 8080
+  ssl: {cert: 'CERT', key: 'KEY'} // required if portocol is HTTPS or HTTP2
 };
 
-const database: KBSDatabase = {
-  options: {
-    name: 'default',
-    type: 'mysql',
-    host: 'localhost',
-    port: 3306,
-    database: 'database',
-    username: 'username',
-    password: 'password',
-    synchronize: true, // auto generate database table (or document), but you may lost all data of this database
-    logging: true, // log all query statements
-    entities: [/** your own entities */]
-  }
+const database: KBSDatabase = { // If undefined, it will disable database connection
+  name: 'default',
+  type: 'mysql',
+  host: 'localhost',
+  port: 3306,
+  database: 'database',
+  username: 'username',
+  password: 'password',
+  synchronize: true, // auto generate database table (or document), but you may lost all data of this database
+  logging: true, // log all query statements
+  entities: ['somewhere/entity/**/*.entity.ts'] // your database table(entity)
 };
 
 const router: KBSRouter = { // if undefined, it will disable koa router
@@ -311,27 +339,23 @@ const router: KBSRouter = { // if undefined, it will disable koa router
 };
 
 const session: KBSSession = { // If undefined, it will disable redisession.
-  name: 'session.id', // cookie name
-  domain: 'your.domain', // domain
+  domain: 'your.domain',
   httpOnly: true,
-  secert: ['keys'], // secert keys
-  redis: { // redis connection options
+  maxAge: 3600, // expire time, second
+  name: 'session.id', // cookie key name
+  redis: { // redis server
     host: 'your.redis.address',
     port: 6379
-  }
+  },
+  secert: ['your', 'secert', 'keys']
 };
 
-const server: Server = new Server({
-  address,
-  database,
-  router,
-  session
-});
+const server: Server = new Server({address, database, router, session});
 
 server.listen();
 ```
 
-- *[Work tree](https://github.com/DevinDon/koa-backend-server/)*
+> **See the [*Work tree*](https://github.com/DevinDon/koa-backend-server/).**
 
 ```text
 ┏━ src/
@@ -344,7 +368,7 @@ server.listen();
 ┃   ┗━ index.ts
 ┣━ .gitignore
 ┣━ LICENSE
-┣━ ormconfig.json
+┣━ server.config.json
 ┣━ package-lock.json
 ┣━ package.json
 ┣━ README.md
