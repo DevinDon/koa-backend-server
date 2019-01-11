@@ -5,9 +5,6 @@ import { Options } from 'redisession';
 import { ConnectionOptions } from 'typeorm';
 import { AllPaths } from './router';
 
-/** RediSession options. */
-export type KBSSession = Options;
-
 /** KBS address. */
 export interface KBSAddress {
   /** KBS portocol. */
@@ -21,10 +18,7 @@ export interface KBSAddress {
 }
 
 /** KBS database connection, if undefined it will disable the typeorm connection. */
-export interface KBSDatabase {
-  /** Use your own options to connect database. */
-  options: ConnectionOptions;
-}
+export type KBSDatabase = ConnectionOptions;
 
 /** KBS router, if undefined it will disable the koa router. */
 export interface KBSRouter {
@@ -38,6 +32,9 @@ export interface KBSRouter {
   /** API version, prefix of all paths. */
   version?: string;
 }
+
+/** RediSession options. */
+export type KBSSession = Options;
 
 /** KBS config. */
 export interface KBSConfig {
