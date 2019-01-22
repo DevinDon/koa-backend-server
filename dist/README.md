@@ -20,9 +20,9 @@ KBS, Koa Backend Server with **TypeScript**.
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-## 0.5.0 => 0.5.1
+## 0.5.1 => 0.5.2
 
-- feat: add CORS_ALLOW_ALL static property in KoaRouter
+- refactor: update types
 
 ## 0.4.7 => 0.5.0
 
