@@ -15,6 +15,8 @@ export interface KBSAddress {
   port?: number;
   /** KBS ssl options, only required in secure server (HTTPS or HTTP2). */
   ssl?: ServerOptions | SecureServerOptions;
+  /** Koa application is in proxy mode or not. */
+  proxy?: boolean;
 }
 
 /** KBS database connection, if undefined it will disable the typeorm connection. */
