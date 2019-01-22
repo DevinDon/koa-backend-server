@@ -46,6 +46,7 @@ export class Server {
       console.log(this.config);
     } catch (err) {
       console.log(`${now()}\tProfile server.config.json not found or cannot be parse, disable it, detail: ${err}`);
+      this.config = config || {};
     }
     // Init KBS.
     this.init();
@@ -75,6 +76,7 @@ export class Server {
           console.log(`${now()}\tUnkoown portocol or unset portocol: ${this.config.address.portocol}, use default portocol HTTP`);
           break;
       }
+      this.app.proxy = Boolean(this.config.address.proxy);
     } else { // Default to HTTP.
       this.server = HTTP.createServer(this.application.callback());
       console.log(`${now()}\tUse default portocol HTTP`);
