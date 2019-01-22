@@ -1,7 +1,7 @@
 import { Middleware } from 'koa';
 import KoaBody from 'koa-body';
 import KoaRouter from 'koa-router';
-import { AllPaths, CORS, Methods, RouterPaths } from '../type';
+import { AllPaths, CORS, Methods, RouterPaths } from '../@types';
 import { now } from '../util';
 
 /**
@@ -9,13 +9,6 @@ import { now } from '../util';
  * @extends {KoaRouter} KoaRouter
  */
 export class Router extends KoaRouter {
-
-  /** Allow all CORS. */
-  public static CORS_ALLOW_ALL: CORS = {
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT'],
-    'Access-Control-Allow-Origin': '*'
-  };
 
   /**
    * Generate CORS middleware.

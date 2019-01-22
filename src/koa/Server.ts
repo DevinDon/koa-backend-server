@@ -5,9 +5,9 @@ import HTTPS from 'https';
 import Koa, { Middleware } from 'koa';
 import KoaStatic from 'koa-static';
 import { RediSession } from 'redisession';
+import { KBSConfig } from '../@types';
 import { Database } from '../database';
 import { Router } from '../middleware';
-import { KBSConfig } from '../type';
 import { now } from '../util';
 
 /**

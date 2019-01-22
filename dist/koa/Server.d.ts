@@ -1,5 +1,5 @@
 import Koa, { Middleware } from 'koa';
-import { KBSConfig } from '../type';
+import { KBSConfig } from '../@types';
 /**
  * KBS, Koa Backend Server.
  */

@@ -147,11 +147,5 @@ class Router extends koa_router_1.default {
         return this.routes();
     }
 }
-/** Allow all CORS. */
-Router.CORS_ALLOW_ALL = {
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT'],
-    'Access-Control-Allow-Origin': '*'
-};
 exports.Router = Router;
 exports.default = Router;
