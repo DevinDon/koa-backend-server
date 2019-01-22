@@ -10,6 +10,33 @@ import { now } from '../util';
  */
 export class Router extends KoaRouter {
 
+  /** Allow all CORS. */
+  public static CORS_ALLOW_ALL: CORS = {
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT'],
+    'Access-Control-Allow-Origin': '*'
+  };
+
+  /**
+   * Generate CORS middleware.
+   * @param {CORS} options CORS options.
+   * @param {boolean} isOPTIONS Is OPTIONS method or not.
+   * @returns {Middleware} CORS middleware.
+   */
+  public static setCORS(options: CORS, isOPTIONS: boolean = false): Middleware {
+    return async (c, next) => {
+      c.set({
+        'Access-Control-Allow-Headers': options['Access-Control-Allow-Headers'],
+        'Access-Control-Allow-Methods': options['Access-Control-Allow-Methods'].join(', '),
+        'Access-Control-Allow-Origin': options['Access-Control-Allow-Origin']
+      });
+      if (isOPTIONS) {
+        c.body = {};
+      }
+      await next();
+    };
+  }
+
   /**
    * Generate router.
    * @param {AllPaths} allPaths All router paths.
@@ -31,26 +58,6 @@ export class Router extends KoaRouter {
     } else {
       console.warn(`${now()}\tThere is no router path has been set.`);
     }
-  }
-
-  /**
-   * Generate CORS middleware.
-   * @param {CORS} options CORS options.
-   * @param {boolean} isOPTIONS Is OPTIONS method or not.
-   * @returns {Middleware} CORS middleware.
-   */
-  public static CORS(options: CORS, isOPTIONS = false): Middleware {
-    return async (c, next) => {
-      c.set({
-        'Access-Control-Allow-Headers': options['Access-Control-Allow-Headers'],
-        'Access-Control-Allow-Methods': options['Access-Control-Allow-Methods'].join(', '),
-        'Access-Control-Allow-Origin': options['Access-Control-Allow-Origin']
-      });
-      if (isOPTIONS) {
-        c.body = {};
-      }
-      await next();
-    };
   }
 
   /**
@@ -102,12 +109,12 @@ export class Router extends KoaRouter {
         }
         // If CORS is true, set the same path of method OPTIONS.
         if (paths[key].cors) {
-          this.options(path, Router.CORS(paths[key].cors as CORS, true) as any);
+          this.options(path, Router.setCORS(paths[key].cors as CORS, true) as any);
           // Never use KoaBody in OPTIONS and HEAD method
           if (typeUpperCase === 'OPTIONS' || typeUpperCase === 'HEAD') {
-            action(path, paths[key].ware, Router.CORS(paths[key].cors as CORS));
+            action(path, paths[key].ware, Router.setCORS(paths[key].cors as CORS));
           } else {
-            action(path, KoaBody(), paths[key].ware, Router.CORS(paths[key].cors as CORS));
+            action(path, KoaBody(), paths[key].ware, Router.setCORS(paths[key].cors as CORS));
           }
           console.log(`${now()}\tLoaded ${typeUpperCase} path: ${path} with CORS`);
         } else {
