@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.0 => 0.5.1
+
+- feat: add CORS_ALLOW_ALL static property in KoaRouter
+
 ## 0.4.7 => 0.5.0
 
 - perf: never use KoaBody in OPTIONS and HEAD method
