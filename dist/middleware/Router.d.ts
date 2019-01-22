@@ -7,19 +7,21 @@ import { AllPaths, CORS, Methods, RouterPaths } from '../type';
  */
 export declare class Router extends KoaRouter {
     private version?;
-    /**
-     * Generate router.
-     * @param {AllPaths} allPaths All router paths.
-     * @param {string} version API version prefix.
-     */
-    constructor(allPaths?: AllPaths, version?: string | undefined);
+    /** Allow all CORS. */
+    static CORS_ALLOW_ALL: CORS;
     /**
      * Generate CORS middleware.
      * @param {CORS} options CORS options.
      * @param {boolean} isOPTIONS Is OPTIONS method or not.
      * @returns {Middleware} CORS middleware.
      */
-    static CORS(options: CORS, isOPTIONS?: boolean): Middleware;
+    static setCORS(options: CORS, isOPTIONS?: boolean): Middleware;
+    /**
+     * Generate router.
+     * @param {AllPaths} allPaths All router paths.
+     * @param {string} version API version prefix.
+     */
+    constructor(allPaths?: AllPaths, version?: string | undefined);
     /**
      * Load all router paths.
      * @param {AllPaths} paths All router pahts.

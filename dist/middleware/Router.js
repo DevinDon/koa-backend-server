@@ -39,7 +39,7 @@ class Router extends koa_router_1.default {
      * @param {boolean} isOPTIONS Is OPTIONS method or not.
      * @returns {Middleware} CORS middleware.
      */
-    static CORS(options, isOPTIONS = false) {
+    static setCORS(options, isOPTIONS = false) {
         return async (c, next) => {
             c.set({
                 'Access-Control-Allow-Headers': options['Access-Control-Allow-Headers'],
@@ -117,13 +117,13 @@ class Router extends koa_router_1.default {
                 }
                 // If CORS is true, set the same path of method OPTIONS.
                 if (paths[key].cors) {
-                    this.options(path, Router.CORS(paths[key].cors, true));
+                    this.options(path, Router.setCORS(paths[key].cors, true));
                     // Never use KoaBody in OPTIONS and HEAD method
                     if (typeUpperCase === 'OPTIONS' || typeUpperCase === 'HEAD') {
-                        action(path, paths[key].ware, Router.CORS(paths[key].cors));
+                        action(path, paths[key].ware, Router.setCORS(paths[key].cors));
                     }
                     else {
-                        action(path, koa_body_1.default(), paths[key].ware, Router.CORS(paths[key].cors));
+                        action(path, koa_body_1.default(), paths[key].ware, Router.setCORS(paths[key].cors));
                     }
                     console.log(`${util_1.now()}\tLoaded ${typeUpperCase} path: ${path} with CORS`);
                 }
@@ -147,5 +147,11 @@ class Router extends koa_router_1.default {
         return this.routes();
     }
 }
+/** Allow all CORS. */
+Router.CORS_ALLOW_ALL = {
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT'],
+    'Access-Control-Allow-Origin': '*'
+};
 exports.Router = Router;
 exports.default = Router;
