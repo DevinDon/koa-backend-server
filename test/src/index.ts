@@ -1,4 +1,4 @@
-import { Server } from '../dist';
+import { Server } from '../../dist';
 import postPaths from './post';
 
 const server = new Server({
