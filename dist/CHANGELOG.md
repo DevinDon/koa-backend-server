@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.5.2 => 0.5.3
+
+- feat: add proxy support in koa application
+- feat: support dev mode, use config file server.config.dev.json
+
 ## 0.5.1 => 0.5.2
 
 - refactor: update types
