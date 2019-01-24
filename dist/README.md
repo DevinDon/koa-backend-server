@@ -20,9 +20,10 @@ KBS, Koa Backend Server with **TypeScript**.
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-## 0.5.1 => 0.5.2
+## 0.5.2 => 0.5.3
 
-- refactor: update types
+- feat: add proxy support in koa application
+- feat: support dev mode, use config file server.config.dev.json
 
 ## 0.4.7 => 0.5.0
 
