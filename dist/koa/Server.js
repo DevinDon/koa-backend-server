@@ -24,7 +24,9 @@ class Server {
     constructor(config) {
         // Load config from profile.
         try {
-            const json = JSON.parse(fs_1.readFileSync('server.config.json').toString());
+            const dev = Boolean(process.argv.find(v => v === 'dev'));
+            console.log(`${util_1.now()}\tKoa Backend Server is on ${dev ? 'development' : 'production'} mode.`);
+            const json = JSON.parse(fs_1.readFileSync(dev ? 'server.config.dev.json' : 'server.config.json').toString());
             // The profile will cover config.
             this.config = Object.assign({}, json, config);
             for (const key in this.config) {
@@ -32,7 +34,6 @@ class Server {
                     Object.assign(this.config[key], json[key]);
                 }
             }
-            console.log(this.config);
         }
         catch (err) {
             console.log(`${util_1.now()}\tProfile server.config.json not found or cannot be parse, disable it, detail: ${err}`);
