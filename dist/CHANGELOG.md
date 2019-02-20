@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.3 => 0.5.4
+
+- feat: add database startup error catch and retry
+
 ## 0.5.2 => 0.5.3
 
 - feat: add proxy support in koa application
