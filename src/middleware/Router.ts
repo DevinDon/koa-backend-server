@@ -127,7 +127,7 @@ export class Router extends KoaRouter {
    * @returns {Middleware} Middleware of router.
    */
   public get ware(): Middleware {
-    return this.routes();
+    return this.routes() as Middleware;
   }
 
 }
