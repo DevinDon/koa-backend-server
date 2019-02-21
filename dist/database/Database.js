@@ -30,7 +30,7 @@ class Database {
             console.error(`Database error: ${error}`);
             console.warn(`Remaining retries: ${this.retries}, in 10 seconds`);
             if (this.retries--) {
-                await sleep_promise_1.default(10);
+                await sleep_promise_1.default(10000);
                 this.connect();
             }
             else {
