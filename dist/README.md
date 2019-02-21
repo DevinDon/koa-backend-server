@@ -20,9 +20,9 @@ KBS, Koa Backend Server with **TypeScript**.
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-## 0.5.3 => 0.5.4
+## 0.5.4 => 0.5.5
 
-- feat: add database startup error catch and retry
+- fix: fix retry interval
 
 ## 0.4.7 => 0.5.0
 
