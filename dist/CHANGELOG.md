@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.4 => 0.5.5
+
+- fix: fix retry interval
+
 ## 0.5.3 => 0.5.4
 
 - feat: add database startup error catch and retry
