@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.5.6 => 0.5.7
+
+- docs: update LICENSE
+- perf: update author information
+- perf: default in development mode
+- perf: it is recommended to use code for configuration first
+
 ## 0.5.5 => 0.5.6
 
 - feat: update dependencies version

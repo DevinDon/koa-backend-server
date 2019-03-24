@@ -1,6 +1,6 @@
 {
   "name": "koa-backend-server",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "Koa Backend Server.",
   "main": "index.js",
   "repository": {

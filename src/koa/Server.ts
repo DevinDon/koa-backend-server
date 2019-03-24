@@ -35,9 +35,10 @@ export class Server {
   constructor(config?: KBSConfig) {
     // Load config from profile.
     try {
-      const dev = Boolean(process.argv.find(v => v === 'dev'));
-      console.log(`${now()}\tKoa Backend Server is on ${dev ? 'development' : 'production'} mode.`);
-      const json: KBSConfig = JSON.parse(readFileSync(dev ? 'server.config.dev.json' : 'server.config.json').toString());
+      // Default in development mode, use `npm start prod` to enable production mode.
+      const prod = Boolean(process.argv.find(v => v === 'prod'));
+      console.log(`${now()}\tKoa Backend Server is on ${prod ? 'production' : 'development'} mode.`);
+      const json: KBSConfig = JSON.parse(readFileSync(prod ? 'server.config.json' : 'server.config.dev.json').toString());
       // The profile will cover config.
       this.config = Object.assign({}, json, config);
       for (const key in this.config) {
@@ -46,7 +47,7 @@ export class Server {
         }
       }
     } catch (err) {
-      console.log(`${now()}\tProfile server.config.json not found or cannot be parse, disable it, detail: ${err}`);
+      console.log(`${now()}\tProfile server.config.json not found or cannot be parse, disable it. Detail: ${err}`);
       this.config = config || {};
     }
     // Init KBS.
