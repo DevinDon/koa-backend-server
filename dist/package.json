@@ -12,7 +12,7 @@
     "backend",
     "server"
   ],
-  "author": "Devin Don <DevinDon@Foxmail.com>",
+  "author": "IInfinity <I.INF@Outlook.com>",
   "license": "MIT",
   "dependencies": {
     "@types/koa": "^2.0.48",
