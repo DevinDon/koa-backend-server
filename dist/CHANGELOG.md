@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.5 => 0.5.6
+
+- feat: update dependencies version
+
 ## 0.5.4 => 0.5.5
 
 - fix: fix retry interval
