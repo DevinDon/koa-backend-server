@@ -20,9 +20,12 @@ KBS, Koa Backend Server with **TypeScript**.
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-## 0.5.5 => 0.5.6
+## 0.5.6 => 0.5.7
 
-- feat: update dependencies version
+- docs: update LICENSE
+- perf: update author information
+- perf: default in development mode
+- perf: it is recommended to use code for configuration first
 
 ## 0.4.7 => 0.5.0
 
