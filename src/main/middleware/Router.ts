@@ -45,7 +45,7 @@ export class Router extends KoaRouter {
   ) {
     super();
     if (version) {
-      logger.warn(`API version is deprecated, use accept header to instead.`)
+      logger.warn(`API version is deprecated, use accept header to instead.`);
       logger.warn(`API version: ${version}, now you can access your router paths with prefix /${version}`);
     }
     if (allPaths) {
