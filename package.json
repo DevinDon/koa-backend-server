@@ -1,5 +1,5 @@
 {
-  "name": "@iinfinity/rest.source",
+  "name": "@iinfinity/rester.source",
   "version": "0.0.0",
   "description": "Source code of Koa Backend Server.",
   "main": "dist/index.js",
