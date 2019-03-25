@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.5.7 => 0.6.0
+
+- perf: deprecated api version, use accept header to instead
+- feat: use node-color-log to be default logger
+- fix: fix message output when database connection failed
+- fix: catch redis connection failed
+- refactor: replace the project name with 'rester'
+
 ## 0.5.6 => 0.5.7
 
 - docs: update LICENSE
