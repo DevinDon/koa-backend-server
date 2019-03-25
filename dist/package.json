@@ -1,7 +1,7 @@
 {
   "name": "@iinfinity/rester",
   "version": "0.6.0",
-  "description": "A RESTful server with db & session support based Koa2.",
+  "description": "A RESTful server with db & session support based Koa2 & TypeScript.",
   "main": "index.js",
   "repository": {
     "type": "git",
