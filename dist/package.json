@@ -15,6 +15,7 @@
   "author": "IInfinity <I.INF@Outlook.com> (https://don.red)",
   "license": "MIT",
   "dependencies": {
+    "@iinfinity/logger": "0.0.1",
     "@types/koa": "^2.0.48",
     "@types/koa-router": "^7.0.40",
     "@types/koa-static": "^4.0.1",
