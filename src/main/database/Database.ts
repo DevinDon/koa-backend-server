@@ -10,7 +10,7 @@ export class Database {
   /** Default connection. */
   private con: Connection;
   /** Remaining retries, default is 5. */
-  private retries = 5;
+  private retries = 10;
   /** Retry interval, second. */
   private retryInterval = 10;
 
@@ -35,7 +35,7 @@ export class Database {
     } catch (err) {
       if (this.retries--) {
         logger.error(`Database connection error: ${err}`);
-        logger.warn(`Remaining retries: ${this.retries}, in ${this.retryInterval} seconds...`);
+        logger.warn(`Database connection remaining retries: ${this.retries} times...`);
         await sleep(this.retryInterval * 1000);
         return await this.connect();
       } else {

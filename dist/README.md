@@ -23,6 +23,10 @@ A RESTful server with db & session support based Koa2 & TypeScript.
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
+## 0.6.0 => 0.6.1
+
+- fix: fix some bugs & update package
+
 ## 0.5.7 => 0.6.0
 
 - perf: deprecated api version, use accept header to instead

@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.6.0 => 0.6.1
+
+- fix: fix some bugs & update package
+
 ## 0.5.7 => 0.6.0
 
 - perf: deprecated api version, use accept header to instead
