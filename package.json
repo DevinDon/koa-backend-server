@@ -4,9 +4,9 @@
   "description": "Source code of Koa Backend Server.",
   "main": "dist/index.js",
   "scripts": {
-    "start": "ts-node src",
-    "test": "ts-node test/src",
     "build": "tsc",
+    "debug": "ts-node src/main",
+    "test": "ts-node src/test",
     "watch": "tsc -w"
   },
   "keywords": [
