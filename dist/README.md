@@ -1,8 +1,6 @@
-# Koa Backend Server
+# Rester
 
-[![NPM](https://nodei.co/npm/koa-backend-server.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/koa-backend-server/)
-
-KBS, Koa Backend Server with **TypeScript**.
+A RESTful server with db & session support based Koa2 & TypeScript.
 
 # Version
 
@@ -15,31 +13,30 @@ KBS, Koa Backend Server with **TypeScript**.
 # Feature
 
 - [ ] feat: support for creating cluster servers
+- [x] feat: database support
+- [x] feat: redis session support
+- [x] feat: static file support
+- [x] feat: CORS router support
+- [x] feat: RESTful api support
 
 # Change log
 
 [Full Change Log](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
 
-## 0.5.6 => 0.5.7
+## 0.5.7 => 0.6.0
 
-- docs: update LICENSE
-- perf: update author information
-- perf: default in development mode
-- perf: it is recommended to use code for configuration first
-
-## 0.4.7 => 0.5.0
-
-- perf: never use KoaBody in OPTIONS and HEAD method
-- perf: provide more help information
-- feat: support for using server.config.json(cover other) to configure KBS
-- feat: use server.config.json instead of ormconfig.json
+- perf: deprecated api version, use accept header to instead
+- feat: use node-color-log to be default logger
+- fix: fix message output when database connection failed
+- fix: catch redis connection failed
+- refactor: replace the project name with 'rester'
 
 # Installation
 
-> *Koa Backend Server on [NPM](https://www.npmjs.com/package/koa-backend-server)*
+> *Rester on [NPM](https://www.npmjs.com/package/@iinfinity/rester)*
 
 ```shell
-npm i --save koa-backend-server
+npm i --save @iinfinity/rester
 ```
 
 > **DO NOT install koa and other dependencies AGAIN!**
@@ -48,7 +45,7 @@ npm i --save koa-backend-server
 
 > See example:
 >
-> - [APP template with client & server](https://github.com/DevinDon/app-template)
+> - [APP template with client Angular & server Rester](https://github.com/DevinDon/app-template)
 >
 > - [Blog Server](https://github.com/DevinDon/blog-2018)
 
@@ -57,7 +54,7 @@ npm i --save koa-backend-server
 *It will create a HTTP server which is listening on port 8080.*
 
 ```typescript
-import { Server } from 'koa-backend-server';
+import { Server } from '@iinfinity/rester';
 
 const server = new Server({
   address: {
@@ -102,8 +99,7 @@ const server = new Server({
     },
     static: { // Static files path.
       path: 'test/html/'
-    },
-    version: 'v1' // API version, the prefix of all paths.
+    }
   },
   session: { // If undefined, it will disable redisession.
     domain: 'your.domain',
@@ -214,7 +210,7 @@ const database: KBSDatabase = { // If undefined, it will disable database connec
 
 *It will cover KBSDatabase config.*
 
-### 3. (Optional but **important**) Set router paths and API version.
+### 3. (Optional but **important**) Set router paths.
 
 > **Here is the [*router path interface*](https://github.com/DevinDon/koa-backend-server/blob/master/src/type/router.ts).**
 
@@ -233,7 +229,7 @@ interface RouterPaths {
 
 ```typescript
 // post/index.ts
-import { AMiddleware, now, RouterPaths } from 'koa-backend-server';
+import { AMiddleware, now, RouterPaths } from '@iinfinity/rester';
 import { User } from '../entity';
 import test from './test';
 
@@ -279,8 +275,7 @@ const router: KBSRouter = { // if undefined, it will disable koa router
   static: { // static files dir, without version prefix
     path: 'static/files/dir',
     options: { /* Some options. */ }
-  },
-  version: 'v1' // API version, the prefix of all paths
+  }
 };
 ```
 
@@ -311,7 +306,7 @@ const session: KBSSession = { // If undefined, it will disable redisession.
 > **Enter point: [*test/index.ts*](https://github.com/DevinDon/koa-backend-server/blob/master/test/index.ts)**
 
 ```typescript
-import { KBSAddress, KBSDatabase, KBSRouter, KBSSession, Server } from 'koa-backend-server';
+import { KBSAddress, KBSDatabase, KBSRouter, KBSSession, Server } from '@iinfinity/rester';
 import postPaths from './post';
 
 const address: KBSAddress = { // optional, default to http://0.0.0.0:8080
@@ -341,8 +336,7 @@ const router: KBSRouter = { // if undefined, it will disable koa router
   static: { // static files dir, without version prefix
     path: 'static/files/dir',
     options: { /* Some options. */ }
-  },
-  version: 'v1' // API version, the prefix of all paths
+  }
 };
 
 const session: KBSSession = { // If undefined, it will disable redisession.
@@ -375,7 +369,6 @@ server.listen();
 ┃   ┗━ index.ts
 ┣━ .gitignore
 ┣━ LICENSE
-┣━ server.config.json
 ┣━ package-lock.json
 ┣━ package.json
 ┣━ README.md
@@ -413,4 +406,4 @@ Emmm, maybe later?
 
 # Author
 
-Devin Don, [Email](mailto:DevinDon@Foxmail.com), [Github](https://github.com/devindon/koa-backend-server), [My Home Page(Under construction)](https://don.red).
+IInfinity, [Email](mailto:I.INF@Outlook.com), [Github](https://github.com/devindon/koa-backend-server), [Home Page (Under construction)](https://don.red).
