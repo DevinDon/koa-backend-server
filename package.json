@@ -40,9 +40,10 @@
     "pg": "^7.9.0",
     "redisession": "^0.2.8",
     "sleep-promise": "^8.0.1",
-    "ts-node": "^8.0.3",
     "typeorm": "^0.2.13",
     "typescript": "^3.3.4000"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "ts-node": "^8.0.3"
+  }
 }
