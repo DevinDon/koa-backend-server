@@ -1,7 +1,7 @@
 {
-  "name": "koa-backend-server",
-  "version": "0.5.7",
-  "description": "Koa Backend Server.",
+  "name": "@iinfinity/rester",
+  "version": "0.6.0",
+  "description": "A RESTful server with db & session support based Koa2.",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
     "backend",
     "server"
   ],
-  "author": "IInfinity <I.INF@Outlook.com>",
+  "author": "IInfinity <I.INF@Outlook.com> (https://don.red)",
   "license": "MIT",
   "dependencies": {
     "@types/koa": "^2.0.48",
