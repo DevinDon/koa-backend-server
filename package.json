@@ -14,7 +14,7 @@
     "backend",
     "server"
   ],
-  "homepage": "https://github.com/DevinDon/koa-backend-server#koa-backend-server-source",
+  "homepage": "https://github.com/DevinDon/rester",
   "author": "IInfinity <I.INF@Outlook.com>",
   "license": "MIT",
   "private": true,
@@ -23,10 +23,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/DevinDon/koa-backend-server.git"
+    "url": "git+ssh://git@github.com/DevinDon/rester.git"
   },
   "bugs": {
-    "url": "https://github.com/DevinDon/koa-backend-server/issues"
+    "url": "https://github.com/DevinDon/rester/issues"
   },
   "dependencies": {
     "@iinfinity/logger": "0.0.1",
