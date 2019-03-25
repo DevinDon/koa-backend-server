@@ -2,7 +2,7 @@
 import { SecureServerOptions } from 'http2';
 import { ServerOptions } from 'https';
 import KoaStatic from 'koa-static';
-import { Options } from 'redisession';
+import { Options } from '@iinfinity/redion';
 import { ConnectionOptions } from 'typeorm';
 import { AllPaths } from './router';
 /** KBS address. */

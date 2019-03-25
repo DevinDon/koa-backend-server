@@ -5,7 +5,7 @@ import HTTP2 from 'http2';
 import HTTPS from 'https';
 import Koa, { Middleware } from 'koa';
 import KoaStatic from 'koa-static';
-import { RediSession } from 'redisession';
+import { Redion } from '@iinfinity/redion';
 import { KBSConfig } from '../@types';
 import { Database } from '../database';
 import { Router } from '../middleware';
@@ -22,7 +22,7 @@ export class Server {
   /** Server. */
   private server: HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server;
   /** Session. */
-  private session?: RediSession;
+  private session?: Redion;
   /** Router. */
   private router?: Router;
   /** Database. */
@@ -95,7 +95,7 @@ export class Server {
 
     // Use session middleware or not.
     if (this.config.session) {
-      this.session = new RediSession(this.application, this.config.session);
+      this.session = new Redion(this.application, this.config.session);
       this.use(this.session.ware);
     } else {
       logger.warn(`Session service not provided.`);

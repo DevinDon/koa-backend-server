@@ -10,7 +10,7 @@ const http2_1 = __importDefault(require("http2"));
 const https_1 = __importDefault(require("https"));
 const koa_1 = __importDefault(require("koa"));
 const koa_static_1 = __importDefault(require("koa-static"));
-const redisession_1 = require("redisession");
+const redion_1 = require("@iinfinity/redion");
 const database_1 = require("../database");
 const middleware_1 = require("../middleware");
 /**
@@ -83,7 +83,7 @@ class Server {
         }
         // Use session middleware or not.
         if (this.config.session) {
-            this.session = new redisession_1.RediSession(this.application, this.config.session);
+            this.session = new redion_1.Redion(this.application, this.config.session);
             this.use(this.session.ware);
         }
         else {
