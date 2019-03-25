@@ -5,14 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const koa_body_1 = __importDefault(require("koa-body"));
 const koa_router_1 = __importDefault(require("koa-router"));
-const util_1 = require("../util");
+const logger_1 = require("@iinfinity/logger");
 /**
  * Package KoaRouter.
+ *
  * @extends {KoaRouter} KoaRouter
  */
 class Router extends koa_router_1.default {
     /**
      * Generate router.
+     *
      * @param {AllPaths} allPaths All router paths.
      * @param {string} version API version prefix.
      */
@@ -20,21 +22,20 @@ class Router extends koa_router_1.default {
         super();
         this.version = version;
         if (version) {
-            console.log(`${util_1.now()}\tAPI version: ${version}, now you can access your router paths with prefix /${version}`);
-        }
-        else {
-            console.warn(`${util_1.now()}\tThere is no version has been set.`);
+            logger_1.logger.warn(`API version is deprecated, use accept header to instead.`);
+            logger_1.logger.warn(`API version: ${version}, now you can access your router paths with prefix /${version}`);
         }
         if (allPaths) {
             this.loadAllPaths(allPaths);
-            console.log(`${util_1.now()}\tLoaded router paths`);
+            logger_1.logger.info(`Loaded router paths`);
         }
         else {
-            console.warn(`${util_1.now()}\tThere is no router path has been set.`);
+            logger_1.logger.warn(`There is no router path has been set.`);
         }
     }
     /**
      * Generate CORS middleware.
+     *
      * @param {CORS} options CORS options.
      * @param {boolean} isOPTIONS Is OPTIONS method or not.
      * @returns {Middleware} CORS middleware.
@@ -54,6 +55,7 @@ class Router extends koa_router_1.default {
     }
     /**
      * Load all router paths.
+     *
      * @param {AllPaths} paths All router pahts.
      * @returns {void} void.
      */
@@ -68,6 +70,7 @@ class Router extends koa_router_1.default {
     }
     /**
      * Load router paths of special method.
+     *
      * @param {Methods} type Type of method.
      * @param {RouterPaths} paths Router paths.
      * @returns {void} void.
@@ -98,7 +101,7 @@ class Router extends koa_router_1.default {
                 action = this.put.bind(this);
                 break;
             default:
-                console.warn(`${util_1.now()}\tUnknown method: ${typeUpperCase}`);
+                logger_1.logger.warn(`Unknown method: ${typeUpperCase}`);
                 return;
         }
         for (const key in paths) {
@@ -125,7 +128,7 @@ class Router extends koa_router_1.default {
                     else {
                         action(path, koa_body_1.default(), paths[key].ware, Router.setCORS(paths[key].cors));
                     }
-                    console.log(`${util_1.now()}\tLoaded ${typeUpperCase} path: ${path} with CORS`);
+                    logger_1.logger.info(`Loaded ${typeUpperCase} path: ${path} with CORS`);
                 }
                 else {
                     // Never use KoaBody in OPTIONS and HEAD method
@@ -135,7 +138,7 @@ class Router extends koa_router_1.default {
                     else {
                         action(path, koa_body_1.default(), paths[key].ware);
                     }
-                    console.log(`${util_1.now()}\tLoaded ${typeUpperCase} path: ${path}`);
+                    logger_1.logger.info(`Loaded ${typeUpperCase} path: ${path}`);
                 }
             }
         }
