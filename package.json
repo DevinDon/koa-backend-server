@@ -1,5 +1,5 @@
 {
-  "name": "koa-backend-server.source",
+  "name": "@iinfinity/rest.source",
   "version": "0.0.0",
   "description": "Source code of Koa Backend Server.",
   "main": "dist/index.js",
@@ -29,6 +29,7 @@
     "url": "https://github.com/DevinDon/koa-backend-server/issues"
   },
   "dependencies": {
+    "@iinfinity/logger": "0.0.1",
     "@types/koa": "^2.0.48",
     "@types/koa-router": "^7.0.40",
     "@types/koa-static": "^4.0.1",
@@ -42,5 +43,6 @@
     "ts-node": "^8.0.3",
     "typeorm": "^0.2.13",
     "typescript": "^3.3.4000"
-  }
+  },
+  "devDependencies": {}
 }
