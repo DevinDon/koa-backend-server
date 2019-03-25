@@ -1,5 +1,6 @@
-import { Connection, ConnectionOptions, createConnection } from 'typeorm';
+import { logger } from '@iinfinity/logger';
 import sleep from 'sleep-promise';
+import { Connection, ConnectionOptions, createConnection } from 'typeorm';
 
 /**
  * Package database.
@@ -10,31 +11,36 @@ export class Database {
   private con: Connection;
   /** Remaining retries, default is 5. */
   private retries = 5;
+  /** Retry interval, second. */
+  private retryInterval = 10;
 
   /**
    * Create a database connection instance, then you should use connect methode to connect database.
+   *
    * @param {ConnectionOptions} options Typeorm database connection options, in server.config.json or code.
    */
   constructor(private options: ConnectionOptions) { }
 
   /**
    * <async> Connect to database.
-   * @returns {Promise<void>} This connection.
+   *
+   * @returns {Promise<boolean>} Success or not.
    */
-  public async connect(): Promise<void> {
+  public async connect(): Promise<boolean> {
     try {
+      logger.info(`Connecting to database...`);
       this.con = await createConnection(this.options);
-    } catch (error) {
-      console.error(`Database error: ${error}`);
-      console.warn(`Remaining retries: ${this.retries}, in 10 seconds`);
+      logger.info(`Database connected.`);
+      return true;
+    } catch (err) {
       if (this.retries--) {
-        await sleep(10000);
-        this.connect();
+        logger.error(`Database connection error: ${err}`);
+        logger.warn(`Remaining retries: ${this.retries}, in ${this.retryInterval} seconds...`);
+        await sleep(this.retryInterval * 1000);
+        return await this.connect();
       } else {
-        throw {
-          type: 'database',
-          error
-        };
+        logger.error(`Database connection failed: ${err}`);
+        return false;
       }
     }
   }
