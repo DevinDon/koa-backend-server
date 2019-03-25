@@ -29,7 +29,7 @@ export interface KBSRouter {
         path: string;
         options?: KoaStatic.Options;
     };
-    /** API version, prefix of all paths. */
+    /** Deprecated, use accept header to instead. API version, prefix of all paths. */
     version?: string;
 }
 /** RediSession options. */

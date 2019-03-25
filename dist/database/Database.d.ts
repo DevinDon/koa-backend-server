@@ -8,16 +8,20 @@ export declare class Database {
     private con;
     /** Remaining retries, default is 5. */
     private retries;
+    /** Retry interval, second. */
+    private retryInterval;
     /**
      * Create a database connection instance, then you should use connect methode to connect database.
+     *
      * @param {ConnectionOptions} options Typeorm database connection options, in server.config.json or code.
      */
     constructor(options: ConnectionOptions);
     /**
      * <async> Connect to database.
-     * @returns {Promise<void>} This connection.
+     *
+     * @returns {Promise<boolean>} Success or not.
      */
-    connect(): Promise<void>;
+    connect(): Promise<boolean>;
     /**
      * @returns {Promise<Connection>} This connection.
      */

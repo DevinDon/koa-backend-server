@@ -18,22 +18,26 @@ export declare class Server {
     private database?;
     /**
      * Create a KBS, Koa Backend Server.
+     *
      * @param {KBSConfig} config KBS Server options.
      */
     constructor(config?: KBSConfig);
     /**
      * Init KBS.
+     *
      * @returns {Promise<void>} Void.
      */
     private init;
     /**
      * Use middlewares.
+     *
      * @param {Middleware[]} middlewares Middlewares.
      * @returns {Server} This server.
      */
     use(...middlewares: Middleware[]): Server;
     /**
      * Listening on some where.
+     *
      * @param {number} port Listening port, default to 8080.
      * @param {string} host The listening host, default to 0.0.0.0.
      * @returns {Promise<Server>} This server.
