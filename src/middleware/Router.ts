@@ -3,15 +3,18 @@ import KoaBody from 'koa-body';
 import KoaRouter from 'koa-router';
 import { AllPaths, CORS, Methods, RouterPaths } from '../@types';
 import { now } from '../util';
+import { logger } from '@iinfinity/logger';
 
 /**
  * Package KoaRouter.
+ *
  * @extends {KoaRouter} KoaRouter
  */
 export class Router extends KoaRouter {
 
   /**
    * Generate CORS middleware.
+   *
    * @param {CORS} options CORS options.
    * @param {boolean} isOPTIONS Is OPTIONS method or not.
    * @returns {Middleware} CORS middleware.
@@ -32,6 +35,7 @@ export class Router extends KoaRouter {
 
   /**
    * Generate router.
+   *
    * @param {AllPaths} allPaths All router paths.
    * @param {string} version API version prefix.
    */
@@ -41,20 +45,20 @@ export class Router extends KoaRouter {
   ) {
     super();
     if (version) {
-      console.log(`${now()}\tAPI version: ${version}, now you can access your router paths with prefix /${version}`);
-    } else {
-      console.warn(`${now()}\tThere is no version has been set.`);
+      logger.warn(`API version is deprecated, use accept header to instead.`)
+      logger.warn(`API version: ${version}, now you can access your router paths with prefix /${version}`);
     }
     if (allPaths) {
       this.loadAllPaths(allPaths);
-      console.log(`${now()}\tLoaded router paths`);
+      logger.info(`Loaded router paths`);
     } else {
-      console.warn(`${now()}\tThere is no router path has been set.`);
+      logger.warn(`There is no router path has been set.`);
     }
   }
 
   /**
    * Load all router paths.
+   *
    * @param {AllPaths} paths All router pahts.
    * @returns {void} void.
    */
@@ -70,6 +74,7 @@ export class Router extends KoaRouter {
 
   /**
    * Load router paths of special method.
+   *
    * @param {Methods} type Type of method.
    * @param {RouterPaths} paths Router paths.
    * @returns {void} void.
@@ -85,7 +90,7 @@ export class Router extends KoaRouter {
       case 'PATCH': action = this.patch.bind(this); break;
       case 'POST': action = this.post.bind(this); break;
       case 'PUT': action = this.put.bind(this); break;
-      default: console.warn(`${now()}\tUnknown method: ${typeUpperCase}`); return;
+      default: logger.warn(`Unknown method: ${typeUpperCase}`); return;
     }
     for (const key in paths) {
       if (paths.hasOwnProperty(key)) {
@@ -109,7 +114,7 @@ export class Router extends KoaRouter {
           } else {
             action(path, KoaBody(), paths[key].ware, Router.setCORS(paths[key].cors as CORS));
           }
-          console.log(`${now()}\tLoaded ${typeUpperCase} path: ${path} with CORS`);
+          logger.info(`Loaded ${typeUpperCase} path: ${path} with CORS`);
         } else {
           // Never use KoaBody in OPTIONS and HEAD method
           if (typeUpperCase === 'OPTIONS' || typeUpperCase === 'HEAD') {
@@ -117,7 +122,7 @@ export class Router extends KoaRouter {
           } else {
             action(path, KoaBody(), paths[key].ware);
           }
-          console.log(`${now()}\tLoaded ${typeUpperCase} path: ${path}`);
+          logger.info(`Loaded ${typeUpperCase} path: ${path}`);
         }
       }
     }
