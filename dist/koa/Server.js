@@ -126,10 +126,9 @@ class Server {
      * @returns {Promise<Server>} This server.
      */
     async listen(host, port) {
-        if (this.database) {
-            await this.database.connect();
+        if ((!this.database) || (this.database && await this.database.connect())) {
+            this.server.listen(port = port || (this.config.address && this.config.address.port) || 8080, host = host || (this.config.address && this.config.address.host) || '0.0.0.0', () => logger_1.logger.info(`Server online, address is ${host}:${port}`));
         }
-        this.server.listen(port = port || (this.config.address && this.config.address.port) || 8080, host = host || (this.config.address && this.config.address.host) || '0.0.0.0', () => logger_1.logger.info(`Server online, address is ${host}:${port}`));
         return this;
     }
     /**

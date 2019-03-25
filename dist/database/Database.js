@@ -18,7 +18,7 @@ class Database {
     constructor(options) {
         this.options = options;
         /** Remaining retries, default is 5. */
-        this.retries = 5;
+        this.retries = 10;
         /** Retry interval, second. */
         this.retryInterval = 10;
     }
@@ -37,7 +37,7 @@ class Database {
         catch (err) {
             if (this.retries--) {
                 logger_1.logger.error(`Database connection error: ${err}`);
-                logger_1.logger.warn(`Remaining retries: ${this.retries}, in ${this.retryInterval} seconds...`);
+                logger_1.logger.warn(`Database connection remaining retries: ${this.retries} times...`);
                 await sleep_promise_1.default(this.retryInterval * 1000);
                 return await this.connect();
             }
