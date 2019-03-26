@@ -34,12 +34,12 @@ export class Database {
       return true;
     } catch (err) {
       if (this.retries--) {
-        logger.error(`Database connection error: ${err}`);
+        logger.error(`Database connection error: ${err} .`);
         logger.warn(`Database connection remaining retries: ${this.retries} times...`);
         await sleep(this.retryInterval * 1000);
         return await this.connect();
       } else {
-        logger.error(`Database connection failed: ${err}`);
+        logger.error(`Database connection failed: ${err} .`);
         return false;
       }
     }
