@@ -36,13 +36,13 @@ class Database {
         }
         catch (err) {
             if (this.retries--) {
-                logger_1.logger.error(`Database connection error: ${err}`);
+                logger_1.logger.error(`Database connection error: ${err} .`);
                 logger_1.logger.warn(`Database connection remaining retries: ${this.retries} times...`);
                 await sleep_promise_1.default(this.retryInterval * 1000);
                 return await this.connect();
             }
             else {
-                logger_1.logger.error(`Database connection failed: ${err}`);
+                logger_1.logger.error(`Database connection failed: ${err} .`);
                 return false;
             }
         }

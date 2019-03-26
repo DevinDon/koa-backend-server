@@ -4,23 +4,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const logger_1 = require("@iinfinity/logger");
+const redion_1 = require("@iinfinity/redion");
 const fs_1 = require("fs");
 const http_1 = __importDefault(require("http"));
 const http2_1 = __importDefault(require("http2"));
 const https_1 = __importDefault(require("https"));
 const koa_1 = __importDefault(require("koa"));
 const koa_static_1 = __importDefault(require("koa-static"));
-const redion_1 = require("@iinfinity/redion");
 const database_1 = require("../database");
 const middleware_1 = require("../middleware");
 /**
- * KBS, Koa Backend Server.
+ * Rester, a RESTful server.
  */
 class Server {
     /**
-     * Create a KBS, Koa Backend Server.
+     * Create a Rester Server.
      *
-     * @param {KBSConfig} config KBS Server options.
+     * @param {ServerConfig} config Rester Server options.
      */
     constructor(config) {
         // Load config from profile.
@@ -38,14 +38,14 @@ class Server {
             }
         }
         catch (err) {
-            logger_1.logger.info(`Profile server.config.json not found or cannot be parse, disable it. Detail: ${err}`);
+            logger_1.logger.info(`Profile server.config.json not found or cannot be parse, disable it.`);
             this.config = config || {};
         }
-        // Init KBS.
+        // Init Rester Server.
         this.init();
     }
     /**
-     * Init KBS.
+     * Init Rester Server.
      *
      * @returns {Promise<void>} Void.
      */
@@ -65,14 +65,14 @@ class Server {
                     break;
                 default:
                     this.server = http_1.default.createServer(this.application.callback());
-                    logger_1.logger.warn(`Unkoown portocol or unset portocol: ${this.config.address.portocol}, use default portocol HTTP`);
+                    logger_1.logger.warn(`Unkoown portocol or unset portocol: ${this.config.address.portocol}, use default portocol HTTP.`);
                     break;
             }
             this.app.proxy = Boolean(this.config.address.proxy);
         }
         else { // Default to HTTP.
             this.server = http_1.default.createServer(this.application.callback());
-            logger_1.logger.info(`Use default portocol HTTP`);
+            logger_1.logger.info(`Use default portocol HTTP.`);
         }
         // Create database connection or not.
         if (this.config.database) {
@@ -84,18 +84,24 @@ class Server {
         // Use session middleware or not.
         if (this.config.session) {
             this.session = new redion_1.Redion(this.application, this.config.session);
-            this.use(this.session.ware);
+            this.use({
+                'Redion': this.session.ware
+            });
         }
         else {
             logger_1.logger.warn(`Session service not provided.`);
         }
         // Config router or not.
         if (this.config.router) {
-            this.router = new middleware_1.Router(this.config.router.paths, this.config.router.version);
-            this.use(this.router.ware);
+            this.router = new middleware_1.Router(this.config.router);
+            this.use({
+                'Koa Router': this.router.ware
+            });
             if (this.config.router.static && this.config.router.static.path) {
-                this.use(koa_static_1.default(this.config.router.static.path, this.config.router.static.options));
-                logger_1.logger.info(`Static resource path: ${this.config.router.static.path}`);
+                this.use({
+                    'Koa Static': koa_static_1.default(this.config.router.static.path, this.config.router.static.options)
+                });
+                logger_1.logger.info(`Static resource path: ${this.config.router.static.path} .`);
             }
             else {
                 logger_1.logger.info(`Static server service not provided.`);
@@ -104,6 +110,13 @@ class Server {
         else {
             logger_1.logger.warn(`Routing service not provided.`);
         }
+        // Enable development / production mode.
+        if (this.config.environment === 'prod') {
+            logger_1.logger.info('Enable production mode.');
+        }
+        else {
+            logger_1.logger.debug('Enable development mode.');
+        }
     }
     /**
      * Use middlewares.
@@ -111,10 +124,13 @@ class Server {
      * @param {Middleware[]} middlewares Middlewares.
      * @returns {Server} This server.
      */
-    use(...middlewares) {
-        for (const middleware of middlewares) {
-            this.application.use(middleware);
-            logger_1.logger.info(`Use middleware: ${middleware.name || middleware.toString()}`);
+    use(middlewares) {
+        for (const name in middlewares) {
+            if (middlewares.hasOwnProperty(name)) {
+                const middleware = middlewares[name];
+                logger_1.logger.info(`Use middleware: ${name} .`);
+                this.application.use(middleware);
+            }
         }
         return this;
     }
@@ -127,7 +143,7 @@ class Server {
      */
     async listen(host, port) {
         if ((!this.database) || (this.database && await this.database.connect())) {
-            this.server.listen(port = port || (this.config.address && this.config.address.port) || 8080, host = host || (this.config.address && this.config.address.host) || '0.0.0.0', () => logger_1.logger.info(`Server online, address is ${host}:${port}`));
+            this.server.listen(port = port || (this.config.address && this.config.address.port) || 8080, host = host || (this.config.address && this.config.address.host) || '0.0.0.0', () => logger_1.logger.info(`Server online, address is ${host}:${port} .`));
         }
         return this;
     }
