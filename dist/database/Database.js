@@ -21,6 +21,7 @@ class Database {
         this.retries = 10;
         /** Retry interval, second. */
         this.retryInterval = 10;
+        this.con = typeorm_1.getConnectionManager().create(options);
     }
     /**
      * <async> Connect to database.
@@ -30,12 +31,12 @@ class Database {
     async connect() {
         try {
             logger_1.logger.info(`Connecting to database...`);
-            this.con = await typeorm_1.createConnection(this.options);
+            await this.con.connect();
             logger_1.logger.info(`Database connected.`);
             return true;
         }
         catch (err) {
-            if (this.retries--) {
+            if (--this.retries) {
                 logger_1.logger.error(`Database connection error: ${err}.`);
                 logger_1.logger.warn(`Database connection remaining retries: ${this.retries} times...`);
                 await sleep_promise_1.default(this.retryInterval * 1000);

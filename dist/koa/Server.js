@@ -42,14 +42,6 @@ class Server {
             this.config = config || {};
         }
         // Init Rester Server.
-        this.init();
-    }
-    /**
-     * Init Rester Server.
-     *
-     * @returns {Promise<void>} Void.
-     */
-    async init() {
         this.application = new koa_1.default();
         // Create server.
         if (this.config.address) { // Select portocol.
