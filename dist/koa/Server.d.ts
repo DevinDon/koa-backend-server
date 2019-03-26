@@ -23,12 +23,6 @@ export declare class Server {
      */
     constructor(config?: ServerConfig);
     /**
-     * Init Rester Server.
-     *
-     * @returns {Promise<void>} Void.
-     */
-    private init;
-    /**
      * Use middlewares.
      *
      * @param {Middleware[]} middlewares Middlewares.
