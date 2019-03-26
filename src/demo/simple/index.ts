@@ -1,4 +1,4 @@
-import { Server, ServerConfig, RouterPaths } from '../../../dist';
+import { RouterPaths, Server, ServerConfig } from '../../../dist'; // Replace it with '@iinfinity/rester' on your workspace.
 
 const GET: RouterPaths = {
   '/ get index': {
