@@ -2,8 +2,8 @@ import { Middleware } from 'koa';
 import KoaBody from 'koa-body';
 import KoaRouter from 'koa-router';
 import { AllPaths, CORS, Methods, RouterPaths } from '../@types';
-import { now } from '../util';
 import { logger } from '@iinfinity/logger';
+import { RouterConfig } from '../@types';
 
 /**
  * Package KoaRouter.
@@ -39,20 +39,19 @@ export class Router extends KoaRouter {
    * @param {AllPaths} allPaths All router paths.
    * @param {string} version API version prefix.
    */
-  constructor(
-    allPaths?: AllPaths,
-    private version?: string
-  ) {
+  constructor(private config: RouterConfig) {
     super();
-    if (version) {
+    if (config.version) {
       logger.warn(`API version is deprecated, use accept header to instead.`);
-      logger.warn(`API version: ${version}, now you can access your router paths with prefix /${version}`);
     }
-    if (allPaths) {
-      this.loadAllPaths(allPaths);
-      logger.info(`Loaded router paths`);
+    if (config.prefix) {
+      logger.info(`Router prefix: ${config.prefix}, now you can access your router paths with prefix /${config.prefix} .`);
+    }
+    if (config.paths) {
+      this.loadAllPaths(config.paths);
+      logger.info(`Loaded router paths.`);
     } else {
-      logger.warn(`There is no router path has been set.`);
+      logger.warn(`There is no router path has been set, server may not work.`);
     }
   }
 
@@ -90,14 +89,14 @@ export class Router extends KoaRouter {
       case 'PATCH': action = this.patch.bind(this); break;
       case 'POST': action = this.post.bind(this); break;
       case 'PUT': action = this.put.bind(this); break;
-      default: logger.warn(`Unknown method: ${typeUpperCase}`); return;
+      default: logger.warn(`Unknown method: ${typeUpperCase} .`); return;
     }
     for (const key in paths) {
       if (paths.hasOwnProperty(key)) {
         /** Router paths with string or RegExp. */
         let path = paths[key].path;
-        /** API version prefix. */
-        const prefix = (this.version && !paths[key].withoutPrefix) ? '/' + this.version : '';
+        /** Router prefix. */
+        const prefix = (this.config.prefix && !paths[key].withoutPrefix) ? '/' + this.config.prefix : '';
         // If the path instanceof RegExp, slice reg and add the prefix to this reg.
         if (path instanceof RegExp) {
           // path.source
@@ -114,7 +113,7 @@ export class Router extends KoaRouter {
           } else {
             action(path, KoaBody(), paths[key].ware, Router.setCORS(paths[key].cors as CORS));
           }
-          logger.info(`Loaded ${typeUpperCase} path: ${path} with CORS`);
+          logger.info(`Loaded ${typeUpperCase} path: ${path} with CORS .`);
         } else {
           // Never use KoaBody in OPTIONS and HEAD method
           if (typeUpperCase === 'OPTIONS' || typeUpperCase === 'HEAD') {
@@ -122,7 +121,7 @@ export class Router extends KoaRouter {
           } else {
             action(path, KoaBody(), paths[key].ware);
           }
-          logger.info(`Loaded ${typeUpperCase} path: ${path}`);
+          logger.info(`Loaded ${typeUpperCase} path: ${path} .`);
         }
       }
     }
