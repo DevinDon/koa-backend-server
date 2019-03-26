@@ -34,6 +34,7 @@ export class Server {
    * @param {ServerConfig} config Rester Server options.
    */
   constructor(config?: ServerConfig) {
+
     // Load config from profile.
     try {
       // Default in development mode, use `npm start prod` to enable production mode.
@@ -51,18 +52,10 @@ export class Server {
       logger.info(`Profile server.config.json not found or cannot be parse, disable it.`);
       this.config = config || {};
     }
+
     // Init Rester Server.
-    this.init();
-  }
-
-  /**
-   * Init Rester Server.
-   *
-   * @returns {Promise<void>} Void.
-   */
-  private async init(): Promise<void> {
-
     this.application = new Koa();
+
     // Create server.
     if (this.config.address) { // Select portocol.
       switch (this.config.address.portocol) {
