@@ -90,10 +90,15 @@ const devConfig: ServerConfig = {
   environment: 'dev'
 };
 
-const server = new Server(devConfig);
-// Use example statistic middleware
-server.use({
-  'Statistic': statistic
-});
+/** Simple config. */
+const simpleConfig: ServerConfig = {};
+
+const server = new Server();
+
+// const server = new Server(devConfig);
+// // Use example statistic middleware
+// server.use({
+//   'Statistic': statistic
+// });
 
 server.listen();
