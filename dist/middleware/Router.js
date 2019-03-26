@@ -18,19 +18,21 @@ class Router extends koa_router_1.default {
      * @param {AllPaths} allPaths All router paths.
      * @param {string} version API version prefix.
      */
-    constructor(allPaths, version) {
+    constructor(config) {
         super();
-        this.version = version;
-        if (version) {
+        this.config = config;
+        if (config.version) {
             logger_1.logger.warn(`API version is deprecated, use accept header to instead.`);
-            logger_1.logger.warn(`API version: ${version}, now you can access your router paths with prefix /${version}`);
         }
-        if (allPaths) {
-            this.loadAllPaths(allPaths);
-            logger_1.logger.info(`Loaded router paths`);
+        if (config.prefix) {
+            logger_1.logger.info(`Router prefix: ${config.prefix}, now you can access your router paths with prefix /${config.prefix} .`);
+        }
+        if (config.paths) {
+            this.loadAllPaths(config.paths);
+            logger_1.logger.info(`Loaded router paths.`);
         }
         else {
-            logger_1.logger.warn(`There is no router path has been set.`);
+            logger_1.logger.warn(`There is no router path has been set, server may not work.`);
         }
     }
     /**
@@ -101,15 +103,15 @@ class Router extends koa_router_1.default {
                 action = this.put.bind(this);
                 break;
             default:
-                logger_1.logger.warn(`Unknown method: ${typeUpperCase}`);
+                logger_1.logger.warn(`Unknown method: ${typeUpperCase} .`);
                 return;
         }
         for (const key in paths) {
             if (paths.hasOwnProperty(key)) {
                 /** Router paths with string or RegExp. */
                 let path = paths[key].path;
-                /** API version prefix. */
-                const prefix = (this.version && !paths[key].withoutPrefix) ? '/' + this.version : '';
+                /** Router prefix. */
+                const prefix = (this.config.prefix && !paths[key].withoutPrefix) ? '/' + this.config.prefix : '';
                 // If the path instanceof RegExp, slice reg and add the prefix to this reg.
                 if (path instanceof RegExp) {
                     // path.source
@@ -128,7 +130,7 @@ class Router extends koa_router_1.default {
                     else {
                         action(path, koa_body_1.default(), paths[key].ware, Router.setCORS(paths[key].cors));
                     }
-                    logger_1.logger.info(`Loaded ${typeUpperCase} path: ${path} with CORS`);
+                    logger_1.logger.info(`Loaded ${typeUpperCase} path: ${path} with CORS .`);
                 }
                 else {
                     // Never use KoaBody in OPTIONS and HEAD method
@@ -138,7 +140,7 @@ class Router extends koa_router_1.default {
                     else {
                         action(path, koa_body_1.default(), paths[key].ware);
                     }
-                    logger_1.logger.info(`Loaded ${typeUpperCase} path: ${path}`);
+                    logger_1.logger.info(`Loaded ${typeUpperCase} path: ${path} .`);
                 }
             }
         }

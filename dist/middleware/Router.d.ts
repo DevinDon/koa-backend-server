@@ -1,13 +1,14 @@
 import { Middleware } from 'koa';
 import KoaRouter from 'koa-router';
 import { AllPaths, CORS, Methods, RouterPaths } from '../@types';
+import { RouterConfig } from '../@types';
 /**
  * Package KoaRouter.
  *
  * @extends {KoaRouter} KoaRouter
  */
 export declare class Router extends KoaRouter {
-    private version?;
+    private config;
     /**
      * Generate CORS middleware.
      *
@@ -22,7 +23,7 @@ export declare class Router extends KoaRouter {
      * @param {AllPaths} allPaths All router paths.
      * @param {string} version API version prefix.
      */
-    constructor(allPaths?: AllPaths, version?: string | undefined);
+    constructor(config: RouterConfig);
     /**
      * Load all router paths.
      *

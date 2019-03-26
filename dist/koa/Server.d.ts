@@ -1,7 +1,7 @@
-import Koa, { Middleware } from 'koa';
-import { KBSConfig } from '../@types';
+import Koa from 'koa';
+import { Middlewares, ServerConfig } from '../@types';
 /**
- * KBS, Koa Backend Server.
+ * Rester, a RESTful server.
  */
 export declare class Server {
     /** Koa. */
@@ -17,13 +17,13 @@ export declare class Server {
     /** Database. */
     private database?;
     /**
-     * Create a KBS, Koa Backend Server.
+     * Create a Rester Server.
      *
-     * @param {KBSConfig} config KBS Server options.
+     * @param {ServerConfig} config Rester Server options.
      */
-    constructor(config?: KBSConfig);
+    constructor(config?: ServerConfig);
     /**
-     * Init KBS.
+     * Init Rester Server.
      *
      * @returns {Promise<void>} Void.
      */
@@ -34,7 +34,7 @@ export declare class Server {
      * @param {Middleware[]} middlewares Middlewares.
      * @returns {Server} This server.
      */
-    use(...middlewares: Middleware[]): Server;
+    use(middlewares: Middlewares): Server;
     /**
      * Listening on some where.
      *
