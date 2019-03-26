@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.1 => 0.7.0
+
+- feat: add development / production mode in Server Config
+- refactor: refactor namespace / module
+- perf: show middleware name when use
+
 ## 0.6.0 => 0.6.1
 
 - fix: fix some bugs & update package
