@@ -38,7 +38,7 @@ export class Server {
     try {
       // Default in development mode, use `npm start prod` to enable production mode.
       const prod = Boolean(process.argv.find(v => v === 'prod'));
-      logger.info(`Koa Backend Server is on ${prod ? 'production' : 'development'} mode.`);
+      logger.info(`Rester is on ${prod ? 'production' : 'development'} mode.`);
       const json: ServerConfig = JSON.parse(readFileSync(prod ? 'server.config.json' : 'server.config.dev.json').toString());
       // The profile will cover config.
       this.config = Object.assign({}, json, config);
@@ -90,7 +90,7 @@ export class Server {
     if (this.config.database) {
       this.database = new Database(this.config.database);
     } else {
-      logger.warn(`Database not connected.`);
+      logger.warn(`Database service not provided.`);
     }
 
     // Use session middleware or not.
@@ -113,7 +113,7 @@ export class Server {
         this.use({
           'Koa Static': KoaStatic(this.config.router.static.path, this.config.router.static.options)
         });
-        logger.info(`Static resource path: ${this.config.router.static.path} .`);
+        logger.info(`Static resource path: ${this.config.router.static.path}.`);
       } else {
         logger.info(`Static server service not provided.`);
       }
@@ -125,7 +125,7 @@ export class Server {
     if (this.config.environment === 'prod') {
       logger.info('Enable production mode.');
     } else {
-      logger.debug('Enable development mode.');
+      logger.debug(`Enable development mode, set config.environment to 'prod' to enable production mode.`);
     }
 
   }
@@ -140,7 +140,7 @@ export class Server {
     for (const name in middlewares) {
       if (middlewares.hasOwnProperty(name)) {
         const middleware = middlewares[name];
-        logger.info(`Use middleware: ${name} .`);
+        logger.info(`Use middleware: ${name}.`);
         this.application.use(middleware);
       }
     }
@@ -159,7 +159,7 @@ export class Server {
       this.server.listen(
         port = port || (this.config.address && this.config.address.port) || 8080,
         host = host || (this.config.address && this.config.address.host) || '0.0.0.0',
-        () => logger.info(`Server online, address is ${host}:${port} .`)
+        () => logger.info(`Rester online, listens on ${host}:${port}.`)
       );
     }
     return this;

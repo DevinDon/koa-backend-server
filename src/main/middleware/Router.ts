@@ -45,7 +45,7 @@ export class Router extends KoaRouter {
       logger.warn(`API version is deprecated, use accept header to instead.`);
     }
     if (config.prefix) {
-      logger.info(`Router prefix: ${config.prefix}, now you can access your router paths with prefix /${config.prefix} .`);
+      logger.info(`Router prefix: ${config.prefix}, now you can access your router paths with prefix /${config.prefix}.`);
     }
     if (config.paths) {
       this.loadAllPaths(config.paths);
@@ -89,7 +89,7 @@ export class Router extends KoaRouter {
       case 'PATCH': action = this.patch.bind(this); break;
       case 'POST': action = this.post.bind(this); break;
       case 'PUT': action = this.put.bind(this); break;
-      default: logger.warn(`Unknown method: ${typeUpperCase} .`); return;
+      default: logger.warn(`Unknown method: ${typeUpperCase}.`); return;
     }
     for (const key in paths) {
       if (paths.hasOwnProperty(key)) {
@@ -113,7 +113,7 @@ export class Router extends KoaRouter {
           } else {
             action(path, KoaBody(), paths[key].ware, Router.setCORS(paths[key].cors as CORS));
           }
-          logger.info(`Loaded ${typeUpperCase} path: ${path} with CORS .`);
+          logger.info(`Loaded ${typeUpperCase} path: ${path} with CORS.`);
         } else {
           // Never use KoaBody in OPTIONS and HEAD method
           if (typeUpperCase === 'OPTIONS' || typeUpperCase === 'HEAD') {
@@ -121,7 +121,7 @@ export class Router extends KoaRouter {
           } else {
             action(path, KoaBody(), paths[key].ware);
           }
-          logger.info(`Loaded ${typeUpperCase} path: ${path} .`);
+          logger.info(`Loaded ${typeUpperCase} path: ${path}.`);
         }
       }
     }

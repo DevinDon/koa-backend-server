@@ -27,7 +27,7 @@ class Server {
         try {
             // Default in development mode, use `npm start prod` to enable production mode.
             const prod = Boolean(process.argv.find(v => v === 'prod'));
-            logger_1.logger.info(`Koa Backend Server is on ${prod ? 'production' : 'development'} mode.`);
+            logger_1.logger.info(`Rester is on ${prod ? 'production' : 'development'} mode.`);
             const json = JSON.parse(fs_1.readFileSync(prod ? 'server.config.json' : 'server.config.dev.json').toString());
             // The profile will cover config.
             this.config = Object.assign({}, json, config);
@@ -79,7 +79,7 @@ class Server {
             this.database = new database_1.Database(this.config.database);
         }
         else {
-            logger_1.logger.warn(`Database not connected.`);
+            logger_1.logger.warn(`Database service not provided.`);
         }
         // Use session middleware or not.
         if (this.config.session) {
@@ -101,7 +101,7 @@ class Server {
                 this.use({
                     'Koa Static': koa_static_1.default(this.config.router.static.path, this.config.router.static.options)
                 });
-                logger_1.logger.info(`Static resource path: ${this.config.router.static.path} .`);
+                logger_1.logger.info(`Static resource path: ${this.config.router.static.path}.`);
             }
             else {
                 logger_1.logger.info(`Static server service not provided.`);
@@ -115,7 +115,7 @@ class Server {
             logger_1.logger.info('Enable production mode.');
         }
         else {
-            logger_1.logger.debug('Enable development mode.');
+            logger_1.logger.debug(`Enable development mode, set config.environment to 'prod' to enable production mode.`);
         }
     }
     /**
@@ -128,7 +128,7 @@ class Server {
         for (const name in middlewares) {
             if (middlewares.hasOwnProperty(name)) {
                 const middleware = middlewares[name];
-                logger_1.logger.info(`Use middleware: ${name} .`);
+                logger_1.logger.info(`Use middleware: ${name}.`);
                 this.application.use(middleware);
             }
         }
@@ -143,7 +143,7 @@ class Server {
      */
     async listen(host, port) {
         if ((!this.database) || (this.database && await this.database.connect())) {
-            this.server.listen(port = port || (this.config.address && this.config.address.port) || 8080, host = host || (this.config.address && this.config.address.host) || '0.0.0.0', () => logger_1.logger.info(`Server online, address is ${host}:${port} .`));
+            this.server.listen(port = port || (this.config.address && this.config.address.port) || 8080, host = host || (this.config.address && this.config.address.host) || '0.0.0.0', () => logger_1.logger.info(`Rester online, listens on ${host}:${port}.`));
         }
         return this;
     }
