@@ -1,12 +1,14 @@
 {
-  "name": "@iinfinity/rester.source",
-  "version": "0.0.0",
-  "description": "Source code of Koa Backend Server.",
+  "name": "@iinfinity/rester",
+  "version": "0.7.0",
+  "description": "A RESTful server with db & session support based Koa & TypeScript.",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "debug": "ts-node src/main",
-    "test": "ts-node src/test",
+    "demo": "npm run demo:simple",
+    "demo:simple": "ts-node --project src/demo/tsconfig.json src/demo/simple",
+    "demo:full": "ts-node --project src/demo/tsconfig.json src/demo/full",
+    "test": "ts-node --project src/test/tsconfig.json src/test",
     "watch": "tsc -w"
   },
   "keywords": [
@@ -14,19 +16,26 @@
     "backend",
     "server"
   ],
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ],
   "homepage": "https://github.com/DevinDon/rester",
-  "author": "IInfinity <I.INF@Outlook.com>",
-  "license": "MIT",
-  "private": true,
-  "directories": {
-    "test": "test"
-  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/DevinDon/rester.git"
   },
   "bugs": {
     "url": "https://github.com/DevinDon/rester/issues"
+  },
+  "author": "IInfinity <I.INF@Outlook.com> (https://don.red)",
+  "license": "MIT",
+  "private": false,
+  "directories": {
+    "test": "test"
   },
   "dependencies": {
     "@iinfinity/logger": "^0.1.0",
