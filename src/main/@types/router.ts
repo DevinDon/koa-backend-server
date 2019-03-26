@@ -1,3 +1,5 @@
+import { Middleware } from "koa";
+
 /** CORS, Cross-origin resource sharing 跨域请求. */
 export interface CORS {
   'Access-Control-Allow-Headers': string;
@@ -10,7 +12,7 @@ export interface RouterPaths {
   [index: string]: {
     cors?: CORS;
     path: string | RegExp | (string | RegExp)[];
-    ware: any;
+    ware: Middleware;
     withoutPrefix?: boolean;
   };
 }
