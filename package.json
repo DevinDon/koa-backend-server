@@ -1,6 +1,6 @@
 {
   "name": "@iinfinity/rester",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "A RESTful server with db & session support based Koa & TypeScript.",
   "main": "dist/index.js",
   "scripts": {
@@ -16,13 +16,6 @@
     "backend",
     "server"
   ],
-  "files": [
-    "dist",
-    "CHANGELOG.md",
-    "LICENSE",
-    "package.json",
-    "README.md"
-  ],
   "homepage": "https://github.com/DevinDon/rester",
   "repository": {
     "type": "git",
@@ -33,7 +26,7 @@
   },
   "author": "IInfinity <I.INF@Outlook.com> (https://don.red)",
   "license": "MIT",
-  "private": false,
+  "private": true,
   "directories": {
     "test": "test"
   },
