@@ -2,7 +2,7 @@
   "name": "@iinfinity/rester",
   "version": "0.7.1",
   "description": "A RESTful server with db & session support based Koa & TypeScript.",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
     "build": "tsc",
     "demo": "npm run demo:simple",
@@ -13,6 +13,7 @@
   },
   "keywords": [
     "koa",
+    "restful",
     "backend",
     "server"
   ],
