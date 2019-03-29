@@ -2,7 +2,9 @@
 
 A RESTful server with db & session support based Koa & TypeScript.
 
-# Version
+[FULL DOCUMENT IS HERE.](https://github.com/DevinDon/koa-backend-server/blob/master/docs/README.md)
+
+# Attention
 
 <span style="color: red">**WARNING: This project is currently in an *UNSTABLE* phase.**</span>
 
@@ -17,10 +19,15 @@ STABLE version will be 1.0.0 in future.
 - [x] CORS router support
 - [x] RESTful api support
 - [ ] local session storage by [Redion](https://github.com/DevinDon/redion)
+- [ ] **Refactor project by DI & AOP, like Angular.**
 
 # Change log
 
-> [See Full Change Log on GitHub.](https://github.com/DevinDon/koa-backend-server/blob/master/dist/CHANGELOG.md)
+> [See Full Change Log on GitHub.](https://github.com/DevinDon/koa-backend-server/blob/master/docs/CHANGELOG.md)
+
+## 0.7.0 => 0.7.1
+
+- refactor: refactor project
 
 ## 0.6.0 => 0.7.0
 
