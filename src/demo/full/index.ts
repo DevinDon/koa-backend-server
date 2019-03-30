@@ -1,4 +1,4 @@
-import { Server, ServerConfig } from '../../../dist';
+import { Server, ServerConfig } from '../../main';
 import PATH from './router';
 import { statistic } from './ware';
 
