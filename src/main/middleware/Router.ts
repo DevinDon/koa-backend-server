@@ -21,6 +21,7 @@ export class Router extends KoaRouter {
    */
   public static setCORS(options: CORS, isOPTIONS: boolean = false): Middleware {
     return async (c, next) => {
+      next();
       c.set({
         'Access-Control-Allow-Headers': options['Access-Control-Allow-Headers'],
         'Access-Control-Allow-Methods': options['Access-Control-Allow-Methods'].join(', '),
@@ -29,7 +30,6 @@ export class Router extends KoaRouter {
       if (isOPTIONS) {
         c.body = {};
       }
-      await next();
     };
   }
 
