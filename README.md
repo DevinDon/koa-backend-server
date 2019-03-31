@@ -25,9 +25,9 @@ STABLE version will be 1.0.0 in future.
 
 > [See Full Change Log on GitHub.](https://github.com/DevinDon/koa-backend-server/blob/master/docs/CHANGELOG.md)
 
-## 0.7.0 => 0.7.1
+## 0.7.1 => 0.7.2
 
-- refactor: refactor project
+- perf: perf next function
 
 ## 0.6.0 => 0.7.0
 

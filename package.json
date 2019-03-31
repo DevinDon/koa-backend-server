@@ -1,6 +1,6 @@
 {
   "name": "@iinfinity/rester",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "A RESTful server with db & session support based Koa & TypeScript.",
   "main": "index.js",
   "scripts": {
@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@iinfinity/logger": "^0.1.0",
-    "@iinfinity/redion": "^0.3.3",
+    "@iinfinity/redion": "^0.3.4",
     "@types/koa": "^2.0.48",
     "@types/koa-router": "^7.0.40",
     "@types/koa-static": "^4.0.1",
@@ -43,10 +43,10 @@
     "koa-static": "^5.0.0",
     "pg": "^7.9.0",
     "sleep-promise": "^8.0.1",
-    "typeorm": "^0.2.15",
-    "typescript": "^3.3.4000"
+    "typeorm": "^0.2.15"
   },
   "devDependencies": {
-    "ts-node": "^8.0.3"
+    "ts-node": "^8.0.3",
+    "typescript": "^3.4.1"
   }
 }
