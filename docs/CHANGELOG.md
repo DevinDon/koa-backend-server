@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.7.1 => 0.7.2
+
+- perf: perf next function
+- chore: update typescript to 3.4.1
+
 ## 0.7.0 => 0.7.1
 
 - refactor: refactor project

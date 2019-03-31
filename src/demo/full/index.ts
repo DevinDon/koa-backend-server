@@ -85,7 +85,8 @@ const devConfig: ServerConfig = {
     redis: {
       host: 'a-1.don.red',
       port: 6379
-    }
+    },
+    maxAge: 120
   },
   environment: 'dev'
 };
