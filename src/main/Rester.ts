@@ -1,24 +1,25 @@
-import { logger } from '@iinfinity/logger';
 import { Redion } from '@iinfinity/redion';
 import { readFileSync } from 'fs';
 import HTTP from 'http';
 import HTTP2 from 'http2';
 import HTTPS from 'https';
-import Koa, { Middleware } from 'koa';
+import Koa from 'koa';
+import 'koa-body';
 import KoaStatic from 'koa-static';
-import { Middlewares, ServerConfig } from '../@types';
-import { Database } from '../database';
-import { Router } from '../middleware';
+import { Middlewares, Option } from './@types';
+import { Database } from './database';
+import { Router } from './middleware';
+import { logger } from '.';
 
 /**
  * Rester, a RESTful server.
  */
-export class Server {
+export class Rester {
 
   /** Koa. */
   private application: Koa;
   /** Config. */
-  private config: ServerConfig;
+  private option: Option;
   /** Server. */
   private server: HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server;
   /** Session. */
@@ -31,64 +32,64 @@ export class Server {
   /**
    * Create a Rester Server.
    *
-   * @param {ServerConfig} config Rester Server options.
+   * @param {Option} option Rester server option.
    */
-  constructor(config?: ServerConfig) {
+  constructor(option?: Option) {
 
     // Load config from profile.
     try {
       // Default in development mode, use `npm start prod` to enable production mode.
       const prod = Boolean(process.argv.find(v => v === 'prod'));
       logger.info(`Rester is on ${prod ? 'production' : 'development'} mode.`);
-      const json: ServerConfig = JSON.parse(readFileSync(prod ? 'server.config.json' : 'server.config.dev.json').toString());
+      const json: Option = JSON.parse(readFileSync(prod ? 'server.config.json' : 'server.config.dev.json').toString());
       // The profile will cover config.
-      this.config = Object.assign({}, json, config);
-      for (const key in this.config) {
-        if (this.config.hasOwnProperty(key)) {
-          Object.assign(this.config[key], json[key]);
+      this.option = Object.assign({}, json, option);
+      for (const key in this.option) {
+        if (this.option.hasOwnProperty(key)) {
+          Object.assign(this.option[key], json[key]);
         }
       }
     } catch (err) {
       logger.info(`Profile server.config.json not found or cannot be parse, disable it.`);
-      this.config = config || {};
+      this.option = option || {};
     }
 
     // Init Rester Server.
     this.application = new Koa();
 
     // Create server.
-    if (this.config.address) { // Select portocol.
-      switch (this.config.address.portocol) {
+    if (this.option.address) { // Select portocol.
+      switch (this.option.address.portocol) {
         case 'HTTP':
           this.server = HTTP.createServer(this.application.callback());
           break;
         case 'HTTP2':
-          this.server = HTTP2.createSecureServer(this.config.address.ssl || {}, this.application.callback());
+          this.server = HTTP2.createSecureServer(this.option.address.ssl || {}, this.application.callback());
           break;
         case 'HTTPS':
-          this.server = HTTPS.createServer(this.config.address.ssl || {}, this.application.callback());
+          this.server = HTTPS.createServer(this.option.address.ssl || {}, this.application.callback());
           break;
         default:
           this.server = HTTP.createServer(this.application.callback());
-          logger.warn(`Unkoown portocol or unset portocol: ${this.config.address.portocol}, use default portocol HTTP.`);
+          logger.warn(`Unkoown portocol or unset portocol: ${this.option.address.portocol}, use default portocol HTTP.`);
           break;
       }
-      this.app.proxy = Boolean(this.config.address.proxy);
+      this.application.proxy = Boolean(this.option.address.proxy);
     } else { // Default to HTTP.
       this.server = HTTP.createServer(this.application.callback());
       logger.info(`Use default portocol HTTP.`);
     }
 
     // Create database connection or not.
-    if (this.config.database) {
-      this.database = new Database(this.config.database);
+    if (this.option.database) {
+      this.database = new Database(this.option.database);
     } else {
       logger.warn(`Database service not provided.`);
     }
 
     // Use session middleware or not.
-    if (this.config.session) {
-      this.session = new Redion(this.application, this.config.session);
+    if (this.option.session) {
+      this.session = new Redion(this.option.session);
       this.use({
         'Redion': this.session.ware
       });
@@ -97,16 +98,16 @@ export class Server {
     }
 
     // Config router or not.
-    if (this.config.router) {
-      this.router = new Router(this.config.router);
+    if (this.option.router) {
+      this.router = new Router(this.option.router);
       this.use({
         'Koa Router': this.router.ware
       });
-      if (this.config.router.static && this.config.router.static.path) {
+      if (this.option.router.static && this.option.router.static.path) {
         this.use({
-          'Koa Static': KoaStatic(this.config.router.static.path, this.config.router.static.options)
+          'Koa Static': KoaStatic(this.option.router.static.path, this.option.router.static.option)
         });
-        logger.info(`Static resource path: ${this.config.router.static.path}.`);
+        logger.info(`Static resource path: ${this.option.router.static.path}.`);
       } else {
         logger.info(`Static server service not provided.`);
       }
@@ -115,7 +116,7 @@ export class Server {
     }
 
     // Enable development / production mode.
-    if (this.config.environment === 'prod') {
+    if (this.option.environment === 'prod') {
       logger.info('Enable production mode.');
     } else {
       logger.debug(`Enable development mode, set config.environment to 'prod' to enable production mode.`);
@@ -127,9 +128,9 @@ export class Server {
    * Use middlewares.
    *
    * @param {Middleware[]} middlewares Middlewares.
-   * @returns {Server} This server.
+   * @returns {Rester} This server.
    */
-  public use(middlewares: Middlewares): Server {
+  public use(middlewares: Middlewares): Rester {
     for (const name in middlewares) {
       if (middlewares.hasOwnProperty(name)) {
         const middleware = middlewares[name];
@@ -145,13 +146,13 @@ export class Server {
    *
    * @param {number} port Listening port, default to 8080.
    * @param {string} host The listening host, default to 0.0.0.0.
-   * @returns {Promise<Server>} This server.
+   * @returns {Promise<Rester>} This server.
    */
-  public async listen(host?: string, port?: number): Promise<Server> {
+  public async listen(host?: string, port?: number): Promise<Rester> {
     if ((!this.database) || (this.database && await this.database.connect())) {
       this.server.listen(
-        port = port || (this.config.address && this.config.address.port) || 8080,
-        host = host || (this.config.address && this.config.address.host) || '0.0.0.0',
+        port = port || (this.option.address && this.option.address.port) || 8080,
+        host = host || (this.option.address && this.option.address.host) || '0.0.0.0',
         () => logger.info(`Rester online, listens on ${host}:${port}.`)
       );
     }
@@ -159,12 +160,12 @@ export class Server {
   }
 
   /**
-   * @returns {Koa} This Koa instance.
+   * @returns {Koa} The core instance, Koa.
    */
-  public get app(): Koa {
+  public get core(): Koa {
     return this.application;
   }
 
 }
 
-export default Server;
+export default Rester;
