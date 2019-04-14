@@ -1,9 +1,9 @@
-import { logger } from '@iinfinity/logger';
-import sleep from 'sleep-promise';
-import { Connection, ConnectionOptions, createConnection, getConnectionManager } from 'typeorm';
+import { delay } from '@iinfinity/delay';
+import { Connection, ConnectionOptions, getConnectionManager } from 'typeorm';
+import { logger } from '..';
 
 /**
- * Package database.
+ * Database connection.
  */
 export class Database {
 
@@ -17,10 +17,10 @@ export class Database {
   /**
    * Create a database connection instance, then you should use connect methode to connect database.
    *
-   * @param {ConnectionOptions} options Typeorm database connection options, in server.config.json or code.
+   * @param {ConnectionOptions} option Typeorm database connection options.
    */
-  constructor(private options: ConnectionOptions) {
-    this.con = getConnectionManager().create(options);
+  constructor(option: ConnectionOptions) {
+    this.con = getConnectionManager().create(option);
   }
 
   /**
@@ -38,8 +38,7 @@ export class Database {
       if (--this.retries) {
         logger.error(`Database connection error: ${err}.`);
         logger.warn(`Database connection remaining retries: ${this.retries} times...`);
-        await sleep(this.retryInterval * 1000);
-        return await this.connect();
+        return await delay(this.retryInterval * 1000, this.connect);
       } else {
         logger.error(`Database connection failed: ${err}.`);
         return false;
@@ -48,7 +47,7 @@ export class Database {
   }
 
   /**
-   * @returns {Promise<Connection>} This connection.
+   * @returns {Connection} This connection.
    */
   public get connection(): Connection {
     return this.con;
