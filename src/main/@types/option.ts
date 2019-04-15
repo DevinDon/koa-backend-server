@@ -1,4 +1,4 @@
-import { Options } from '@iinfinity/redion';
+import { Option as RedionOption } from '@iinfinity/redion';
 import { SecureServerOptions } from 'http2';
 import { ServerOptions } from 'https';
 import { Middleware } from 'koa';
@@ -7,24 +7,24 @@ import { ConnectionOptions } from 'typeorm';
 import { AllPaths } from './router';
 
 /** Rester Server address. */
-export interface AddressConfig {
+export interface AddressOption {
   /** Rester Server portocol. */
   portocol?: 'HTTP' | 'HTTPS' | 'HTTP2';
   /** Rester Server host. */
   host?: string;
   /** Rester Server port. */
   port?: number;
-  /** Rester Server ssl options, only required in secure server (HTTPS or HTTP2). */
+  /** Rester Server ssl option, only required in secure server (HTTPS or HTTP2). */
   ssl?: ServerOptions | SecureServerOptions;
   /** Koa application is in proxy mode or not. */
   proxy?: boolean;
 }
 
 /** Rester Server database connection, if undefined it will disable the typeorm connection. */
-export type DatabaseConfig = ConnectionOptions;
+export type DatabaseOption = ConnectionOptions;
 
 /** Rester Server router, if undefined it will disable the koa router. */
-export interface RouterConfig {
+export interface RouterOption {
   /** All paths of Rester Server router. */
   paths: AllPaths;
   /** Router prefix. */
@@ -32,7 +32,7 @@ export interface RouterConfig {
   /** Static files root dir path. */
   static?: {
     path: string;
-    options?: KoaStatic.Options
+    option?: KoaStatic.Options
   };
   /**
    * API version, prefix of all paths.
@@ -41,20 +41,20 @@ export interface RouterConfig {
   version?: string;
 }
 
-/** RediSession options. */
-export type SessionConfig = Options;
+/** RediSession option. */
+export type SessionOption = RedionOption;
 
-/** Rester Server config. */
-export interface ServerConfig {
+/** Rester Server option. */
+export interface Option {
   [index: string]: any;
   /** Rester Server address. */
-  address?: AddressConfig;
+  address?: AddressOption;
   /** Rester Server database connection, if undefined it will disable the typeorm connection. */
-  database?: DatabaseConfig;
+  database?: DatabaseOption;
   /** Rester Server router, if undefined it will disable the koa router. */
-  router?: RouterConfig;
+  router?: RouterOption;
   /** Rester Server session, if undefined it will disable the Rester Server session. */
-  session?: SessionConfig;
+  session?: SessionOption;
   /** Enviroument: development or production. */
   environment?: 'dev' | 'prod';
 }
