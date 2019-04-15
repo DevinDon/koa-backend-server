@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.7.2 => 0.7.3
+
+- chore: perf package
+- refactor: refactor option
+
 ## 0.7.1 => 0.7.2
 
 - perf: perf next function
