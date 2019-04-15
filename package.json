@@ -1,15 +1,11 @@
 {
   "name": "@iinfinity/rester",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "A RESTful server with db & session support based Koa & TypeScript.",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "demo": "npm run demo:simple",
-    "demo:simple": "ts-node --project src/demo/tsconfig.json src/demo/simple",
-    "demo:full": "ts-node --project src/demo/tsconfig.json src/demo/full",
-    "test": "ts-node --project src/test/tsconfig.json src/test",
-    "watch": "tsc -w"
+    "test": "node node_modules/jasmine/bin/jasmine.js --config=jasmine.json --reporter=jasmine-console-reporter --require=ts-node/register"
   },
   "keywords": [
     "koa",
@@ -29,24 +25,30 @@
   "license": "MIT",
   "private": true,
   "directories": {
-    "test": "test"
+    "doc": "docs",
+    "example": "src/demo",
+    "test": "src/test"
   },
   "dependencies": {
-    "@iinfinity/logger": "^0.1.0",
-    "@iinfinity/redion": "^0.3.4",
-    "@types/koa": "^2.0.48",
-    "@types/koa-router": "^7.0.40",
-    "@types/koa-static": "^4.0.1",
+    "@iinfinity/delay": "^0.1.0",
+    "@iinfinity/logger": "^0.3.1",
+    "@iinfinity/redion": "^0.4.2",
     "koa": "^2.7.0",
     "koa-body": "^4.1.0",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "pg": "^7.9.0",
-    "sleep-promise": "^8.0.1",
-    "typeorm": "^0.2.15"
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.16"
   },
   "devDependencies": {
-    "ts-node": "^8.0.3",
-    "typescript": "^3.4.1"
+    "@types/jasmine": "^3.3.12",
+    "@types/koa": "^2.0.48",
+    "@types/koa-router": "^7.0.40",
+    "@types/koa-static": "^4.0.1",
+    "jasmine": "^3.4.0",
+    "jasmine-console-reporter": "^3.1.0",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.3"
   }
 }
