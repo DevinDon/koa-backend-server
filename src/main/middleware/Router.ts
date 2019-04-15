@@ -1,9 +1,8 @@
+import { logger } from '@iinfinity/logger';
 import { Middleware } from 'koa';
 import KoaBody from 'koa-body';
 import KoaRouter from 'koa-router';
-import { AllPaths, CORS, Methods, RouterPaths } from '../@types';
-import { logger } from '@iinfinity/logger';
-import { RouterConfig } from '../@types';
+import { AllPaths, CORS, Methods, RouterOption, RouterPaths } from '../@types';
 
 /**
  * Package KoaRouter.
@@ -15,17 +14,17 @@ export class Router extends KoaRouter {
   /**
    * Generate CORS middleware.
    *
-   * @param {CORS} options CORS options.
+   * @param {CORS} cors CORS options.
    * @param {boolean} isOPTIONS Is OPTIONS method or not.
    * @returns {Middleware} CORS middleware.
    */
-  public static setCORS(options: CORS, isOPTIONS: boolean = false): Middleware {
+  public static setCORS(cors: CORS, isOPTIONS: boolean = false): Middleware {
     return async (c, next) => {
       next();
       c.set({
-        'Access-Control-Allow-Headers': options['Access-Control-Allow-Headers'],
-        'Access-Control-Allow-Methods': options['Access-Control-Allow-Methods'].join(', '),
-        'Access-Control-Allow-Origin': options['Access-Control-Allow-Origin']
+        'Access-Control-Allow-Headers': cors['Access-Control-Allow-Headers'],
+        'Access-Control-Allow-Methods': cors['Access-Control-Allow-Methods'].join(', '),
+        'Access-Control-Allow-Origin': cors['Access-Control-Allow-Origin']
       });
       if (isOPTIONS) {
         c.body = {};
@@ -36,19 +35,18 @@ export class Router extends KoaRouter {
   /**
    * Generate router.
    *
-   * @param {AllPaths} allPaths All router paths.
-   * @param {string} version API version prefix.
+   * @param {RouterOption} option Router option.
    */
-  constructor(private config: RouterConfig) {
+  constructor(private option: RouterOption) {
     super();
-    if (config.version) {
+    if (option.version) {
       logger.warn(`API version is deprecated, use accept header to instead.`);
     }
-    if (config.prefix) {
-      logger.info(`Router prefix: ${config.prefix}, now you can access your router paths with prefix /${config.prefix}.`);
+    if (option.prefix) {
+      logger.info(`Router prefix: ${option.prefix}, now you can access your router paths with prefix /${option.prefix}.`);
     }
-    if (config.paths) {
-      this.loadAllPaths(config.paths);
+    if (option.paths) {
+      this.loadAllPaths(option.paths);
       logger.info(`Loaded router paths.`);
     } else {
       logger.warn(`There is no router path has been set, server may not work.`);
@@ -96,7 +94,7 @@ export class Router extends KoaRouter {
         /** Router paths with string or RegExp. */
         let path = paths[key].path;
         /** Router prefix. */
-        const prefix = (this.config.prefix && !paths[key].withoutPrefix) ? '/' + this.config.prefix : '';
+        const prefix = (this.option.prefix && !paths[key].withoutPrefix) ? '/' + this.option.prefix : '';
         // If the path instanceof RegExp, slice reg and add the prefix to this reg.
         if (path instanceof RegExp) {
           // path.source
