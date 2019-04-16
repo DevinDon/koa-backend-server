@@ -18,16 +18,17 @@ STABLE version will be 1.0.0 in future.
 - [x] static file support
 - [x] CORS router support
 - [x] RESTful api support
-- [ ] local session storage by [Redion](https://github.com/DevinDon/redion)
+- [x] local session storage by [Redion](https://github.com/DevinDon/redion)
 - [ ] **Refactor project by DI & AOP, like Angular.**
 
 # Change log
 
 > [See Full Change Log on GitHub.](https://github.com/DevinDon/koa-backend-server/blob/master/docs/CHANGELOG.md)
 
-## 0.7.1 => 0.7.2
+## 0.7.2 => 0.7.3
 
-- perf: perf next function
+- chore: perf package
+- refactor: refactor option
 
 ## 0.6.0 => 0.7.0
 
@@ -53,7 +54,7 @@ npm i --save @iinfinity/rester
 ### 1. Install Rester
 
 ```shell
-npm i --save @iinfinity/rester
+npm install --save @iinfinity/rester
 ```
 
 ### 2. Create index.ts file
@@ -61,8 +62,9 @@ npm i --save @iinfinity/rester
 And fill it with following code, see [source code](https://github.com/DevinDon/rester/blob/master/src/demo/simple/index.ts) on GitHub.
 
 ```typescript
-import { RouterPaths, Server, ServerConfig } from '@iinfinity/rester';
+import { RouterPaths, Rester, Option } from '@iinfinity/rester';
 
+/** Router path. */
 const GET: RouterPaths = {
   '/ get index': {
     path: '/',
@@ -73,17 +75,16 @@ const GET: RouterPaths = {
   }
 };
 
-/** Simple config. */
-const simpleConfig: ServerConfig = {
+/** Simple option. */
+const option: Option = {
   router: {
     paths: { GET }
   }
 };
 
-const server = new Server(simpleConfig);
+const server = new Rester(option);
 
 server.listen();
-
 ```
 
 And then, run `ts-node index.ts` or `tsc && node dist` to start Rester.
