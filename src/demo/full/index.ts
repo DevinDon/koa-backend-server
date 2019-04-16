@@ -1,53 +1,13 @@
-import { Server, ServerConfig } from '../../main';
+import { Level } from '@iinfinity/logger';
+import { logger } from '@iinfinity/redion';
+import { Option, Rester } from '../../main';
 import PATH from './router';
 import { statistic } from './ware';
 
-/** Production config. */
-const prodConfig: ServerConfig = {
-  address: {
-    portocol: 'HTTP',
-    host: '0.0.0.0',
-    port: 8080,
-    proxy: true,
-    ssl: {
-      cert: 'CERT CONTENT',
-      key: 'KEY CONTENT'
-    }
-  },
-  database: {
-    type: 'postgres',
-    host: 'app-postgres',
-    port: 5432,
-    username: 'app',
-    password: 'app',
-    database: 'app',
-    synchronize: true,
-    logging: true,
-    entities: [
-      'entity/**/*.entity.js'
-    ],
-    migrations: [],
-    subscribers: []
-  },
-  router: {
-    static: {
-      path: 'client'
-    },
-    paths: PATH
-  },
-  session: {
-    domain: '',
-    name: 'session.id',
-    redis: {
-      host: 'app-redis',
-      port: 6379
-    }
-  },
-  environment: 'prod'
-};
+logger.setLevel(Level.INFO);
 
 /** Devlopment config. */
-const devConfig: ServerConfig = {
+const option: Option = {
   address: {
     portocol: 'HTTP',
     host: '0.0.0.0',
@@ -66,7 +26,7 @@ const devConfig: ServerConfig = {
     password: 'publicuser',
     database: 'public',
     synchronize: true,
-    logging: true,
+    logging: false, // log db records
     entities: [
       'src/demo/full/entity/**/*.entity.ts'
     ],
@@ -79,36 +39,16 @@ const devConfig: ServerConfig = {
     },
     paths: PATH
   },
-  session: {
+  session: { // local session
     domain: 'localhost',
     name: 'session.id',
-    redis: {
-      host: 'a-1.don.red',
-      port: 6379
-    },
-    maxAge: 120
+    expire: 3600,
+    secert: ['your', 'secert', 'keys']
   },
-  environment: 'dev'
+  environment: 'prod'
 };
 
-/** Simple config. */
-const simpleConfig: ServerConfig = {
-  router: {
-    paths: {
-      GET: {
-        '/ get index': {
-          path: '/',
-          ware: async (c, next) => {
-            next();
-            c.body = 'Hello, world!';
-          }
-        }
-      }
-    }
-  }
-};
-
-const server = new Server(devConfig);
+const server = new Rester(option);
 // Use example statistic middleware
 server.use({
   'Statistic': statistic
