@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.7.3 => 0.7.4
+
+- fix: fix database connection exception
+
 ## 0.7.2 => 0.7.3
 
 - chore: perf package
