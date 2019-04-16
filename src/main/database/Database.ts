@@ -38,7 +38,8 @@ export class Database {
       if (--this.retries) {
         logger.error(`Database connection error: ${err}.`);
         logger.warn(`Database connection remaining retries: ${this.retries} times...`);
-        return await delay(this.retryInterval * 1000, this.connect);
+        await delay(this.retryInterval * 1000);
+        return this.connect();
       } else {
         logger.error(`Database connection failed: ${err}.`);
         return false;
