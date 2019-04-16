@@ -30,25 +30,25 @@
     "test": "src/test"
   },
   "dependencies": {
-    "@iinfinity/delay": "^0.1.0",
-    "@iinfinity/logger": "^0.3.1",
-    "@iinfinity/redion": "^0.4.4",
-    "koa": "^2.7.0",
-    "koa-body": "^4.1.0",
-    "koa-router": "^7.4.0",
-    "koa-static": "^5.0.0",
-    "pg": "^7.9.0",
-    "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.2.16"
+    "@iinfinity/delay": "0.x",
+    "@iinfinity/logger": "0.x",
+    "@iinfinity/redion": "0.x",
+    "koa": "2.x",
+    "koa-body": "4.x",
+    "koa-router": "7.x",
+    "koa-static": "5.x",
+    "pg": "7.x",
+    "reflect-metadata": "0.1.x",
+    "typeorm": "0.2.x"
   },
   "devDependencies": {
-    "@types/jasmine": "^3.3.12",
-    "@types/koa": "^2.0.48",
-    "@types/koa-router": "^7.0.40",
-    "@types/koa-static": "^4.0.1",
-    "jasmine": "^3.4.0",
-    "jasmine-console-reporter": "^3.1.0",
-    "ts-node": "^8.1.0",
-    "typescript": "^3.4.3"
+    "@types/jasmine": "3.x",
+    "@types/koa": "2.x",
+    "@types/koa-router": "7.x",
+    "@types/koa-static": "4.x",
+    "jasmine": "3.x",
+    "jasmine-console-reporter": "3.x",
+    "ts-node": "8.x",
+    "typescript": "3.x"
   }
 }
