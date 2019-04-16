@@ -39,37 +39,27 @@ const TEMP: RouterMap = {
   PUT: new Map()
 };
 
-function baseService(method: PathMap) {
-  return (path: string) => {
-    return (target: any, name: string, descriptor: PropertyDescriptor) => {
-      method.set(path, name);
-    };
+export function Service(path: string = ''): ClassDecorator {
+  return target => {
+    Reflect.defineMetadata('ROUTER:PATH', path, target);
   };
 }
 
-export function Service(path: string = '') {
-  return (target: any) => {
-    // TODO: DI feature
-    const service = new target();
-    for (const method in Method) {
-      if (TEMP.hasOwnProperty(method)) {
-        const element = TEMP[method as Method];
-        element.forEach((v, k) => {
-          ROUTERMAP[method as Method].set(path + k, service[v].bind(service));
-        });
-        element.clear();
-      }
-    }
+function baseService(method: PathMap) {
+  return (path: string): MethodDecorator => {
+    return (target, key, descriptor) => {
+      Reflect.defineMetadata('ROUTER:PATH', path, descriptor.value!);
+      Reflect.defineMetadata('ROUTER:METHOD', method, descriptor.value!);
+    };
   };
 }
 
 export const Post = baseService(TEMP.POST);
 export const Get = baseService(TEMP.GET);
 
-function Session() {
-  return (target: any, name: string, index: number) => {
-    const paramsTypes: Array<Function> = Reflect.getMetadata('design:paramtypes', target, name);
-    logger.debug(name, index, paramsTypes);
+function Session(): ParameterDecorator {
+  return (target, key, index) => {
+
   };
 }
 
