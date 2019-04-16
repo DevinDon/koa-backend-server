@@ -1,5 +1,7 @@
-import { RouterPaths, Server, ServerConfig } from '../../main'; // Replace it with '@iinfinity/rester' in your workspace.
+// import { RouterPaths, Rester, Option } from '@iinfinity/rester';
+import { Option, Rester, RouterPaths } from '../../main'; // use above import statement in your workspace
 
+/** Router path. */
 const GET: RouterPaths = {
   '/ get index': {
     path: '/',
@@ -10,13 +12,13 @@ const GET: RouterPaths = {
   }
 };
 
-/** Simple config. */
-const simpleConfig: ServerConfig = {
+/** Simple option. */
+const simpleConfig: Option = {
   router: {
     paths: { GET }
   }
 };
 
-const server = new Server(simpleConfig);
+const server = new Rester(simpleConfig);
 
 server.listen();
