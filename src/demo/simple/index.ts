@@ -13,12 +13,12 @@ const GET: RouterPaths = {
 };
 
 /** Simple option. */
-const simpleConfig: Option = {
+const option: Option = {
   router: {
     paths: { GET }
   }
 };
 
-const server = new Rester(simpleConfig);
+const server = new Rester(option);
 
 server.listen();
