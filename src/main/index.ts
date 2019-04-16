@@ -6,3 +6,4 @@ export const logger = new Logger('Rester');
 export * from './@types';
 export * from './database';
 export * from './middleware';
+export * from './Rester';
