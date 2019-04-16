@@ -6,17 +6,17 @@ import HTTPS from 'https';
 import Koa from 'koa';
 import 'koa-body';
 import KoaStatic from 'koa-static';
+import { logger } from '.';
 import { Middlewares, Option } from './@types';
 import { Database } from './database';
 import { Router } from './middleware';
-import { logger } from '.';
 
 /**
  * Rester, a RESTful server.
  */
 export class Rester {
 
-  /** Koa. */
+  /** Application. */
   private application: Koa;
   /** Config. */
   private option: Option;
@@ -90,6 +90,7 @@ export class Rester {
     // Use session middleware or not.
     if (this.option.session) {
       this.session = new Redion(this.option.session);
+      this.application.keys = this.option.session.secert;
       this.use({
         'Redion': this.session.ware
       });
