@@ -39,9 +39,6 @@ export class Router extends KoaRouter {
    */
   constructor(private option: RouterOption) {
     super();
-    if (option.version) {
-      logger.warn(`API version is deprecated, use accept header to instead.`);
-    }
     if (option.prefix) {
       logger.info(`Router prefix: ${option.prefix}, now you can access your router paths with prefix /${option.prefix}.`);
     }

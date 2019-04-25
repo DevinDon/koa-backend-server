@@ -34,11 +34,6 @@ export interface RouterOption {
     path: string;
     option?: KoaStatic.Options
   };
-  /**
-   * API version, prefix of all paths.
-   * @deprecated Use accept header to instead. It will be changed in future.
-   */
-  version?: string;
 }
 
 /** RediSession option. */
