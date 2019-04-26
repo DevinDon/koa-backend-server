@@ -6,9 +6,9 @@ import HTTPS from 'https';
 import Koa from 'koa';
 import 'koa-body';
 import KoaStatic from 'koa-static';
+import { createConnection, createConnections } from 'typeorm';
 import { logger } from '.';
 import { Middlewares, Option } from './@types';
-import { Database } from './database';
 import { Router } from './middleware';
 
 /**
@@ -26,8 +26,6 @@ export class Rester {
   private session?: Redion;
   /** Router. */
   private router?: Router;
-  /** Database. */
-  private database?: Database;
 
   /**
    * Create a Rester Server.
@@ -82,7 +80,11 @@ export class Rester {
 
     // Create database connection or not.
     if (this.option.database) {
-      this.database = new Database(this.option.database);
+      if (this.option.database instanceof Array) {
+        createConnections(this.option.database);
+      } else {
+        createConnection(this.option.database);
+      }
     } else {
       logger.warn(`Database service not provided.`);
     }
@@ -150,13 +152,11 @@ export class Rester {
    * @returns {Promise<Rester>} This server.
    */
   public async listen(host?: string, port?: number): Promise<Rester> {
-    if ((!this.database) || (this.database && await this.database.connect())) {
-      this.server.listen(
-        port = port || (this.option.address && this.option.address.port) || 8080,
-        host = host || (this.option.address && this.option.address.host) || '0.0.0.0',
-        () => logger.info(`Rester online, listens on ${host}:${port}.`)
-      );
-    }
+    this.server.listen(
+      port = port || (this.option.address && this.option.address.port) || 8080,
+      host = host || (this.option.address && this.option.address.host) || '0.0.0.0',
+      () => logger.info(`Rester online, listens on ${host}:${port}.`)
+    );
     return this;
   }
 

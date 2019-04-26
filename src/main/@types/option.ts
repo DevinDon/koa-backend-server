@@ -21,7 +21,7 @@ export interface AddressOption {
 }
 
 /** Rester Server database connection, if undefined it will disable the typeorm connection. */
-export type DatabaseOption = ConnectionOptions;
+export type DatabaseOption = ConnectionOptions | ConnectionOptions[];
 
 /** Rester Server router, if undefined it will disable the koa router. */
 export interface RouterOption {
