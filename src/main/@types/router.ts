@@ -1,4 +1,4 @@
-import { Middleware } from "koa";
+import { Middleware } from 'koa';
 
 /** CORS, Cross-origin resource sharing 跨域请求. */
 export interface CORS {
