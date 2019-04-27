@@ -19,7 +19,7 @@ STABLE version will be 1.0.0 in future.
 - [x] CORS router support
 - [x] RESTful api support
 - [x] local session storage by [Redion](https://github.com/DevinDon/redion)
-- [ ] **Refactor project by DI & AOP, like Angular.**
+- [ ] **Refactor project by DI & AOP, like Angular & Spring Boot.**
 
 # Change log
 
