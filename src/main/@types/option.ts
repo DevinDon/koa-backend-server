@@ -4,7 +4,6 @@ import { ServerOptions } from 'https';
 import { Middleware } from 'koa';
 import KoaStatic from 'koa-static';
 import { ConnectionOptions } from 'typeorm';
-import { AllPaths } from './router';
 
 /** Rester Server address. */
 export interface AddressOption {
@@ -25,8 +24,6 @@ export type DatabaseOption = ConnectionOptions | ConnectionOptions[];
 
 /** Rester Server router, if undefined it will disable the koa router. */
 export interface RouterOption {
-  /** All paths of Rester Server router. */
-  paths: AllPaths;
   /** Router prefix. */
   prefix?: string;
   /** Static files root dir path. */
