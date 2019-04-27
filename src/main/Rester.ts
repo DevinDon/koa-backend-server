@@ -5,11 +5,9 @@ import HTTP2 from 'http2';
 import HTTPS from 'https';
 import Koa from 'koa';
 import 'koa-body';
-import KoaStatic from 'koa-static';
 import { createConnection, createConnections } from 'typeorm';
 import { logger } from '.';
 import { Middlewares, Option } from './@types';
-import { Router } from './middleware';
 
 /**
  * Rester, a RESTful server.
@@ -24,8 +22,6 @@ export class Rester {
   private server: HTTP.Server | HTTP2.Http2SecureServer | HTTPS.Server;
   /** Session. */
   private session?: Redion;
-  /** Router. */
-  private router?: Router;
 
   /**
    * Create a Rester Server.
@@ -100,23 +96,14 @@ export class Rester {
       logger.warn(`Session service not provided.`);
     }
 
-    // Config router or not.
-    if (this.option.router) {
-      this.router = new Router(this.option.router);
-      this.use({
-        'Koa Router': this.router.ware
-      });
-      if (this.option.router.static && this.option.router.static.path) {
-        this.use({
-          'Koa Static': KoaStatic(this.option.router.static.path, this.option.router.static.option)
-        });
-        logger.info(`Static resource path: ${this.option.router.static.path}.`);
-      } else {
-        logger.info(`Static server service not provided.`);
-      }
-    } else {
-      logger.warn(`Routing service not provided.`);
-    }
+    // if (this.option.router.static && this.option.router.static.path) {
+    //   this.use({
+    //     'Koa Static': KoaStatic(this.option.router.static.path, this.option.router.static.option)
+    //   });
+    //   logger.info(`Static resource path: ${this.option.router.static.path}.`);
+    // } else {
+    //   logger.info(`Static server service not provided.`);
+    // }
 
     // Enable development / production mode.
     if (this.option.environment === 'prod') {
@@ -133,7 +120,7 @@ export class Rester {
    * @param {Middleware[]} middlewares Middlewares.
    * @returns {Rester} This server.
    */
-  public use(middlewares: Middlewares): Rester {
+  use(middlewares: Middlewares): Rester {
     for (const name in middlewares) {
       if (middlewares.hasOwnProperty(name)) {
         const middleware = middlewares[name];
@@ -151,7 +138,7 @@ export class Rester {
    * @param {string} host The listening host, default to 0.0.0.0.
    * @returns {Promise<Rester>} This server.
    */
-  public async listen(host?: string, port?: number): Promise<Rester> {
+  async listen(host?: string, port?: number): Promise<Rester> {
     this.server.listen(
       port = port || (this.option.address && this.option.address.port) || 8080,
       host = host || (this.option.address && this.option.address.host) || '0.0.0.0',
@@ -163,7 +150,7 @@ export class Rester {
   /**
    * @returns {Koa} The core instance, Koa.
    */
-  public get core(): Koa {
+  get core(): Koa {
     return this.application;
   }
 
