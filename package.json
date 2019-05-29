@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "demo": "ts-node -P src/demo/full/tsconfig.json src/demo/full",
-    "test": "node node_modules/jasmine/bin/jasmine.js --config=jasmine.json --reporter=jasmine-console-reporter --require=ts-node/register"
+    "test": "node node_modules/jasmine/bin/jasmine.js --config=src/test/jasmine.json --reporter=jasmine-console-reporter --require=ts-node/register"
   },
   "keywords": [
     "fastify",
@@ -31,19 +31,19 @@
     "test": "src/test"
   },
   "dependencies": {
-    "@iinfinity/delay": "0.x",
-    "@iinfinity/logger": "0.x",
-    "@iinfinity/redion": "0.x",
-    "fastify": "2.x",
-    "reflect-metadata": "0.1.x",
-    "typeorm": "0.2.x"
+    "@iinfinity/delay": "^0.1.1",
+    "@iinfinity/logger": "^0.3.3",
+    "@iinfinity/redion": "^0.4.6",
+    "@panva/jose": "^1.2.0",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.17"
   },
   "devDependencies": {
-    "@types/jasmine": "3.x",
-    "@types/node": "^11.13.8",
-    "jasmine": "3.x",
-    "jasmine-console-reporter": "3.x",
-    "ts-node": "8.x",
-    "typescript": "3.x"
+    "@types/jasmine": "^3.3.13",
+    "@types/node": "^11.13.12",
+    "jasmine": "^3.4.0",
+    "jasmine-console-reporter": "^3.1.0",
+    "ts-node": "^8.2.0",
+    "typescript": "^3.4.5"
   }
 }
