@@ -1,8 +1,6 @@
-import { Option as RedionOption } from '@iinfinity/redion';
+// import { Option as RedionOption } from '@iinfinity/redion';
 import { SecureServerOptions } from 'http2';
 import { ServerOptions } from 'https';
-import { Middleware } from 'koa';
-import KoaStatic from 'koa-static';
 import { ConnectionOptions } from 'typeorm';
 
 /** Rester Server address. */
@@ -29,12 +27,12 @@ export interface RouterOption {
   /** Static files root dir path. */
   static?: {
     path: string;
-    option?: KoaStatic.Options
+    option?: any
   };
 }
 
 /** RediSession option. */
-export type SessionOption = RedionOption;
+export type SessionOption = any;
 
 /** Rester Server option. */
 export interface Option {
@@ -52,6 +50,6 @@ export interface Option {
 }
 
 /** Middleware with name. */
-export interface Middlewares {
-  [index: string]: Middleware;
-}
+// export interface Middlewares {
+//   [index: string]: Middleware;
+// }

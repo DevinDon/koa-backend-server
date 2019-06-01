@@ -1,17 +1,8 @@
-import { Middleware } from 'koa';
-
 /** CORS, Cross-origin resource sharing. */
 export interface CORSOption {
   'Access-Control-Allow-Headers': string;
   'Access-Control-Allow-Methods': string[];
   'Access-Control-Allow-Origin': string;
-}
-
-/** Router path, with type & value. */
-export interface Path {
-  method: Method;
-  value: string;
-  ware: Middleware;
 }
 
 /** Allowed HTTP methods. */
