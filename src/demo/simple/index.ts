@@ -1,10 +1,12 @@
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import 'reflect-metadata';
-import { BaseHandler, Controller, CoreHandlerPool, GET, Handler, HTTPRequest, HTTPResponse, Injector, POST, RequestHeader } from '../../main';
+import { inspect } from 'util';
+import { Controller, CoreHandlerPool, GET, HTTPRequest, HTTPResponse, Injector, POST, RequestHeader } from '../../main';
+import { HTTPException } from '../../main/Exception';
 
 const pool: CoreHandlerPool = Injector.generate(CoreHandlerPool);
 
-@Controller()
+@Controller('/')
 class DemoController {
 
   private count = 0;
@@ -37,16 +39,23 @@ class DemoController {
 
 }
 
-// @Handler()
-// class ExceptionHandler extends BaseHandler {
-//   handle(): string {
-//     return '';
-//   }
-// }
+@Controller('/prefix')
+class PrefixController {
+  @GET()
+  index() {
+    return 'Hello, prefix!';
+  }
+}
 
 const server = new Server((request, response) => {
   const handler = pool.take(request, response);
-  response.end(handler.handle());
+  try {
+    response.end(handler.handle());
+  } catch (error) {
+    const exception: HTTPException = error;
+    response.writeHead(exception.code, exception.message);
+    response.end(inspect(exception.content, true));
+  }
   // don't need init
   pool.give(handler);
 }).listen(8080);
