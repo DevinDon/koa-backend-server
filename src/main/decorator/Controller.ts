@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Method } from '../@types';
+import { MetadataKey, Method } from '../@types';
 import { Injector } from './Injector';
 
 /**
@@ -21,10 +21,6 @@ export interface ParamInjection {
   type: ParamInjectionType;
   value: string;
 }
-
-export const DECORATOR$PARAM = Symbol('DECORATOR$PARAM');
-export const DECORATOR$MAPPING = Symbol('DECORATOR$MAPPING');
-// export const DECORATOR$CONTROLLER = Symbol('DECORATOR$CONTROLLER');
 
 interface Router {
   method: Method;
@@ -63,11 +59,11 @@ export const CORE$ROUTER: CoreRouter = {
 function baseParam(type: ParamInjectionType) {
   return (value: string = ''): ParameterDecorator => (target: any, name, index) => {
     // get existing params array
-    const exist: ParamInjection[] = Reflect.getMetadata(DECORATOR$PARAM, target, name) || [];
+    const exist: ParamInjection[] = Reflect.getMetadata(MetadataKey.Parameter, target, name) || [];
     // put this param with special index
     exist[index] = { type, value };
     // and then, set it
-    Reflect.defineMetadata(DECORATOR$PARAM, exist, target, name);
+    Reflect.defineMetadata(MetadataKey.Parameter, exist, target, name);
   };
 }
 
@@ -80,7 +76,7 @@ export const HTTPResponse = baseParam(ParamInjectionType.HTTPResponse);
 
 function baseMethod(method: Method) {
   return (path: string = ''): MethodDecorator => (target: any, name, descriptor) => {
-    Reflect.defineMetadata(DECORATOR$MAPPING, { method, path }, target, name);
+    Reflect.defineMetadata(MetadataKey.Method, { method, path }, target, name);
   };
 }
 
@@ -97,13 +93,13 @@ export function Controller(path: string = ''): ClassDecorator {
     const controller = Injector.generate(target);
     // TODO: maybe we will use it later
     // // define metadata: key = DECORATOR$CONTROLLER, value = controller, on = class
-    // Reflect.defineMetadata(DECORATOR$CONTROLLER, controller, target.prototype);
+    // Reflect.defineMetadata(DECORATOR$CONTROLLER, controller, target);
     Object.getOwnPropertyNames(target.prototype)
       // exclude constructor
       .filter(v => v !== 'constructor')
       // put them on CORE$ROUTER
       .forEach(name => {
-        const mapping: Mapping = Reflect.getMetadata(DECORATOR$MAPPING, target.prototype, name);
+        const mapping: Mapping = Reflect.getMetadata(MetadataKey.Controller, target.prototype, name);
         CORE$ROUTER[mapping.method].set(mapping.path = path + mapping.path, {
           method: mapping.method,
           path: mapping.path,

@@ -1,5 +1,5 @@
-import { Method } from '../@types';
-import { CORE$ROUTER, DECORATOR$PARAM, ParamInjection, ParamInjectionType } from '../decorator/Controller';
+import { Method, MetadataKey } from '../@types';
+import { CORE$ROUTER, ParamInjection, ParamInjectionType } from '../decorator/Controller';
 import { HTTP404Exception, HTTP500Exception } from '../Exception';
 import { BaseHandler } from './BaseHandler';
 
@@ -14,10 +14,15 @@ export class CoreHandler extends BaseHandler {
     PARAM$HTTP$RESPONSE: () => this.response!,
     PARAM$PATH$QUERY: () => '',
     PARAM$PATH$VARIABLE: () => '',
-    PARAM$REQUEST$BODY: () => this.request!.read(),
+    PARAM$REQUEST$BODY: () => '',
     PARAM$REQUEST$HEADER: (value: string) => this.request!.headers[value.toLowerCase()]
   };
 
+  /**
+   * Core handle method.
+   *
+   * @returns {string} Stringify HTTP response.
+   */
   handle(): string {
     try {
       // content-type default to application/json
@@ -27,7 +32,7 @@ export class CoreHandler extends BaseHandler {
       const router = CORE$ROUTER[method].get(path);
       if (router) {
         // get params type array
-        const params: ParamInjection[] | undefined = Reflect.getMetadata(DECORATOR$PARAM, router.target.prototype, router.name);
+        const params: ParamInjection[] | undefined = Reflect.getMetadata(MetadataKey.Parameter, router.target.prototype, router.name);
         const args = params ? params.map(v => this.paramInjectors[v.type](v.value)) : [];
         // TODO: use JSON schema instead of JSON stringify
         return JSON.stringify(router.controller[router.name](...args));
