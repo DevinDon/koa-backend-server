@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { MetadataKey, Method } from '../@types';
 import { Injector } from './Injector';
 
@@ -99,7 +98,7 @@ export function Controller(path: string = ''): ClassDecorator {
       .filter(v => v !== 'constructor')
       // put them on CORE$ROUTER
       .forEach(name => {
-        const mapping: Mapping = Reflect.getMetadata(MetadataKey.Controller, target.prototype, name);
+        const mapping: Mapping = Reflect.getMetadata(MetadataKey.Method, target.prototype, name);
         CORE$ROUTER[mapping.method].set(mapping.path = path + mapping.path, {
           method: mapping.method,
           path: mapping.path,
