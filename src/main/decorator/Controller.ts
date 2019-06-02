@@ -87,7 +87,7 @@ export const PATCH = baseMethod('PATCH');
 export const POST = baseMethod('POST');
 export const PUT = baseMethod('PUT');
 
-export function Controller(path: string = ''): ClassDecorator {
+export function Controller(prefix: string = ''): ClassDecorator {
   return target => {
     const controller = Injector.generate(target);
     // TODO: maybe we will use it later
@@ -99,13 +99,23 @@ export function Controller(path: string = ''): ClassDecorator {
       // put them on CORE$ROUTER
       .forEach(name => {
         const mapping: Mapping = Reflect.getMetadata(MetadataKey.Method, target.prototype, name);
-        CORE$ROUTER[mapping.method].set(mapping.path = path + mapping.path, {
-          method: mapping.method,
-          path: mapping.path,
-          name,
-          target,
-          controller
-        });
+        CORE$ROUTER[mapping.method].set(
+          mapping.path = formatPath(prefix, mapping.path),
+          {
+            method: mapping.method,
+            path: mapping.path,
+            name,
+            target,
+            controller
+          }
+        );
       });
   };
+}
+
+function formatPath(prefix: string, path: string): string {
+  if (path.charAt(path.length - 1) === '/') {
+    path = path.substring(0, path.length - 1);
+  }
+  return (prefix + path).replace(/\/\//g, '/');
 }
