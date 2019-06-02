@@ -1,4 +1,8 @@
-# Part of help document
+# Rester Document
+
+**:warning: WARNING: This document is *OUTDATED*, new document coming soon!**
+**:warning: WARNING: This document is *OUTDATED*, new document coming soon!**
+**:warning: WARNING: This document is *OUTDATED*, new document coming soon!**
 
 ## Full config
 
