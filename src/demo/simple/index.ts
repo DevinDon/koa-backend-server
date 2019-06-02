@@ -1,6 +1,6 @@
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import 'reflect-metadata';
-import { Controller, GET, CoreHandler, CoreHandlerPool, HTTPRequest, HTTPResponse, Injectable, Injector, POST, RequestHeader } from '../../main';
+import { BaseHandler, Controller, CoreHandlerPool, GET, Handler, HTTPRequest, HTTPResponse, Injector, POST, RequestHeader } from '../../main';
 
 const pool: CoreHandlerPool = Injector.generate(CoreHandlerPool);
 
@@ -37,16 +37,12 @@ class DemoController {
 
 }
 
-interface Plugin {
-  core: (handler: CoreHandler) => any;
-}
-
-@Injectable()
-class ExceptionPlugin implements Plugin {
-  core(handler: CoreHandler) {
-    // handler.handle;
-  }
-}
+// @Handler()
+// class ExceptionHandler extends BaseHandler {
+//   handle(): string {
+//     return '';
+//   }
+// }
 
 const server = new Server((request, response) => {
   const handler = pool.take(request, response);
