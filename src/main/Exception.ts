@@ -5,7 +5,7 @@ interface ExceptionContent {
   response: ServerResponse;
 }
 
-export class HTTPException<T = any> {
+export class HTTPException<T = ExceptionContent> {
   constructor(public code: number, public message?: string, public content?: T) { }
 }
 
