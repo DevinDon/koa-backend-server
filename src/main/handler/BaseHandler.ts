@@ -1,7 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { HTTP500Exception } from '../Exception';
 
-export class BaseHandler {
+export abstract class BaseHandler {
 
   protected request?: IncomingMessage;
   protected response?: ServerResponse;
@@ -12,8 +11,6 @@ export class BaseHandler {
     return this;
   }
 
-  handle(): string {
-    throw new HTTP500Exception('Handle method has not been override.', { request: this.request!, response: this.response! });
-  }
+  abstract handle(): string;
 
 }
