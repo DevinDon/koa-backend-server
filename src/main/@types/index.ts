@@ -12,9 +12,9 @@ export namespace MetadataKey {
   export const Parameter = Symbol('Parameter');
 
   /**
-   * Metadata key in Method.
+   * Metadata key in Mapping.
    */
-  export const Method = Symbol('Method');
+  export const Mapping = Symbol('Mapping');
 
   /**
    * Metadata key in Controller.

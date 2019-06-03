@@ -75,7 +75,7 @@ export const HTTPResponse = baseParam(ParamInjectionType.HTTPResponse);
 
 function baseMethod(method: Method) {
   return (path: string = ''): MethodDecorator => (target: any, name, descriptor) => {
-    Reflect.defineMetadata(MetadataKey.Method, { method, path }, target, name);
+    Reflect.defineMetadata(MetadataKey.Mapping, { method, path }, target, name);
   };
 }
 
@@ -98,7 +98,7 @@ export function Controller(prefix: string = ''): ClassDecorator {
       .filter(v => v !== 'constructor')
       // put them on CORE$ROUTER
       .forEach(name => {
-        const mapping: Mapping = Reflect.getMetadata(MetadataKey.Method, target.prototype, name);
+        const mapping: Mapping = Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name);
         CORE$ROUTER[mapping.method].set(
           mapping.path = formatPath(prefix, mapping.path),
           {
