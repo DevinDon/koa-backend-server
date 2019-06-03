@@ -113,9 +113,21 @@ export function Controller(prefix: string = ''): ClassDecorator {
   };
 }
 
+/**
+ * Format router path.
+ *
+ * First, `replace(/\/+/g, '/')`
+ *
+ * And then, `replace(/\/+$/, '')`
+ *
+ * Example:
+ *
+ * Input: `//abc//def/`
+ * Output: `/abc/def`
+ *
+ * @param prefix Controller prefix.
+ * @param path Mapping path.
+ */
 function formatPath(prefix: string, path: string): string {
-  if (path.charAt(path.length - 1) === '/') {
-    path = path.substring(0, path.length - 1);
-  }
-  return (prefix + path).replace(/\/\//g, '/');
+  return (prefix + path).replace(/\/+/g, '/').replace(/\/+$/, '');
 }
