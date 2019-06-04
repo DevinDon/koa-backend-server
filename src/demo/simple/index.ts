@@ -1,7 +1,7 @@
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import 'reflect-metadata';
 import { inspect } from 'util';
-import { Controller, CoreHandlerPool, GET, HTTPRequest, HTTPResponse, Injector, POST, RequestHeader } from '../../main';
+import { Controller, CoreHandlerPool, GET, HTTPRequest, HTTPResponse, Injector, PathVariable, POST, RequestHeader } from '../../main';
 import { HTTPException } from '../../main/Exception';
 
 namespace Simple {
@@ -33,10 +33,20 @@ namespace Simple {
       return request.headers as any;
     }
 
+    @GET('/request/method')
+    requestMethod(@HTTPRequest() request: IncomingMessage): string {
+      return request.method! + request.url!;
+    }
+
     @GET('/response')
     response(@HTTPResponse() response: ServerResponse): number {
       response.writeHead(401, 'This is a long test reason, /adwdad/awd/wada/da/d/w/da//a/abc not found.');
       return 401;
+    }
+
+    @GET('/show/{{name}}')
+    show(@PathVariable('name') name: string): string {
+      return name;
     }
 
   }
@@ -60,6 +70,6 @@ namespace Simple {
     }
     // don't need init
     pool.give(handler);
-  }).listen(8080);
+  }).listen(8080, () => { console.log('Server listening on localhost:8080.'); });
 
 }
