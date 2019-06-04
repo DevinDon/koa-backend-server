@@ -4,58 +4,62 @@ import { inspect } from 'util';
 import { Controller, CoreHandlerPool, GET, HTTPRequest, HTTPResponse, Injector, POST, RequestHeader } from '../../main';
 import { HTTPException } from '../../main/Exception';
 
-const pool: CoreHandlerPool = Injector.generate(CoreHandlerPool);
+namespace Simple {
 
-@Controller('/')
-class DemoController {
+  const pool: CoreHandlerPool = Injector.generate(CoreHandlerPool);
 
-  private count = 0;
+  @Controller('/')
+  class DemoController {
 
-  @GET('/')
-  index(): string {
-    return new Date().toLocaleString();
+    private count = 0;
+
+    @GET('/')
+    index(): string {
+      return new Date().toLocaleString();
+    }
+
+    @POST('/add')
+    add(): number {
+      return ++this.count;
+    }
+
+    @GET('/host')
+    host(@RequestHeader('host') host: string): string {
+      return host;
+    }
+
+    @GET('/request')
+    request(@HTTPRequest() request: IncomingMessage): string {
+      return request.headers as any;
+    }
+
+    @GET('/response')
+    response(@HTTPResponse() response: ServerResponse): number {
+      response.writeHead(401, 'This is a long test reason, /adwdad/awd/wada/da/d/w/da//a/abc not found.');
+      return 401;
+    }
+
   }
 
-  @POST('/add')
-  add(): number {
-    return ++this.count;
+  @Controller('/prefix')
+  class PrefixController {
+    @GET('/')
+    index() {
+      return 'Hello, prefix!';
+    }
   }
 
-  @GET('/host')
-  host(@RequestHeader('host') host: string): string {
-    return host;
-  }
-
-  @GET('/request')
-  request(@HTTPRequest() request: IncomingMessage): string {
-    return request.headers as any;
-  }
-
-  @GET('/response')
-  response(@HTTPResponse() response: ServerResponse): number {
-    response.writeHead(401, 'This is a long test reason, /adwdad/awd/wada/da/d/w/da//a/abc not found.');
-    return 401;
-  }
+  const server = new Server((request, response) => {
+    const handler = pool.take(request, response);
+    try {
+      response.end(handler.handle());
+    } catch (error) {
+      const exception: HTTPException = error;
+      response.writeHead(exception.code, exception.message);
+      response.end(inspect(exception.content, true));
+    }
+    // don't need init
+    pool.give(handler);
+  }).listen(8080);
 
 }
-
-@Controller('/prefix')
-class PrefixController {
-  @GET()
-  index() {
-    return 'Hello, prefix!';
-  }
-}
-
-const server = new Server((request, response) => {
-  const handler = pool.take(request, response);
-  try {
-    response.end(handler.handle());
-  } catch (error) {
-    const exception: HTTPException = error;
-    response.writeHead(exception.code, exception.message);
-    response.end(inspect(exception.content, true));
-  }
-  // don't need init
-  pool.give(handler);
-}).listen(8080);
