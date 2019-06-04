@@ -9,7 +9,7 @@ export interface Mapping {
 }
 
 /**
- * Route, with name, target & controller instance.
+ * Route, with function name, target & controller instance.
  */
 export interface Route {
   name: string;
@@ -48,7 +48,7 @@ export class Router {
    * Input: `///`
    * Output: `/`
    *
-   * @param path Mapping path.
+   * @param {string} path Mapping path.
    */
   private static format(path: string): string {
     return path.replace(/\/+/g, '/').replace(/(.+)\/$/, '$1');
@@ -61,8 +61,8 @@ export class Router {
    *
    * `getMap(map, 'abc')` => `map.get('abc') || map.set('abc').get('abc')`
    *
-   * @param map Map.
-   * @param key Method / Sub path.
+   * @param {Map<K, any>} map Map.
+   * @param {K} key Method / Sub path.
    * @returns Key of map.
    */
   private static getMap<K>(map: Map<K, any>, key: K): Map<any, any> {
@@ -72,7 +72,7 @@ export class Router {
   /**
    * Get special route.
    *
-   * @param mapping Mapping information.
+   * @param {Mapping} mapping Mapping information.
    * @returns Route. If not found, return undefined.
    */
   static get(mapping: Mapping): Route | undefined {
@@ -112,8 +112,8 @@ export class Router {
   /**
    * Set mapping to core router.
    *
-   * @param mapping Mapping information.
-   * @param route Route.
+   * @param {Mapping} mapping Mapping information.
+   * @param {Route} route Route.
    * @throws If the path already has a route, throw an error.
    */
   static set(mapping: Mapping, route: Route): Route {
