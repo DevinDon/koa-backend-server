@@ -1,6 +1,7 @@
-import { Method, MetadataKey } from '../@types';
-import { CORE$ROUTER, ParamInjection, ParamInjectionType } from '../decorator/Controller';
+import { MetadataKey, Method } from '../@types';
+import { ParamInjection, ParamInjectionType } from '../decorator/Controller';
 import { HTTP404Exception, HTTP500Exception } from '../Exception';
+import { Router } from '../Router';
 import { BaseHandler } from './BaseHandler';
 
 /**
@@ -29,13 +30,13 @@ export class CoreHandler extends BaseHandler {
       this.response!.setHeader('content-type', 'application/json');
       const method = this.request!.method!.toUpperCase() as Method;
       const path = this.request!.url!;
-      const router = CORE$ROUTER[method].get(path);
-      if (router) {
+      const route = Router.get({ method, path });
+      if (route) {
         // get params type array
-        const params: ParamInjection[] | undefined = Reflect.getMetadata(MetadataKey.Parameter, router.target.prototype, router.name);
+        const params: ParamInjection[] | undefined = Reflect.getMetadata(MetadataKey.Parameter, route.target.prototype, route.name);
         const args = params ? params.map(v => this.paramInjectors[v.type](v.value)) : [];
         // TODO: use JSON schema instead of JSON stringify
-        return JSON.stringify(router.controller[router.name](...args));
+        return JSON.stringify(route.controller[route.name](...args));
       }
     } catch (error) {
       // server exception
