@@ -56,6 +56,16 @@ export class Router {
   }
 
   /**
+   * Format mapping to array.
+   *
+   * @param {Mapping} mapping Mapping.
+   * @returns {string[]} Formatted array.
+   */
+  public static formatToArray(mapping: Mapping): string[] {
+    return (mapping.method + Router.format(mapping.path)).split('/').filter(v => v.length > 0);
+  }
+
+  /**
    * Get special route.
    *
    * @param {Mapping} mapping Mapping information.
