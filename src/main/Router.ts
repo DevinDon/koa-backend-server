@@ -6,15 +6,24 @@ import { Method } from './@types';
 export interface Mapping {
   method: Method;
   path: string;
+  array?: string[];
 }
 
 /**
- * Route, with function name, target & controller instance.
+ * Route.
+ *
+ * - Controller instance.
+ * - Mapping
+ *  - Method
+ *  - Path
+ * - Function name
+ * - Target
  */
 export interface Route {
+  controller: any;
+  mapping: Mapping;
   name: string;
   target: Function;
-  controller: any;
 }
 
 /**
