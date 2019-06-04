@@ -38,7 +38,7 @@ export interface Route {
 export class Router {
 
   /** Special path in router. `Map.get(''); Map.set('%');` */
-  private static SpecialPath = { route: '', variable: '%' };
+  private static SpecialPath = { regexp: /{{(.+)}}/, route: '', variable: '%' };
 
   /** Core router. `Map<Method, Map>` */
   private static router: Map<Method, Map<string, any>> = new Map();
