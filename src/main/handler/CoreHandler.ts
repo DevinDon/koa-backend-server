@@ -1,7 +1,7 @@
 import { MetadataKey, Method } from '../@types';
 import { ParamInjection, ParamInjectionType } from '../decorator/Controller';
 import { HTTP404Exception, HTTP500Exception } from '../Exception';
-import { Router } from '../Router';
+import { Mapping, Router, Route } from '../Router';
 import { BaseHandler } from './BaseHandler';
 
 /**
@@ -28,9 +28,12 @@ export class CoreHandler extends BaseHandler {
     try {
       // content-type default to application/json
       this.response!.setHeader('content-type', 'application/json');
-      const method = this.request!.method!.toUpperCase() as Method;
-      const path = this.request!.url!;
-      const route = Router.get({ method, path });
+      const mapping: Mapping = {
+        method: this.request!.method! as Method,
+        path: this.request!.url!,
+        array: []
+      };
+      const route = Router.get(mapping);
       if (route) {
         // get params type array
         const params: ParamInjection[] | undefined = Reflect.getMetadata(MetadataKey.Parameter, route.target.prototype, route.name);
