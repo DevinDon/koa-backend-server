@@ -51,7 +51,7 @@ export class Router {
    * @param path Mapping path.
    */
   private static format(path: string): string {
-    return path.replace(/\/+/g, '/').replace(/.\/+$/, '');
+    return path.replace(/\/+/g, '/').replace(/(.+)\/$/, '$1');
   }
 
   /**
