@@ -55,21 +55,6 @@ export class Router {
   }
 
   /**
-   * Get key of map. If key of map does not exist, create it.
-   *
-   * Such as:
-   *
-   * `getMap(map, 'abc')` => `map.get('abc') || map.set('abc').get('abc')`
-   *
-   * @param {Map<K, any>} map Map.
-   * @param {K} key Method / Sub path.
-   * @returns Key of map.
-   */
-  private static getMap<K>(map: Map<K, any>, key: K): Map<any, any> {
-    return map.get(key) || map.set(key, new Map()).get(key)!;
-  }
-
-  /**
    * Get special route.
    *
    * @param {Mapping} mapping Mapping information.
