@@ -91,7 +91,10 @@ export function Controller(prefix: string = ''): ClassDecorator {
       // put them on Router.router
       .forEach(name => {
         const mapping: Mapping = Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name);
-        Router.set({ method: mapping.method, path: prefix + mapping.path }, { name, target, controller });
+        if (mapping) {
+          mapping.path = prefix + mapping.path;
+          Router.set({ controller, mapping, name, target });
+        }
       });
   };
 }
