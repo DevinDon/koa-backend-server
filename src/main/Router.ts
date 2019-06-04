@@ -120,9 +120,13 @@ export class Router {
     // foreach & get router / route
     route.mapping.array
       .forEach((v, i, a) => {
-        // if router has key of `v`, get it
-        // else set `v` & get it
-        router = (router.has(v) ? router : router.set(v, new Map())).get(v);
+        // if router variable, get & set it
+        if (Router.SpecialPath.regexp.test(v)) {
+          router = router.get(Router.SpecialPath.variable) || router.set(Router.SpecialPath.variable, new Map()).get(Router.SpecialPath.variable);
+        } else {
+          // if router has key of `v`, get it; else set `v` & get it
+          router = router.get(v) || router.set(v, new Map()).get(v);
+        }
         // if match end, set the route
         if (a.length === i + 1) {
           router.set(Router.SpecialPath.route, route);
