@@ -1,4 +1,5 @@
 import { MetadataKey, Method } from '../@types';
+import { Mapping, Router } from '../Router';
 import { Injector } from './Injector';
 
 /**
@@ -21,40 +22,17 @@ export interface ParamInjection {
   value: string;
 }
 
-interface Router {
-  method: Method;
-  path: string;
-  name: string;
-  target: Function;
-  controller: any;
-}
-
-interface Mapping {
-  method: Method;
-  path: string;
-}
-
-type CoreRouter = {
-  [index in Method]: Map<string, Router>;
-};
-
 /**
- * Core router mapping.
+ * Generate a Parameter Decorator.
  *
- * Usage:
- *
- * `const mapping = CORE$ROUTER[method].get(path);`
+ * @param {ParamInjectionType} type ParamInjectionType, as:
+ * - PathQuery
+ * - PathVariable
+ * - RequestBody
+ * - RequestHeader
+ * - HTTPRequest
+ * - HTTPResponse
  */
-export const CORE$ROUTER: CoreRouter = {
-  DELETE: new Map(),
-  GET: new Map(),
-  HEAD: new Map(),
-  OPTIONS: new Map(),
-  PATCH: new Map(),
-  POST: new Map(),
-  PUT: new Map()
-};
-
 function baseParam(type: ParamInjectionType) {
   return (value: string = ''): ParameterDecorator => (target: any, name, index) => {
     // get existing params array
@@ -66,6 +44,13 @@ function baseParam(type: ParamInjectionType) {
   };
 }
 
+/**
+ * Parameter Decorator.
+ *
+ * Inject query object to param.
+ *
+ * @param {string} value Query key.
+ */
 export const PathQuery = baseParam(ParamInjectionType.PathQuery);
 export const PathVariable = baseParam(ParamInjectionType.PathVariable);
 export const RequestBody = baseParam(ParamInjectionType.RequestBody);
@@ -87,6 +72,13 @@ export const PATCH = baseMethod('PATCH');
 export const POST = baseMethod('POST');
 export const PUT = baseMethod('PUT');
 
+/**
+ * Class Decorator.
+ *
+ * Controller decorator.
+ *
+ * @param prefix Controller prefix, will add to all sub mapping.
+ */
 export function Controller(prefix: string = ''): ClassDecorator {
   return target => {
     const controller = Injector.generate(target);
@@ -96,38 +88,10 @@ export function Controller(prefix: string = ''): ClassDecorator {
     Object.getOwnPropertyNames(target.prototype)
       // exclude constructor
       .filter(v => v !== 'constructor')
-      // put them on CORE$ROUTER
+      // put them on Router.router
       .forEach(name => {
         const mapping: Mapping = Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name);
-        CORE$ROUTER[mapping.method].set(
-          mapping.path = formatPath(prefix, mapping.path),
-          {
-            method: mapping.method,
-            path: mapping.path,
-            name,
-            target,
-            controller
-          }
-        );
+        Router.set({ method: mapping.method, path: prefix + mapping.path }, { name, target, controller });
       });
   };
-}
-
-/**
- * Format router path.
- *
- * First, `replace(/\/+/g, '/')`
- *
- * And then, `replace(/\/+$/, '')`
- *
- * Example:
- *
- * Input: `//abc//def/`
- * Output: `/abc/def`
- *
- * @param prefix Controller prefix.
- * @param path Mapping path.
- */
-function formatPath(prefix: string, path: string): string {
-  return (prefix + path).replace(/\/+/g, '/').replace(/\/+$/, '');
 }
