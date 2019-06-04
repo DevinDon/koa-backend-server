@@ -86,10 +86,8 @@ export class Router {
       let router: Map<string, any> = Router.router;
       /** Special route, maybe undefined(not found). */
       let route: Route | undefined;
-      /** Format path and then concat with method, result: `POST/sign/in` */
-      const path = mapping.method + Router.format(mapping.path);
-      // Split path by `/`, result: `['POST', 'sign', 'in']`
-      path.split('/').filter(v => v.length > 0)
+      // format mapping to array
+      Router.formatToArray(mapping)
         // foreach & get router / route
         .forEach((v, i, a) => {
           // if string path doesn't exist, try to get variable path
@@ -109,18 +107,18 @@ export class Router {
   /**
    * Set mapping to core router.
    *
-   * @param {Mapping} mapping Mapping information.
    * @param {Route} route Route.
    * @throws If the path already has a route, throw an error.
    */
-  static set(mapping: Mapping, route: Route): Route {
+  static set(route: Route): Route {
     /** Current router. */
     let router: Map<string, any> = Router.router;
-    /** Format path and then concat with method, result: `POST/sign/in` */
-    const path = mapping.method + Router.format(mapping.path);
-    // Split path by `/`, result: `['POST', 'sign', 'in']`
-    path.split('/').filter(v => v.length > 0)
-      // foreach & get router / route
+    // format path
+    route.mapping.path = Router.format(route.mapping.path);
+    // format mapping to array
+    route.mapping.array = Router.formatToArray(route.mapping);
+    // foreach & get router / route
+    route.mapping.array
       .forEach((v, i, a) => {
         // if router has key of `v`, get it
         // else set `v` & get it
