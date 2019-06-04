@@ -14,7 +14,7 @@ export class CoreHandler extends BaseHandler {
     PARAM$HTTP$REQUEST: () => this.request!,
     PARAM$HTTP$RESPONSE: () => this.response!,
     PARAM$PATH$QUERY: () => '',
-    PARAM$PATH$VARIABLE: () => '',
+    PARAM$PATH$VARIABLE: (name: string, route: Route, mapping: Mapping) => Router.formatToArray(mapping)[route.mapping.array.indexOf(`{{${name}}}`)],
     PARAM$REQUEST$BODY: () => '',
     PARAM$REQUEST$HEADER: (value: string) => this.request!.headers[value.toLowerCase()]
   };
@@ -37,7 +37,7 @@ export class CoreHandler extends BaseHandler {
       if (route) {
         // get params type array
         const params: ParamInjection[] | undefined = Reflect.getMetadata(MetadataKey.Parameter, route.target.prototype, route.name);
-        const args = params ? params.map(v => this.paramInjectors[v.type](v.value)) : [];
+        const args = params ? params.map(v => this.paramInjectors[v.type](v.value, route, mapping)) : [];
         // TODO: use JSON schema instead of JSON stringify
         return JSON.stringify(route.controller[route.name](...args));
       }
