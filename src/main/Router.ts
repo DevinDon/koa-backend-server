@@ -63,34 +63,26 @@ export class Router {
    */
   static get(mapping: Mapping): Route | undefined {
     try {
-      /** Such as: `POST/sign/in` */
+      /** Current router. */
+      let router: Map<string, any> = Router.router;
+      /** Special route, maybe undefined(not found). */
+      let route: Route | undefined;
+      /** Format path and then concat with method, result: `POST/sign/in` */
       const path = mapping.method + Router.format(mapping.path);
-      /** Such as: `['POST', 'sign', 'in']` */
-      const arr = path.split('/').filter(v => v.length > 0);
-      /** Maybe route, exception or `Method`. */
-      const result = arr.reduce((previous, current, index, array): any => {
-        // first step
-        if (index === 1) {
-          const router = Router.router.get(previous as Method)!.get(current);
-          if (array.length === 2) { // get route
-            return router.get('');
+      // Split path by `/`, result: `['POST', 'sign', 'in']`
+      path.split('/').filter(v => v.length > 0)
+        // foreach & get router / route
+        .forEach((v, i, a) => {
+          // if string path doesn't exist, try to get variable path
+          router = router.get(v) || router.get(Router.SpecialPath.variable);
+          // if match end, return the route
+          if (a.length === i + 1) {
+            route = router.get(Router.SpecialPath.route);
           }
-          return router;
-        } else {
-          const router = (previous as any as Map<string, any>).get(current);
-          if (array.length === index + 1) { // get route
-            return router.get('');
-          }
-          return router;
-        }
-      });
-      // If result is method, such as `POST/` to `['POST']` to `POST`,
-      // it means get the root mapping
-      if (result === mapping.method) {
-        return Router.router.get(mapping.method)!.get('');
-      }
-      return result as any;
+        });
+      return route;
     } catch (exception) { // catch route not found exception
+      console.log(`Route '${mapping.method}${mapping.path}' not found, ${exception}.`);
       return undefined;
     }
   }
@@ -103,32 +95,23 @@ export class Router {
    * @throws If the path already has a route, throw an error.
    */
   static set(mapping: Mapping, route: Route): Route {
+    /** Current router. */
+    let router: Map<string, any> = Router.router;
+    /** Format path and then concat with method, result: `POST/sign/in` */
     const path = mapping.method + Router.format(mapping.path);
-    const result = path.split('/').filter(v => v.length > 0)
-      .reduce((previous, current, index, array): any => {
-        if (index === 1) {
-          const router = Router.getMap(Router.getMap(Router.router, previous), current);
-          if (array.length === 2) {
-            if (router.has('')) { // route has already existed
-              throw new Error(`${path} has already existed`);
-            }
-            router.set('', route); // set route
-          }
-          return router;
-        } else {
-          const router = Router.getMap(previous as any, current);
-          if (array.length === index + 1) {
-            if (router.has('')) { // route has already existed
-              throw new Error(`${path} has already existed`);
-            }
-            router.set('', route); // set route
-          }
-          return router;
+    // Split path by `/`, result: `['POST', 'sign', 'in']`
+    path.split('/').filter(v => v.length > 0)
+      // foreach & get router / route
+      .forEach((v, i, a) => {
+        // if router has key of `v`, get it
+        // else set `v` & get it
+        router = (router.has(v) ? router : router.set(v, new Map())).get(v);
+        // if match end, set the route
+        if (a.length === i + 1) {
+          router.set(Router.SpecialPath.route, route);
         }
       });
-    if (result === mapping.method) {
-      Router.getMap(Router.router, mapping.method).set('', route);
-    }
+    // return route
     return route;
   }
 
