@@ -6,7 +6,7 @@ import { Method } from './@types';
 export interface Mapping {
   method: Method;
   path: string;
-  pathArray: string[];
+  pathArray?: string[];
   query?: string;
   queryObject?: { [index: string]: string };
 }
@@ -122,7 +122,7 @@ export class Router {
       /** Special route, maybe undefined(not found). */
       let route: Route | undefined;
       // format mapping to array
-      Router.formatToPathArray(mapping)
+      Router.format(mapping).pathArray!
         // foreach & get router / route
         .forEach((v, i, a) => {
           // if string path doesn't exist, try to get variable path
@@ -148,12 +148,9 @@ export class Router {
   static set(route: Route): Route {
     /** Current router. */
     let router: Map<string, any> = Router.router;
-    // format path
-    route.mapping.path = Router.formatPath(route.mapping.path);
-    // format mapping to array
-    route.mapping.pathArray = Router.formatToPathArray(route.mapping);
+    // format mapping
+    Router.format(route.mapping).pathArray!
     // foreach & get router / route
-    route.mapping.pathArray
       .forEach((v, i, a) => {
         // if router variable, get & set it
         if (Router.SpecialPath.regexp.test(v)) {
