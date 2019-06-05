@@ -46,6 +46,38 @@ export class Router {
   private static router: Map<Method, Map<string, any>> = new Map();
 
   /**
+   * Format mapping, it will **modify** raw mapping.
+   *
+   * @param {Mapping} mapping Request mapping, include method & path.
+   * @returns {Mapping} Formatted mapping.
+   */
+  public static format(mapping: Mapping): Mapping {
+    // mapping has already formatted
+    if (mapping.pathArray) {
+      return mapping;
+    }
+    // method to upper case
+    mapping.method = mapping.method.toUpperCase() as Method;
+    // split with `?`, path & query
+    const temp = mapping.path.split('?');
+    // format requset path
+    mapping.path = Router.formatPath(temp[0]);
+    // format to path array
+    mapping.pathArray = Router.formatToPathArray(mapping.method, mapping.path);
+    // if query string exist
+    if (temp[1]) {
+      mapping.query = temp[1];
+      mapping.queryObject = {};
+      mapping.query.split('&')
+        .forEach(v => {
+          const kv = v.split('=');
+          mapping.queryObject![kv[0]] = kv[1];
+        });
+    }
+    return mapping;
+  }
+
+  /**
    * Format route path.
    *
    * First, `replace(/\/+/g, '/')`
