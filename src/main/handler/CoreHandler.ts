@@ -15,7 +15,20 @@ export class CoreHandler extends BaseHandler {
     PARAM$HTTP$RESPONSE: () => this.response!,
     PARAM$PATH$QUERY: (name: string, route: Route, mapping: Mapping) => mapping.queryObject && mapping.queryObject[name],
     PARAM$PATH$VARIABLE: (name: string, route: Route, mapping: Mapping) => Router.format(mapping).pathArray![route.mapping.pathArray!.indexOf(`{{${name}}}`)],
-    PARAM$REQUEST$BODY: () => '',
+    PARAM$REQUEST$BODY: async (): Promise<any> => new Promise<any>((resolve, reject) => {
+      let data: Buffer = Buffer.allocUnsafe(0);
+      this.request!.on('data', (chunk: Buffer) => data = Buffer.concat([data, chunk]));
+      // TODO: JSON schema & validate
+      this.request!.on('end', () => {
+        let result;
+        switch (this.request!.headers['content-type']) {
+          case 'application/json': result = JSON.parse(data.toString()); break;
+          default: result = data.toString(); break;
+        }
+        resolve(result);
+      });
+      this.request!.on('error', error => reject(error));
+    }),
     PARAM$REQUEST$HEADER: (value: string) => this.request!.headers[value.toLowerCase()]
   };
 
