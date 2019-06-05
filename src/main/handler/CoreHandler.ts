@@ -13,7 +13,7 @@ export class CoreHandler extends BaseHandler {
   private paramInjectors: { [index in ParamInjectionType]: (name: string, route: Route, mapping: Mapping) => any } = {
     PARAM$HTTP$REQUEST: () => this.request!,
     PARAM$HTTP$RESPONSE: () => this.response!,
-    PARAM$PATH$QUERY: (name: string, route: Route, mapping: Mapping) => { },
+    PARAM$PATH$QUERY: (name: string, route: Route, mapping: Mapping) => mapping.queryObject && mapping.queryObject[name],
     PARAM$PATH$VARIABLE: (name: string, route: Route, mapping: Mapping) => Router.format(mapping).pathArray![route.mapping.pathArray!.indexOf(`{{${name}}}`)],
     PARAM$REQUEST$BODY: () => '',
     PARAM$REQUEST$HEADER: (value: string) => this.request!.headers[value.toLowerCase()]
