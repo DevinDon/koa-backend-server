@@ -28,11 +28,9 @@ export class CoreHandler extends BaseHandler {
     try {
       // content-type default to application/json
       this.response!.setHeader('content-type', 'application/json');
-      const pathAndQuery = this.request!.url!.split('?');
       const mapping: Mapping = Router.format({
         method: this.request!.method! as Method,
-        path: pathAndQuery[0],
-        query: pathAndQuery[1]
+        path: this.request!.url!
       });
       const route = Router.get(mapping);
       if (route) {
