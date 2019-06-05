@@ -4,7 +4,7 @@ import { inspect } from 'util';
 import { Controller, CoreHandlerPool, GET, HTTPRequest, HTTPResponse, Injector, PathQuery, PathVariable, POST, RequestHeader } from '../../main';
 import { HTTPException } from '../../main/Exception';
 
-namespace Simple {
+namespace SimpleDemo {
 
   const pool: CoreHandlerPool = Injector.generate(CoreHandlerPool);
 

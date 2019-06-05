@@ -1,4 +1,4 @@
-namespace Performance {
+namespace PerformanceDemo {
   // tslint:disable: no-console
 
   function array() {

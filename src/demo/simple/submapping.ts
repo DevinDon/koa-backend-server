@@ -1,4 +1,4 @@
-namespace SubMapping {
+namespace SubMappingDemo {
   const text = '/date/{{year}}/{{month}}/{{day}}';
 
   const router = {
