@@ -10,7 +10,7 @@ import { BaseHandler } from './BaseHandler';
 export class CoreHandler extends BaseHandler {
 
   /** Param injectors, function. */
-  private paramInjectors: { [index in ParamInjectionType]: Function } = {
+  private paramInjectors: { [index in ParamInjectionType]: (name: string, route: Route, mapping: Mapping) => any } = {
     PARAM$HTTP$REQUEST: () => this.request!,
     PARAM$HTTP$RESPONSE: () => this.response!,
     PARAM$PATH$QUERY: (name: string, route: Route, mapping: Mapping) => { },
