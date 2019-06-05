@@ -60,20 +60,21 @@ export class Router {
    * Input: `///`
    * Output: `/`
    *
-   * @param {string} path Mapping path.
+   * @param {string} path Request path, without query.
    */
-  private static formatPath(path: string): string {
+  public static formatPath(path: string): string {
     return path.replace(/\/+/g, '/').replace(/(.+)\/$/, '$1');
   }
 
   /**
    * Format mapping to array.
    *
-   * @param {Mapping} mapping Mapping.
+   * @param {Method} method Request method.
+   * @param {string} path Request path, without query & should be formatted.
    * @returns {string[]} Formatted array.
    */
-  public static formatToPathArray(mapping: Mapping): string[] {
-    return (mapping.method + Router.formatPath(mapping.path)).split('/').filter(v => v.length > 0);
+  public static formatToPathArray(method: Method, path: string): string[] {
+    return (method + path).split('/').filter(v => v.length > 0);
   }
 
   /**
