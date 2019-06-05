@@ -71,7 +71,7 @@ export class Router {
       mapping.query.split('&')
         .forEach(v => {
           const kv = v.split('=');
-          mapping.queryObject![kv[0]] = kv[1];
+          mapping.queryObject![kv[0]] = decodeURIComponent(kv[1]);
         });
     }
     return mapping;
@@ -150,7 +150,7 @@ export class Router {
     let router: Map<string, any> = Router.router;
     // format mapping
     Router.format(route.mapping).pathArray!
-    // foreach & get router / route
+      // foreach & get router / route
       .forEach((v, i, a) => {
         // if router variable, get & set it
         if (Router.SpecialPath.regexp.test(v)) {
