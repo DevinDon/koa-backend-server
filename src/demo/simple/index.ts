@@ -1,7 +1,7 @@
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import 'reflect-metadata';
 import { inspect } from 'util';
-import { Controller, CoreHandlerPool, GET, HTTPRequest, HTTPResponse, Injector, PathVariable, POST, RequestHeader } from '../../main';
+import { Controller, CoreHandlerPool, GET, HTTPRequest, HTTPResponse, Injector, PathQuery, PathVariable, POST, RequestHeader } from '../../main';
 import { HTTPException } from '../../main/Exception';
 
 namespace Simple {
@@ -47,6 +47,11 @@ namespace Simple {
     @GET('/show/{{name}}')
     show(@PathVariable('name') name: string): string {
       return name;
+    }
+
+    @GET('/query')
+    query(@PathQuery('name') name: string): any {
+      return { name: name };
     }
 
   }
