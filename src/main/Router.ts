@@ -6,7 +6,9 @@ import { Method } from './@types';
 export interface Mapping {
   method: Method;
   path: string;
-  array: string[];
+  pathArray: string[];
+  query?: string;
+  queryObject?: { [index: string]: string };
 }
 
 /**
