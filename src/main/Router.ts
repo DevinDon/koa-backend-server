@@ -60,7 +60,7 @@ export class Router {
    *
    * @param {string} path Mapping path.
    */
-  private static format(path: string): string {
+  private static formatPath(path: string): string {
     return path.replace(/\/+/g, '/').replace(/(.+)\/$/, '$1');
   }
 
@@ -70,8 +70,8 @@ export class Router {
    * @param {Mapping} mapping Mapping.
    * @returns {string[]} Formatted array.
    */
-  public static formatToArray(mapping: Mapping): string[] {
-    return (mapping.method + Router.format(mapping.path)).split('/').filter(v => v.length > 0);
+  public static formatToPathArray(mapping: Mapping): string[] {
+    return (mapping.method + Router.formatPath(mapping.path)).split('/').filter(v => v.length > 0);
   }
 
   /**
@@ -87,7 +87,7 @@ export class Router {
       /** Special route, maybe undefined(not found). */
       let route: Route | undefined;
       // format mapping to array
-      Router.formatToArray(mapping)
+      Router.formatToPathArray(mapping)
         // foreach & get router / route
         .forEach((v, i, a) => {
           // if string path doesn't exist, try to get variable path
@@ -114,11 +114,11 @@ export class Router {
     /** Current router. */
     let router: Map<string, any> = Router.router;
     // format path
-    route.mapping.path = Router.format(route.mapping.path);
+    route.mapping.path = Router.formatPath(route.mapping.path);
     // format mapping to array
-    route.mapping.array = Router.formatToArray(route.mapping);
+    route.mapping.pathArray = Router.formatToPathArray(route.mapping);
     // foreach & get router / route
-    route.mapping.array
+    route.mapping.pathArray
       .forEach((v, i, a) => {
         // if router variable, get & set it
         if (Router.SpecialPath.regexp.test(v)) {
