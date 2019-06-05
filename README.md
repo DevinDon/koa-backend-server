@@ -1,14 +1,22 @@
 # Rester
 
-A RESTful server with db & session support based Koa & TypeScript.
+<del>A RESTful server with db & session support based Koa & TypeScript.</del>
 
-[FULL DOCUMENT IS HERE.](https://github.com/DevinDon/koa-backend-server/blob/master/docs/README.md)
+<del>[FULL DOCUMENT IS HERE.](https://github.com/DevinDon/koa-backend-server/blob/master/docs/README.md)</del>
+
+**How do you think about Spring Boot?**
+
+**In Node.js & TypeScript!**
 
 # Attention
 
-<span style="color: red">**WARNING: This project is currently in an *UNSTABLE* phase.**</span>
+<span style="color: red">**:loudspeaker: Attention: This project is being refactored, I will take some new feature to you!**</span>
+
+**:warning: WARNING: This project is currently in an *UNSTABLE* phase.**
 
 STABLE version will be 1.0.0 in future.
+
+**And this document is outdated.**
 
 # Feature
 
@@ -100,7 +108,7 @@ See [Full Document](https://github.com/DevinDon/rester/tree/master/docs) for mor
 
 ## **Advanced usage**
 
-### Use your own middlewares.
+### Use your own middlewares
 
 ```typescript
 server.use({
