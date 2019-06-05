@@ -11,6 +11,6 @@ export abstract class BaseHandler {
     return this;
   }
 
-  abstract handle(): string;
+  async abstract handle(): Promise<string>;
 
 }
