@@ -13,8 +13,8 @@ export class CoreHandler extends BaseHandler {
   private paramInjectors: { [index in ParamInjectionType]: Function } = {
     PARAM$HTTP$REQUEST: () => this.request!,
     PARAM$HTTP$RESPONSE: () => this.response!,
-    PARAM$PATH$QUERY: () => '',
-    PARAM$PATH$VARIABLE: (name: string, route: Route, mapping: Mapping) => Router.formatToArray(mapping)[route.mapping.array.indexOf(`{{${name}}}`)],
+    PARAM$PATH$QUERY: (name: string, route: Route, mapping: Mapping) => { },
+    PARAM$PATH$VARIABLE: (name: string, route: Route, mapping: Mapping) => Router.format(mapping).pathArray![route.mapping.pathArray!.indexOf(`{{${name}}}`)],
     PARAM$REQUEST$BODY: () => '',
     PARAM$REQUEST$HEADER: (value: string) => this.request!.headers[value.toLowerCase()]
   };
@@ -28,11 +28,12 @@ export class CoreHandler extends BaseHandler {
     try {
       // content-type default to application/json
       this.response!.setHeader('content-type', 'application/json');
-      const mapping: Mapping = {
+      const pathAndQuery = this.request!.url!.split('?');
+      const mapping: Mapping = Router.format({
         method: this.request!.method! as Method,
-        path: this.request!.url!,
-        array: []
-      };
+        path: pathAndQuery[0],
+        query: pathAndQuery[1]
+      });
       const route = Router.get(mapping);
       if (route) {
         // get params type array
