@@ -8,6 +8,8 @@
 
 **In Node.js & TypeScript!**
 
+See [demo script(in developing)](https://github.com/DevinDon/rester/blob/master/src/demo/simple/index.ts) here! It is easy to understand!
+
 # Attention
 
 <span style="color: red">**:loudspeaker: Attention: This project is being refactored, I will take some new feature to you!**</span>
