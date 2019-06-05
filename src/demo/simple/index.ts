@@ -1,7 +1,7 @@
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import 'reflect-metadata';
 import { inspect } from 'util';
-import { Controller, CoreHandlerPool, GET, HTTPRequest, HTTPResponse, Injector, PathQuery, PathVariable, POST, RequestHeader } from '../../main';
+import { Controller, CoreHandlerPool, GET, HTTPRequest, HTTPResponse, Injector, PathQuery, PathVariable, POST, RequestBody, RequestHeader } from '../../main';
 import { HTTPException } from '../../main/Exception';
 
 namespace SimpleDemo {
@@ -54,6 +54,16 @@ namespace SimpleDemo {
       return { name: name };
     }
 
+    @POST('/body')
+    async body(@RequestBody() body: any): Promise<any> {
+      return body;
+    }
+
+    @POST('/async')
+    async asyncTest(): Promise<any> {
+      return 'Async test OK!';
+    }
+
   }
 
   @Controller('/prefix')
@@ -64,10 +74,10 @@ namespace SimpleDemo {
     }
   }
 
-  const server = new Server((request, response) => {
+  const server = new Server(async (request, response) => {
     const handler = pool.take(request, response);
     try {
-      response.end(handler.handle());
+      response.end(await handler.handle());
     } catch (error) {
       const exception: HTTPException = error;
       response.writeHead(exception.code, exception.message);
