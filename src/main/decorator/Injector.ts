@@ -24,7 +24,7 @@ export class Injector {
       return this.storage.get(target);
     } else {
       // recursive injection
-      const args = providers && providers.map((provider: any) => this.generate(provider));
+      const args = providers && providers.map((provider: any) => this.generate(provider, false));
       const obj = args ? new target(...args) : new target();
       // save to instance storage
       if (save) {
