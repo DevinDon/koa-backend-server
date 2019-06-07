@@ -163,7 +163,11 @@ export class Router {
         }
         // if match end, set the route
         if (a.length === i + 1) {
-          router.set(Router.SpecialPath.route, route);
+          if (router.has(Router.SpecialPath.route)) { // duplicate route
+            throw new Error(`Path ${route.mapping.path} already has route.`);
+          } else {
+            router.set(Router.SpecialPath.route, route);
+          }
         }
       });
     return route;
