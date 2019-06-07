@@ -3,7 +3,6 @@ import { HandlerType } from '../decorator';
 import { BaseHandler, HandlerOption } from './BaseHandler';
 import { CoreHandler } from './CoreHandler';
 
-@Injectable()
 export class HandlerPool {
 
   static max = 100 * 100;
