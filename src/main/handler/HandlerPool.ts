@@ -31,8 +31,13 @@ export class HandlerPool {
     }
   }
 
-  give(handler: BaseHandler): number {
-    return this.pool.length < this.max ? this.pool.push(handler) : 0;
+  static compose(current: BaseHandler, i: number): () => any {
+    if (i + 1 < HandlerPool.order.length) {
+      const next = HandlerPool.take(HandlerPool.order[i]).inherit(current);
+      return async () => current.handle(HandlerPool.compose(next, i + 1)).finally(() => HandlerPool.give(current));
+    } else {
+      return async () => current.handle(current.run.bind(current)).finally(() => HandlerPool.give(current));
+    }
   }
 
 }
