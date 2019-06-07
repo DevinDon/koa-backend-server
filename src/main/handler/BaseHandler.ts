@@ -14,12 +14,40 @@ export abstract class BaseHandler {
   protected response?: ServerResponse;
   protected route?: Route;
 
-  init(request?: IncomingMessage, response?: ServerResponse): this {
-    this.request = request;
-    this.response = response;
+  /**
+   * Init handler with rdequest & response.
+   *
+   * If call init() without arguments, it mean set request, response & route to undefined.
+   *
+   * @param {Request} request Incoming message.
+   * @param {Response} response Server response.
+   * @returns {this} This handler instance.
+   */
+  init(option?: HandlerOption): this {
+    if (option) { // init handler with request, response & route
+      this.request = option.request;
+      this.response = option.response;
+      this.route = option.route;
+    } else { // init handler
+      this.args = undefined;
+      this.request = undefined;
+      this.response = undefined;
+      this.route = undefined;
+    }
     return this;
   }
 
-  async abstract handle(): Promise<string>;
+  inherit<THandler extends BaseHandler>(handler: THandler): this {
+    this.request = handler.request;
+    this.response = handler.response;
+    this.route = handler.route;
+    return this;
+  }
+
+  async abstract handle<T>(next: () => Promise<T>): Promise<T>;
+
+  async run(): Promise<any> {
+    return this.route!.controller[this.route!.name](...this.args!);
+  }
 
 }
