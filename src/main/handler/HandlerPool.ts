@@ -1,18 +1,19 @@
-import { IncomingMessage, ServerResponse } from 'http';
-import { Injectable } from '../decorator';
-import { BaseHandler } from './BaseHandler';
+import { inspect } from 'util';
+import { HandlerType } from '../decorator';
+import { BaseHandler, HandlerOption } from './BaseHandler';
 import { CoreHandler } from './CoreHandler';
 
 @Injectable()
 export class HandlerPool {
 
-  max = 100 * 100;
-  pool: BaseHandler[] = [];
+  static max = 100 * 100;
+  static order: HandlerType[] = [CoreHandler];
+  static pools: Map<string, BaseHandler[]> = new Map();
 
-  constructor() {
-    for (let i = 0; i < 10; i++) {
-      this.pool.push(new CoreHandler());
-    }
+  static take<T = BaseHandler>(type: HandlerType): T {
+    const pool = HandlerPool.pools.get(type.name)! || HandlerPool.pools.set(type.name, []).get(type.name)!;
+    return pool.pop() || new type() as any;
+  }
   }
 
   take(request: IncomingMessage, response: ServerResponse): BaseHandler {
