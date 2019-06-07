@@ -1,12 +1,8 @@
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import 'reflect-metadata';
-import { inspect } from 'util';
-import { Controller, CoreHandlerPool, GET, HTTPRequest, HTTPResponse, Injector, PathQuery, PathVariable, POST, RequestBody, RequestHeader } from '../../main';
-import { HTTPException } from '../../main/Exception';
+import { Controller, GET, HandlerPool, HTTPRequest, HTTPResponse, Method, PathQuery, PathVariable, POST, RequestBody, RequestHeader, Router } from '../../main';
 
 namespace SimpleDemo {
-
-  const pool: CoreHandlerPool = Injector.generate(CoreHandlerPool);
 
   @Controller('/')
   class DemoController {
@@ -74,17 +70,10 @@ namespace SimpleDemo {
     }
   }
 
-  const server = new Server(async (request, response) => {
-    const handler = pool.take(request, response);
-    try {
-      response.end(await handler.handle());
-    } catch (error) {
-      const exception: HTTPException = error;
-      response.writeHead(exception.code, exception.message);
-      response.end(inspect(exception.content, true));
-    }
-    // don't need init
-    pool.give(handler);
+  const server = new Server((request, response) => {
+    HandlerPool.process({
+      request, response, route: Router.get({ method: request.method as Method, path: request.url! })!
+    });
   }).listen(8080, () => { console.log('Server listening on localhost:8080.'); });
 
 }
