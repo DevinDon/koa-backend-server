@@ -13,6 +13,10 @@ export class HandlerPool {
     const pool = HandlerPool.pools.get(type.name)! || HandlerPool.pools.set(type.name, []).get(type.name)!;
     return pool.pop() || new type() as any;
   }
+
+  static give(handler: BaseHandler): number {
+    const pool = HandlerPool.pools.get(handler.constructor.name)! || HandlerPool.pools.set(handler.constructor.name, []).get(handler.constructor.name)!;
+    return pool.length < HandlerPool.max ? pool.push(handler.init()) : pool.length;
   }
 
   take(request: IncomingMessage, response: ServerResponse): BaseHandler {
