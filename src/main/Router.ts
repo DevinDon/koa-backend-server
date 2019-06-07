@@ -1,4 +1,5 @@
 import { Method } from './@types';
+import { HandlerType } from './decorator';
 
 /**
  * Mapping, with method & path.
@@ -51,7 +52,7 @@ export class Router {
    * @param {Mapping} mapping Request mapping, include method & path.
    * @returns {Mapping} Formatted mapping.
    */
-  public static format(mapping: Mapping): Mapping {
+  static format(mapping: Mapping): Mapping {
     // mapping has already formatted
     if (mapping.pathArray) {
       return mapping;
@@ -94,7 +95,7 @@ export class Router {
    *
    * @param {string} path Request path, without query.
    */
-  public static formatPath(path: string): string {
+  static formatPath(path: string): string {
     return path.replace(/\/+/g, '/').replace(/(.+)\/$/, '$1');
   }
 
@@ -105,7 +106,7 @@ export class Router {
    * @param {string} path Request path, without query & should be formatted.
    * @returns {string[]} Formatted array.
    */
-  public static formatToPathArray(method: Method, path: string): string[] {
+  static formatToPathArray(method: Method, path: string): string[] {
     return (method + path).split('/').filter(v => v.length > 0);
   }
 
@@ -164,7 +165,6 @@ export class Router {
           router.set(Router.SpecialPath.route, route);
         }
       });
-    // return route
     return route;
   }
 
