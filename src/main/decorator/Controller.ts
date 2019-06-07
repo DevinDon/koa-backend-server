@@ -22,6 +22,8 @@ export interface ParamInjection {
   value: string;
 }
 
+const router: Router = Injector.generate(Router);
+
 /**
  * Generate a Parameter Decorator.
  *
@@ -93,7 +95,7 @@ export function Controller(prefix: string = ''): ClassDecorator {
         const mapping: Mapping = Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name);
         if (mapping) {
           mapping.path = prefix + mapping.path;
-          Router.set({ controller, handlerTypes: Reflect.getMetadata(MetadataKey.Handler, target) || [], mapping, name, target });
+          router.set({ controller, handlerTypes: Reflect.getMetadata(MetadataKey.Handler, target) || [], mapping, name, target });
         }
       });
   };
