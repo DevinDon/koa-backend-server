@@ -1,7 +1,7 @@
 import { MetadataKey, Method } from '../@types';
 import { ParamInjection, ParamInjectionType } from '../decorator/Controller';
-import { HTTP400Exception, HTTP404Exception, HTTP500Exception, HTTPException } from '../Exception';
-import { Mapping, Route, Router } from '../Router';
+import { HTTP400Exception, HTTP404Exception } from '../Exception';
+import { Route, Router } from '../Router';
 import { BaseHandler } from './BaseHandler';
 
 /**
@@ -38,51 +38,35 @@ export class CoreHandler extends BaseHandler {
   /**
    * Core handle method.
    *
-   * @returns {Promise<string>} Stringify HTTP response.
+   * @param {Next<T>} next Next function, to go to next handler.
+   * @returns {Promise<T>} Result for this handler.
    */
-  async handle(): Promise<string> {
-    try {
-      // content-type default to application/json
-      this.response!.setHeader('content-type', 'application/json');
-      /** Formatted mapping. */
-      const mapping: Mapping = Router.format({
-        method: this.request!.method! as Method,
-        path: this.request!.url!
-      });
-      /** Route. */
-      const route = Router.get(mapping);
-      if (route) {
-        /** Params type array. */
-        const params: ParamInjection[] | undefined = Reflect.getMetadata(MetadataKey.Parameter, route.target.prototype, route.name);
-        /** Arguments, or undefined. */
-        const args = params ? params.map(v => this.paramInjectors[v.type](v.value, route, mapping)) : [];
-        try {
-          // await promise args, such as `body`
-          for (let i = 0; i < args.length; i++) {
-            if (args[i] instanceof Promise) {
-              args[i] = await args[i];
-            }
+  async handle<T>(next: () => Promise<T>): Promise<T> {
+    // TODO: refactor by content-type handler
+    // content-type default to application/json
+    this.response!.setHeader('content-type', 'application/json');
+    // if route exist
+    if (this.route) {
+      /** Parameter injection array. */
+      const parameterInjections: ParamInjection[] | undefined = Reflect.getMetadata(MetadataKey.Parameter, this.route.target.prototype, this.route.name);
+      /** Arguments, or undefined. */
+      this.args = parameterInjections
+        ? parameterInjections.map(v => this.paramInjectors[v.type](v.value, this.route!))
+        : [];
+      try {
+        // await promise args, such as `body`
+        for (let i = 0; i < this.args.length; i++) {
+          if (this.args[i] instanceof Promise) {
+            this.args[i] = await this.args[i];
           }
-        } catch (error) {
-          // bad request cannot be parsed, throw 400
-          throw new HTTP400Exception(`Bad request ${error}.`);
         }
-        // if controller mapping is Promise, await it(slow)
-        const result = route.controller[route.name](...args);
-        // TODO: use JSON schema instead of JSON stringify
-        return JSON.stringify(result instanceof Promise ? await result : result);
+      } catch (error) {
+        // bad request cannot be parsed, throw 400
+        throw new HTTP400Exception(`Bad request ${error}.`);
       }
-    } catch (error) {
-      if (error instanceof HTTPException) {
-        // error is HTTPException
-        throw error;
-      } else {
-        // internal error, throw 500
-        throw new HTTP500Exception(error, { request: this.request!, response: this.response! });
-      }
+      return next();
     }
-    // router not found, throw 404
-    throw new HTTP404Exception(`CAN'T ${this.request!.method!.toUpperCase()} ${this.request!.url!}`, { request: this.request!, response: this.response! });
+    throw new HTTP404Exception(`Can't ${this.request!.method!.toUpperCase()} ${this.request!.url!}`, { request: this.request!, response: this.response! });
   }
 
 }
