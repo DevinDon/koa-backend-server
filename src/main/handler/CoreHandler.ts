@@ -10,11 +10,14 @@ import { BaseHandler } from './BaseHandler';
 export class CoreHandler extends BaseHandler {
 
   /** Param injectors, function. */
-  private paramInjectors: { [index in ParamInjectionType]: (name: string, route: Route, mapping: Mapping) => any } = {
+  private paramInjectors: { [index in ParamInjectionType]: (name: string, route: Route) => any } = {
     PARAM$HTTP$REQUEST: () => this.request!,
     PARAM$HTTP$RESPONSE: () => this.response!,
-    PARAM$PATH$QUERY: (name: string, route: Route, mapping: Mapping) => mapping.queryObject && mapping.queryObject[name],
-    PARAM$PATH$VARIABLE: (name: string, route: Route, mapping: Mapping) => Router.format(mapping).pathArray![route.mapping.pathArray!.indexOf(`{{${name}}}`)],
+    PARAM$PATH$QUERY: (name: string, route: Route) => {
+      const queryObject = Router.format({ method: this.request!.method as Method, path: this.request!.url! }).queryObject;
+      return queryObject && queryObject[name];
+    },
+    PARAM$PATH$VARIABLE: (name: string, route: Route) => Router.format({ method: this.request!.method as Method, path: this.request!.url! }).pathArray![route.mapping.pathArray!.indexOf(`{{${name}}}`)],
     PARAM$REQUEST$BODY: async (): Promise<any> => new Promise<any>((resolve, reject) => {
       let data: Buffer = Buffer.allocUnsafe(0);
       this.request!.on('data', (chunk: Buffer) => data = Buffer.concat([data, chunk]));
