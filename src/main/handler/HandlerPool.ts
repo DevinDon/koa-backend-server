@@ -19,8 +19,16 @@ export class HandlerPool {
     return pool.length < HandlerPool.max ? pool.push(handler.init()) : pool.length;
   }
 
-  take(request: IncomingMessage, response: ServerResponse): BaseHandler {
-    return (this.pool.pop() || new CoreHandler()).init(request, response);
+  static async process(option: HandlerOption): Promise<void> {
+    // TODO: refactor
+    try {
+      const result = await HandlerPool.compose(HandlerPool.take(HandlerPool.order[0]).init(option), 0)();
+      option.response.end(JSON.stringify(result));
+    } catch (error) {
+      const exception = error;
+      option.response.writeHead(exception.code || 600, exception.message);
+      option.response.end(inspect(exception.content, true));
+    }
   }
 
   give(handler: BaseHandler): number {
