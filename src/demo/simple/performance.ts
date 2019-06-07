@@ -166,5 +166,55 @@ namespace PerformanceDemo {
 
   }
 
-  splitString();
+  function mapStringKey$mapFunctionKey() {
+
+    const times = 10 * 10000;
+    const mapStringKey = new Map();
+    mapStringKey.set(ABC.name, ABC);
+    const mapFunctionKey = new Map();
+    mapFunctionKey.set(ABC, ABC);
+
+    console.time('string');
+    for (let i = 0; i < times; i++) {
+      const result = mapStringKey.get(ABC.name);
+    }
+    console.timeEnd('string');
+
+    console.time('function');
+    for (let i = 0; i < times; i++) {
+      const result = mapFunctionKey.get(ABC);
+    }
+    console.timeEnd('function');
+
+  }
+
+  function bind() {
+
+    const times = 10 * 10000;
+
+    class DEF {
+      age = 1;
+      hello() {
+        return this.age;
+      }
+    }
+
+    const def = new DEF();
+
+    console.time('bind');
+    for (let i = 0; i < times; i++) {
+      const result = def.hello.bind(def)();
+    }
+    console.timeEnd('bind');
+
+    console.time('no');
+    for (let i = 0; i < times; i++) {
+      const result = def.hello();
+    }
+    console.timeEnd('no');
+
+  }
+
+  bind();
+
 }
