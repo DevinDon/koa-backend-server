@@ -45,7 +45,7 @@ export class Router {
   private static SpecialPath = { regexp: /{{(.+)}}/, route: '', variable: '%' };
 
   /** Core router. `Map<Method, Map>` */
-  private static router: Map<Method, Map<string, any>> = new Map();
+  private router: Map<Method, Map<string, any>> = new Map();
 
   /**
    * Format mapping, it will **modify** raw mapping.
@@ -117,10 +117,10 @@ export class Router {
    * @param {Mapping} mapping Mapping information.
    * @returns Route. If not found, return undefined.
    */
-  static get(mapping: Mapping): Route | undefined {
+  get(mapping: Mapping): Route | undefined {
     try {
       /** Current router. */
-      let router: Map<string, any> = Router.router;
+      let router: Map<string, any> = this.router;
       /** Special route, maybe undefined(not found). */
       let route: Route | undefined;
       // format mapping to array
@@ -147,9 +147,9 @@ export class Router {
    * @param {Route} route Route.
    * @throws If the path already has a route, throw an error.
    */
-  static set(route: Route): Route {
+  set(route: Route): Route {
     /** Current router. */
-    let router: Map<string, any> = Router.router;
+    let router: Map<string, any> = this.router;
     // format mapping
     Router.format(route.mapping).pathArray!
       // foreach & get router / route

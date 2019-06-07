@@ -1,6 +1,6 @@
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import 'reflect-metadata';
-import { Controller, GET, HandlerPool, HTTPRequest, HTTPResponse, Method, PathQuery, PathVariable, POST, RequestBody, RequestHeader, Router } from '../../main';
+import { Controller, GET, HandlerPool, HTTPRequest, HTTPResponse, Method, PathQuery, PathVariable, POST, RequestBody, RequestHeader, Router, Injector } from '../../main';
 
 namespace SimpleDemo {
 
@@ -70,9 +70,14 @@ namespace SimpleDemo {
     }
   }
 
+  const pool = Injector.generate(HandlerPool);
+  const router: Router = Injector.generate(Router);
+
   const server = new Server((request, response) => {
-    HandlerPool.process({
-      request, response, route: Router.get({ method: request.method as Method, path: request.url! })!
+    pool.process({
+      request,
+      response,
+      route: router.get({ method: request.method as Method, path: request.url! })!
     });
   }).listen(8080, () => { console.log('Server listening on localhost:8080.'); });
 
