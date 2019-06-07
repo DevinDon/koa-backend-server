@@ -9,8 +9,10 @@ export interface HandlerOption {
 
 export abstract class BaseHandler {
 
+  protected args?: any[];
   protected request?: IncomingMessage;
   protected response?: ServerResponse;
+  protected route?: Route;
 
   init(request?: IncomingMessage, response?: ServerResponse): this {
     this.request = request;
