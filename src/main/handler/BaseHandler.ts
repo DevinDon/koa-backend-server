@@ -1,4 +1,11 @@
 import { IncomingMessage, ServerResponse } from 'http';
+import { Route } from '../Router';
+
+export interface HandlerOption {
+  request: IncomingMessage;
+  response: ServerResponse;
+  route: Route;
+}
 
 export abstract class BaseHandler {
 
