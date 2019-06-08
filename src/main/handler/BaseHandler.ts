@@ -38,6 +38,7 @@ export abstract class BaseHandler {
   }
 
   inherit<THandler extends BaseHandler>(handler: THandler): this {
+    this.args = handler.args;
     this.request = handler.request;
     this.response = handler.response;
     this.route = handler.route;
