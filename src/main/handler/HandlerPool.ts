@@ -22,7 +22,8 @@ export class HandlerPool {
   async process(option: HandlerOption): Promise<void> {
     // TODO: refactor
     try {
-      const result = await this.compose(this.take(this.order[0]).init(option), 0)();
+      const handlerTypes = this.handlerTypes.concat(option.route.handlerTypes || []);
+      const result = await this.compose(this.take(handlerTypes[0]).init(option), 0, handlerTypes)();
       option.response.end(JSON.stringify(result));
     } catch (error) {
       const exception = error;
