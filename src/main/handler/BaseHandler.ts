@@ -9,10 +9,10 @@ export interface HandlerOption {
 
 export abstract class BaseHandler {
 
-  protected args?: any[];
-  protected request?: IncomingMessage;
-  protected response?: ServerResponse;
-  protected route?: Route;
+  protected args!: any[];
+  protected request!: IncomingMessage;
+  protected response!: ServerResponse;
+  protected route!: Route;
 
   /**
    * Init handler with rdequest & response.
@@ -28,11 +28,11 @@ export abstract class BaseHandler {
       this.request = option.request;
       this.response = option.response;
       this.route = option.route;
-    } else { // init handler
-      this.args = undefined;
-      this.request = undefined;
-      this.response = undefined;
-      this.route = undefined;
+    } else { // init handler in order to gc
+      this.args = undefined as any;
+      this.request = undefined as any;
+      this.response = undefined as any;
+      this.route = undefined as any;
     }
     return this;
   }
