@@ -6,8 +6,9 @@ import { CoreHandler } from './CoreHandler';
 export class HandlerPool {
 
   private max = 100 * 100;
-  private order: HandlerType[] = [CoreHandler, CoreHandler];
   private pools: Map<string, BaseHandler[]> = new Map();
+
+  handlerTypes: HandlerType[] = [CoreHandler];
 
   take<T = BaseHandler>(type: HandlerType): T {
     const pool = this.pools.get(type.name)! || this.pools.set(type.name, []).get(type.name)!;
