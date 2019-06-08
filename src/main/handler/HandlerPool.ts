@@ -32,12 +32,17 @@ export class HandlerPool {
     }
   }
 
-  compose(current: BaseHandler, i: number): () => any {
-    if (i + 1 < this.order.length) {
-      const next = this.take(this.order[i]).inherit(current);
-      return async () => current.handle(this.compose(next, i + 1)).finally(() => this.give(current));
+  compose(current: BaseHandler, i: number, handlerTypes: HandlerType[]): () => any {
+    if (i + 1 < handlerTypes.length) {
+      // that is very very very, complex
+      // 利用非立即执行函数的特性, 在 current.handle 调用 next 时再进行数据继承绑定
+      // 才能正确的获取所有的属性（包括参数和已处理过的其他属性）
+      // by the way, it will also make compose faster than before
+      return async () => current.handle(() => this.compose(this.take(handlerTypes[++i]).inherit(current), i, handlerTypes)())
+        .finally(() => this.give(current));
     } else {
-      return async () => current.handle(current.run.bind(current)).finally(() => this.give(current));
+      return async () => current.handle(current.run.bind(current))
+        .finally(() => this.give(current));
     }
   }
 
