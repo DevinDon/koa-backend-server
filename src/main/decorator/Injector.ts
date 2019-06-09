@@ -19,15 +19,13 @@ export class Injector {
    */
   static generate<T = any>(target: any, save: boolean = true): T {
     const providers = Reflect.getMetadata('design:paramtypes', target);
-    // get exist instance
-    if (this.storage.has(target)) {
+    if (this.storage.has(target)) { // if instance already exists
       return this.storage.get(target);
-    } else {
+    } else { // or generate it
       // recursive injection
       const args = providers && providers.map((provider: any) => this.generate(provider, false));
       const obj = args ? new target(...args) : new target();
-      // save to instance storage
-      if (save) {
+      if (save) { // save to instance storage
         this.storage.set(target, obj);
       }
       return obj;
@@ -51,7 +49,7 @@ export function Injectable(): ClassDecorator {
 /**
  * Property Decorator.
  *
- * Inject target property.
+ * Inject target property, like `@Autowried`.
  */
 export function Inject(): PropertyDecorator {
   return (target, name) => {
