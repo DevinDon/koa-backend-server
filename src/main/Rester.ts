@@ -1,10 +1,10 @@
 import HTTP from 'http';
-import HTTP2, { SecureServerOptions } from 'http2';
-import HTTPS, { ServerOptions } from 'https';
+import HTTP2 from 'http2';
+import HTTPS from 'https';
 import { ConnectionOptions } from 'typeorm';
 import { Method } from './@types';
-import { Injector, HandlerType } from './decorator';
-import { HandlerPool, BaseHandler } from './handler';
+import { HandlerType, Injector } from './decorator';
+import { HandlerPool } from './handler';
 import { Router } from './Router';
 
 export interface ResterOption {
@@ -16,7 +16,7 @@ export interface ResterOption {
     /** Rester Server port. */
     port: number;
     /** Rester Server ssl option, only required in secure server (HTTPS or HTTP2). */
-    ssl?: ServerOptions | SecureServerOptions;
+    ssl?: HTTPS.ServerOptions | HTTP2.SecureServerOptions;
     /** In proxy mode or not. */
     proxy?: boolean;
   };
@@ -52,9 +52,17 @@ export class Rester {
     }
   }
 
-  addHandlers(...handlerTypes: HandlerType[]) {
+  addHandlers(...handlerTypes: HandlerType[]): HandlerType[] {
     this.pool.handlerTypes.push(...handlerTypes);
     return this.pool.handlerTypes;
+  }
+
+  getHandlers(): HandlerType[] {
+    return this.pool.handlerTypes;
+  }
+
+  resetHandlers(): HandlerType[] {
+    return this.pool.handlerTypes = [];
   }
 
   listen(port: number = this.option.address.port, host: string = this.option.address.host): this {
