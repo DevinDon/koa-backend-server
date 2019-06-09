@@ -1,17 +1,35 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { Route } from '../Router';
 
+/**
+ * Handler option.
+ *
+ * @property request.
+ * @property response.
+ * @property route.
+ */
 export interface HandlerOption {
   request: IncomingMessage;
   response: ServerResponse;
   route: Route;
 }
 
+/**
+ * Abstract class BaseHandler.
+ *
+ * Base handler, custom handler class must extends it.
+ *
+ * @abstract `handle` Must implement this abstruct method.
+ */
 export abstract class BaseHandler {
 
+  /** Arguments of controller method. */
   protected args!: any[];
+  /** Request instance. */
   protected request!: IncomingMessage;
+  /** Response instance. */
   protected response!: ServerResponse;
+  /** Route of this request. */
   protected route!: Route;
 
   /**
@@ -19,8 +37,7 @@ export abstract class BaseHandler {
    *
    * If call init() without arguments, it mean set request, response & route to undefined.
    *
-   * @param {Request} request Incoming message.
-   * @param {Response} response Server response.
+   * @param {HandlerOption} option Handler init option.
    * @returns {this} This handler instance.
    */
   init(option?: HandlerOption): this {
@@ -37,6 +54,12 @@ export abstract class BaseHandler {
     return this;
   }
 
+  /**
+   * Inherit properties(args, request, response, route) from special handler.
+   *
+   * @param {THandler extends BaseHandler} handler Inherited object.
+   * @returns {this} This handler instance.
+   */
   inherit<THandler extends BaseHandler>(handler: THandler): this {
     this.args = handler.args;
     this.request = handler.request;
@@ -45,10 +68,23 @@ export abstract class BaseHandler {
     return this;
   }
 
+  /**
+   * Handle method.
+   *
+   * @param {() => Promise<T>} next Next handler, result should be returned.
+   * @returns {Promise<T>} Handle result, normally it is response.
+   */
   async abstract handle<T>(next: () => Promise<T>): Promise<T>;
 
+  /**
+   * Run controller method with args.
+   *
+   * `this.route.controller[this.route.name](...this.args)`
+   *
+   * @returns {Promise<any>} Return a promise result.
+   */
   async run(): Promise<any> {
-    return this.route!.controller[this.route!.name](...this.args!);
+    return this.route.controller[this.route.name](...this.args);
   }
 
 }
