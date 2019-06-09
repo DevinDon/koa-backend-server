@@ -52,17 +52,18 @@ export class Rester {
     }
   }
 
-  addHandlers(...handlerTypes: HandlerType[]): HandlerType[] {
+  addHandlers(...handlerTypes: HandlerType[]): this {
     this.pool.handlerTypes.push(...handlerTypes);
-    return this.pool.handlerTypes;
+    return this;
   }
 
   getHandlers(): HandlerType[] {
     return this.pool.handlerTypes;
   }
 
-  resetHandlers(): HandlerType[] {
-    return this.pool.handlerTypes = [];
+  resetHandlers(): this {
+    this.pool.handlerTypes = [];
+    return this;
   }
 
   listen(port: number = this.option.address.port, host: string = this.option.address.host): this {
