@@ -85,7 +85,7 @@ export const PUT = baseMethod('PUT');
 export function Controller(prefix: string = ''): ClassDecorator {
   return target => {
     const controller = Injector.generate(target);
-    const handlerTypes: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target) || [];
+    const handlerTypesOnController: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target) || [];
     // TODO: maybe we will use it later
     // // define metadata: key = DECORATOR$CONTROLLER, value = controller, on = class
     // Reflect.defineMetadata(DECORATOR$CONTROLLER, controller, target);
@@ -97,7 +97,7 @@ export function Controller(prefix: string = ''): ClassDecorator {
         const mapping: Mapping = Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name);
         if (mapping) {
           mapping.path = prefix + mapping.path;
-          router.set({ controller, handlerTypes: handlerTypes.concat(Reflect.getMetadata(MetadataKey.Handler, target.prototype, name) || []), mapping, name, target });
+          router.set({ controller, handlerTypes: (Reflect.getMetadata(MetadataKey.Handler, target.prototype, name) || []).concat(handlerTypesOnController), mapping, name, target });
         }
       });
   };
