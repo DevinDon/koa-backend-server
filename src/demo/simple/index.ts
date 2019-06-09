@@ -84,19 +84,6 @@ namespace SimpleDemo {
 
   }
 
-  // const pool = Injector.generate(HandlerPool);
-  // const router: Router = Injector.generate(Router);
-
-  // const server = new Server((request, response) => {
-  //   pool.process({
-  //     request,
-  //     response,
-  //     route: router.get({ method: request.method as Method, path: request.url! })!
-  //   });
-  // }).listen(8080, () => { console.log('Server listening on localhost:8080.'); });
-
-  const server = new Rester().listen();
-
-  const result = server.addHandlers(LogHandler);
+  const server = new Rester().listen().addHandlers(LogHandler);
 
 }
