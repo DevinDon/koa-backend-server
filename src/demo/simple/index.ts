@@ -51,8 +51,8 @@ namespace SimpleDemo {
     }
 
     @GET('/query')
-    query(@PathQuery('name') name: string): any {
-      return { name: name };
+    query(@PathQuery('username') username: string, @PathQuery('password') password: string): any {
+      return { username, password };
     }
 
     @POST('/body')
