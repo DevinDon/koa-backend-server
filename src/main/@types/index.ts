@@ -1,4 +1,5 @@
-export * from './service';
+/** Allowed HTTP methods. */
+export type Method = 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT';
 
 /**
  * Metadata key, symbol.
