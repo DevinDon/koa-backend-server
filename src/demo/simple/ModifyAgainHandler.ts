@@ -2,9 +2,9 @@ import { BaseHandler } from '../../main';
 
 export class ModifyAgainHandler extends BaseHandler {
 
-  async handle<T>(next: () => Promise<T>): Promise<T> {
+  async handle(next: () => Promise<any>): Promise<any> {
     next();
-    return 'response has been changed again!' as any;
+    return 'response has been changed again!';
   }
 
 }
