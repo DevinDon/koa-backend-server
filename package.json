@@ -35,22 +35,19 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "@iinfinity/delay": "^0.1.1",
-    "@iinfinity/jwt": "^0.1.1",
-    "@iinfinity/logger": "^0.3.3",
-    "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.2.17"
+    "@iinfinity/delay": "0.1.1",
+    "@iinfinity/jwt": "0.1.1",
+    "@iinfinity/logger": "0.3.3",
+    "reflect-metadata": "0.1.13",
+    "typeorm": "0.2.18"
   },
   "devDependencies": {
-    "@types/jasmine": "^3.3.13",
-    "@types/node": "^12.0.3",
-    "jasmine": "^3.4.0",
-    "jasmine-console-reporter": "^3.1.0",
-    "ts-node": "^8.2.0",
-    "typescript": "^3.4.5"
+    "@types/jasmine": "3.3.13",
+    "@types/node": "12.0.7",
+    "jasmine": "3.4.0",
+    "jasmine-console-reporter": "3.1.0",
+    "ts-node": "8.2.0",
+    "typescript": "3.5.1"
   },
-  "optionalDependencies": {
-    "mysql2": "^1.6.5",
-    "pg": "^7.11.0"
-  }
+  "optionalDependencies": {}
 }
