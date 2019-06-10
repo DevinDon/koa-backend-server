@@ -2,7 +2,7 @@ import { Logger } from '@iinfinity/logger';
 import HTTP from 'http';
 import HTTP2 from 'http2';
 import HTTPS from 'https';
-import { ConnectionOptions } from 'typeorm';
+import { ConnectionOptions, createConnection, createConnections } from 'typeorm';
 import { HandlerType, Injector } from './decorator';
 import { HandlerPool } from './handler';
 
@@ -29,7 +29,7 @@ export class Rester {
   private pool: HandlerPool = Injector.generate(HandlerPool);
   private server: HTTP.Server | HTTP2.Http2Server | HTTPS.Server;
 
-  constructor(option?: ResterOption) {
+  constructor(option?: Partial<ResterOption>) {
     this.option = {
       address: Object.assign({
         portocol: 'HTTP',
@@ -48,6 +48,15 @@ export class Rester {
       default:
         this.server = HTTP.createServer(this.pool.process.bind(this.pool));
         break;
+    }
+    if (this.option.database) {
+      if (this.option.database instanceof Array) {
+        createConnections(this.option.database);
+      } else {
+        createConnection(this.option.database);
+      }
+    } else {
+      this.logger.warn(`No database connection.`);
     }
   }
 
