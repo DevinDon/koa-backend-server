@@ -41,18 +41,20 @@ export class HandlerPool {
   /**
    * Process request.
    *
-   * @param {HandlerOption} option Handler option.
+   * @param {IncomingMessage} request Request.
+   * @param {ServerResponse} response Response.
    */
-  async process(option: HandlerOption): Promise<void> {
-    // TODO: refactor by ExceptionHandler
-    try {
-      const handlerTypes = this.handlerTypes.concat(option.route.handlerTypes || []);
-      const result = await this.compose(this.take(handlerTypes[0]).init(option), 0, handlerTypes)();
-      option.response.end(JSON.stringify(result));
-    } catch (exception) {
-      option.response.writeHead(exception.code || 600, exception.message);
-      option.response.end(inspect(exception.content, true));
-    }
+  async process(request: any, response: any): Promise<void> {
+    // TODO: how to catch exception in router
+    const option: HandlerOption = { request, response, route: this.router.get({ method: request.method as Method, path: request.url! })! };
+    /** Handler types on this route. */
+    const handlerTypes = this.handlerTypes.concat((option.route && option.route.handlerTypes) || []);
+    // take & compose these handlers
+    this.compose(this.take(handlerTypes[0]).init(option), 0, handlerTypes)()
+      .then(v => {
+        option.response.write(v);
+      })
+      .finally(() => option.response.end());
   }
 
   /**
