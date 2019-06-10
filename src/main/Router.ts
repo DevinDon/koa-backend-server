@@ -1,5 +1,6 @@
 import { Method } from './@types';
 import { HandlerType } from './decorator';
+import { HTTP404Exception } from './Exception';
 
 /**
  * Mapping, with method & path.
@@ -136,8 +137,7 @@ export class Router {
         });
       return route;
     } catch (exception) { // catch route not found exception
-      console.log(`Route '${mapping.method}${mapping.path}' not found, ${exception}.`);
-      return undefined;
+      throw new HTTP404Exception(`Can't ${mapping.method} ${mapping.path}`);
     }
   }
 
