@@ -33,16 +33,16 @@ export class ParameterHandler extends BaseHandler {
      *
      * @returns {string | undefined} Query value of special key, maybe undefined.
      */
-    PARAM$PATH$QUERY: (name: string): string | undefined => {
+    PARAM$PATH$QUERY: (key: string): string | undefined => {
       const queryObject = Router.format({ method: this.request.method as Method, path: this.request.url! }).queryObject;
-      return queryObject && queryObject[name];
+      return queryObject && queryObject[key];
     },
     /**
      * Inject path variable.
      *
      * @returns {string} Path variable.
      */
-    PARAM$PATH$VARIABLE: (name: string, route: Route): string => Router.format({ method: this.request.method as Method, path: this.request.url! }).pathArray![route.mapping.pathArray!.indexOf(`{{${name}}}`)],
+    PARAM$PATH$VARIABLE: (key: string, route: Route): string => Router.format({ method: this.request.method as Method, path: this.request.url! }).pathArray![route.mapping.pathArray!.indexOf(`{{${key}}}`)],
     /**
      * Inject request body object, should await it to get result.
      *
@@ -67,7 +67,7 @@ export class ParameterHandler extends BaseHandler {
      *
      * @returns {string | string[] | undefined} Header value of special key, or undefined.
      */
-    PARAM$REQUEST$HEADER: (value: string): string | string[] | undefined => this.request.headers[value.toLowerCase()]
+    PARAM$REQUEST$HEADER: (key: string): string | string[] | undefined => this.request.headers[key.toLowerCase()]
   };
 
   /**
