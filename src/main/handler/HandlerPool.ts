@@ -49,8 +49,7 @@ export class HandlerPool {
       const handlerTypes = this.handlerTypes.concat(option.route.handlerTypes || []);
       const result = await this.compose(this.take(handlerTypes[0]).init(option), 0, handlerTypes)();
       option.response.end(JSON.stringify(result));
-    } catch (error) {
-      const exception = error;
+    } catch (exception) {
       option.response.writeHead(exception.code || 600, exception.message);
       option.response.end(inspect(exception.content, true));
     }

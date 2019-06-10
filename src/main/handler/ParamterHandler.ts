@@ -97,9 +97,9 @@ export class ParameterHandler extends BaseHandler {
             this.args[i] = await this.args[i];
           }
         }
-      } catch (error) {
+      } catch (exception) {
         // bad request cannot be parsed, throw 400
-        throw new HTTP400Exception(`Bad request ${error}.`);
+        throw new HTTP400Exception(`Bad request ${exception}.`);
       }
       return next();
     }
