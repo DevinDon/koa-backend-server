@@ -65,7 +65,7 @@ export class HandlerPool {
    * @param {HandlerType[]} handlerTypes Handler types in this request.
    * @returns {() => any} Composed function.
    */
-  compose(current: BaseHandler, i: number, handlerTypes: HandlerType[]): () => any {
+  compose(current: BaseHandler, i: number, handlerTypes: HandlerType[]): () => Promise<any> {
     if (i + 1 < handlerTypes.length) {
       // that is very very very, complex
       // 利用非立即执行函数的特性, 在 current.handle 调用 next 时再进行数据继承绑定
