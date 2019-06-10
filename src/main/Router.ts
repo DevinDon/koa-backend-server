@@ -1,6 +1,5 @@
 import { Method } from './@types';
 import { HandlerType } from './decorator';
-import { HTTP404Exception } from './Exception';
 
 /**
  * Mapping, with method & path.
@@ -119,26 +118,23 @@ export class Router {
    * @returns Route. If not found, return undefined.
    */
   get(mapping: Mapping): Route | undefined {
-    try {
-      /** Current router. */
-      let router: Map<string, any> = this.router;
-      /** Special route, maybe undefined(not found). */
-      let route: Route | undefined;
-      // format mapping to array
-      Router.format(mapping).pathArray!
-        // foreach & get router / route
-        .forEach((v, i, a) => {
-          // if string path doesn't exist, try to get variable path
-          router = router.get(v) || router.get(Router.SpecialPath.variable);
-          // if match end, return the route
-          if (a.length === i + 1) {
-            route = router.get(Router.SpecialPath.route);
-          }
-        });
-      return route;
-    } catch (exception) { // catch route not found exception
-      throw new HTTP404Exception(`Can't ${mapping.method} ${mapping.path}`);
-    }
+    /** Current router. */
+    let router: Map<string, any> = this.router;
+    /** Special route, maybe undefined(not found). */
+    let route: Route | undefined;
+    // format mapping to array
+    Router.format(mapping).pathArray!
+      // foreach & get router / route
+      .every((v, i, a) => {
+        // if string path doesn't exist, try to get variable path
+        router = router.get(v) || router.get(Router.SpecialPath.variable);
+        // if match end, return the route
+        if (a.length === i + 1) {
+          route = router && router.get(Router.SpecialPath.route);
+        }
+        return router;
+      });
+    return route;
   }
 
   /**
