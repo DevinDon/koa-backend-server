@@ -60,6 +60,11 @@ namespace SimpleDemo {
       return body;
     }
 
+    @POST('/body/buffer')
+    buffer(@RequestBody() body: Buffer) {
+      return body;
+    }
+
     @POST('/async')
     async asyncTest(): Promise<any> {
       return 'Async test OK!';
