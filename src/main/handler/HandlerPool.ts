@@ -1,7 +1,10 @@
-import { inspect } from 'util';
-import { HandlerType } from '../decorator';
+import { Method } from '../@types';
+import { HandlerType, Inject } from '../decorator';
+import { Router } from '../Router';
 import { BaseHandler, HandlerOption } from './BaseHandler';
+import { ExceptionHandler } from './ExceptionHandler';
 import { ParameterHandler } from './ParamterHandler';
+import { SchemaHandler } from './SchemaHandler';
 
 /**
  * Handler pool.
@@ -10,11 +13,14 @@ export class HandlerPool {
 
   /** Maximum number of handlers per category, default to 10000. */
   private max = 100 * 100;
-  /** Pool. */
+  /** Pools. */
   private pools: Map<string, BaseHandler[]> = new Map();
+  /** Router. */
+  @Inject()
+  private router!: Router;
 
   /** Handler types, default to `[ExceptionHandler, SchemaHandler, ParameterHandler]` */
-  handlerTypes: HandlerType[] = [ParameterHandler];
+  handlerTypes: HandlerType[] = [ExceptionHandler, SchemaHandler, ParameterHandler];
 
   /**
    * Take one hander instance with special type.
