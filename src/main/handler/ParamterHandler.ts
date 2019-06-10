@@ -78,10 +78,7 @@ export class ParameterHandler extends BaseHandler {
    * @returns {Promise<T>} Result for this handler.
    * @throws {HTTP404Exception} Not found exception.
    */
-  async handle<T>(next: () => Promise<T>): Promise<T> {
-    // TODO: refactor by content-type handler
-    // content-type default to application/json
-    this.response.setHeader('content-type', 'application/json');
+  async handle(next: () => Promise<any>): Promise<any> {
     // if route exist
     if (this.route) {
       /** Parameter injection array. */
@@ -99,12 +96,12 @@ export class ParameterHandler extends BaseHandler {
         }
       } catch (exception) {
         // bad request cannot be parsed, throw 400
-        throw new HTTP400Exception(`Bad request ${exception}.`);
+        throw new HTTP400Exception(`Bad Request`);
       }
       return next();
     }
     // throw 404 not found exception
-    throw new HTTP404Exception(`Can't ${this.request.method} ${this.request.url!}`, { request: this.request, response: this.response });
+    throw new HTTP404Exception(`Can't ${this.request.method} ${this.request.url!}`);
   }
 
 }
