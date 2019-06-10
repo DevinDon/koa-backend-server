@@ -1,6 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import 'reflect-metadata';
-import { Controller, GET, Handler, HTTPRequest, HTTPResponse, PathQuery, PathVariable, POST, RequestBody, RequestHeader, Rester } from '../../main';
+import { Controller, GET, Handler, HTTPRequest, HTTPResponse, PathQuery, PathVariable, POST, RequestBody, RequestHeader, Rester, HTTP401Exception } from '../../main';
 import { LogHandler } from './LogHandler';
 import { ModifyHostHandler } from './ModifyHostHandler';
 import { ModifyPrefixHandler } from './ModifyPrefixHandler';
@@ -30,8 +30,8 @@ namespace SimpleDemo {
     }
 
     @GET('/request')
-    request(@HTTPRequest() request: IncomingMessage): string {
-      return request.headers as any;
+    request(@HTTPRequest() request: IncomingMessage): any {
+      return request.headers;
     }
 
     @GET('/request/method')
@@ -40,9 +40,13 @@ namespace SimpleDemo {
     }
 
     @GET('/response')
-    response(@HTTPResponse() response: ServerResponse): number {
-      response.writeHead(401, '401 status code test.');
-      return 401;
+    response(@HTTPResponse() response: ServerResponse): any {
+      return 'What the fuck!';
+    }
+
+    @GET('/status')
+    status() {
+      throw new HTTP401Exception('401 status code test.', 'Status code is 401, and this is response.');
     }
 
     @GET('/show/{{name}}')
