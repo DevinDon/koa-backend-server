@@ -1,3 +1,4 @@
+import { Logger } from '@iinfinity/logger';
 import HTTP from 'http';
 import HTTP2 from 'http2';
 import HTTPS from 'https';
@@ -23,6 +24,7 @@ export interface ResterOption {
 
 export class Rester {
 
+  private logger: Logger = new Logger(`Rester ${Date.now()}`);
   private option: ResterOption;
   private pool: HandlerPool = Injector.generate(HandlerPool);
   private server: HTTP.Server | HTTP2.Http2Server | HTTPS.Server;
@@ -63,9 +65,17 @@ export class Rester {
     return this;
   }
 
+  getLogger(): Logger {
+    return this.logger;
+  }
+
+  setLogger(logger: Logger): Logger {
+    return this.logger = logger;
+  }
+
   listen(port: number = this.option.address.port, host: string = this.option.address.host): this {
     this.server.listen(port, host);
-    console.log(`Server online, listening on: ${host}:${port}.`);
+    this.logger.log(`Server online, listening on: ${host}:${port}.`);
     return this;
   }
 
