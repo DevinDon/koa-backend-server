@@ -71,10 +71,10 @@ export abstract class BaseHandler {
   /**
    * Handle method.
    *
-   * @param {() => Promise<T>} next Next handler, result should be returned.
-   * @returns {Promise<T>} Handle result, normally it is response.
+   * @param {() => Promise<any>} next Next handler, result should be returned.
+   * @returns {Promise<any>} Handle result, normally it is response.
    */
-  async abstract handle<T>(next: () => Promise<T>): Promise<T>;
+  async abstract handle(next: () => Promise<any>): Promise<any>;
 
   /**
    * Run controller method with args.
