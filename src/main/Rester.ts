@@ -40,9 +40,9 @@ export class Rester {
       // case 'HTTP2':
       //   this.server = HTTP2.createSecureServer(this.option.address.ssl || {}, this.pool.process.bind(this.pool));
       //   break;
-      case 'HTTPS':
-        this.server = HTTPS.createServer(this.option.address.ssl || {}, this.pool.process.bind(this.pool));
-        break;
+      // case 'HTTPS':
+      //   this.server = HTTPS.createServer(this.option.address.ssl || {}, this.pool.process.bind(this.pool));
+      //   break;
       default:
         this.server = HTTP.createServer(this.pool.process.bind(this.pool));
         break;
