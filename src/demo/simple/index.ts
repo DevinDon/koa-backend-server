@@ -5,6 +5,7 @@ import { LogHandler } from './LogHandler';
 import { ModifyHostHandler } from './ModifyHostHandler';
 import { ModifyPrefixHandler } from './ModifyPrefixHandler';
 import { ModifyAgainHandler } from './ModifyAgainHandler';
+import { UserEntity, User } from './UserEntity';
 
 namespace SimpleDemo {
 
@@ -93,6 +94,36 @@ namespace SimpleDemo {
 
   }
 
-  const server = new Rester().listen().addHandlers(LogHandler);
+  @Controller('/user')
+  class UserController {
+
+    @POST('/add')
+    async add(@RequestBody() user: User) {
+      return UserEntity.insert(user);
+    }
+
+    @GET('/list')
+    async list() {
+      return UserEntity.find();
+    }
+
+  }
+
+  const server = new Rester({
+    database: {
+      type: 'postgres',
+      host: 't-1.don.red',
+      port: 5432,
+      username: 'shared',
+      password: 'shared',
+      database: 'shared',
+      entities: [
+        UserEntity
+      ],
+      logging: true,
+      synchronize: true
+    }
+  }).listen()
+    .addHandlers(LogHandler);
 
 }
