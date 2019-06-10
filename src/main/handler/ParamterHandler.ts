@@ -48,14 +48,15 @@ export class ParameterHandler extends BaseHandler {
      *
      * @returns {Promise<any>} Request body promise object.
      */
-    PARAM$REQUEST$BODY: (): Promise<any> => new Promise<any>((resolve, reject) => {
+    PARAM$REQUEST$BODY: (type?: string): Promise<any> => new Promise<any>((resolve, reject) => {
       let data: Buffer = Buffer.allocUnsafe(0);
       this.request.on('data', (chunk: Buffer) => data = Buffer.concat([data, chunk]));
       // TODO: JSON schema & validate
       this.request.on('end', () => {
         let result;
-        switch (this.request.headers['content-type']) {
+        switch (type || this.request.headers['content-type']) {
           case 'application/json': result = JSON.parse(data.toString()); break;
+          case 'application/octet-stream': result = data; break;
           default: result = data.toString(); break;
         }
         resolve(result);
