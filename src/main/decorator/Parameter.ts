@@ -64,6 +64,8 @@ export const PathVariable = baseParam(ParamInjectionType.PathVariable);
  * Parameter decorator.
  *
  * Inject request body object.
+ *
+ * @param {string} value It will use the type of value if it is defined. Else, use content-type.
  */
 export const RequestBody = baseParam(ParamInjectionType.RequestBody);
 
