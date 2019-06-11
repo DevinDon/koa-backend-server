@@ -43,7 +43,7 @@ export class Rester {
   /** Rester option. */
   private option: ResterOption;
   /** Handler pool. */
-  private pool: HandlerPool = Injector.generate(HandlerPool);
+  private pool: HandlerPool = Injector.instance(HandlerPool);
   /** Node.js server. */
   private server: HTTP.Server | HTTP2.Http2Server | HTTPS.Server;
 
