@@ -14,7 +14,7 @@ const router: Router = Injector.generate(Router);
  */
 export function Controller(prefix: string = ''): ClassDecorator {
   return target => {
-    const controller = Injector.generate(target);
+    const controller = Injector.instance(target);
     const handlerTypesOnController: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target) || [];
     // TODO: maybe we will use it later
     // // define metadata: key = DECORATOR$CONTROLLER, value = controller, on = class

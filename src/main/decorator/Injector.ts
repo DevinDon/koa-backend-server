@@ -17,13 +17,13 @@ export class Injector {
    * @param {boolean} save Save to instances storage, default to true.
    * @returns {T} Instance.
    */
-  static generate<T = any>(target: any, save: boolean = true): T {
+  static instance<T = any>(target: any, save: boolean = true): T {
     const providers = Reflect.getMetadata('design:paramtypes', target);
     if (this.storage.has(target)) { // if instance already exists
       return this.storage.get(target);
     } else { // or generate it
       // recursive injection
-      const args = providers && providers.map((provider: any) => this.generate(provider, false));
+      const args = providers && providers.map((provider: any) => this.instance(provider, false));
       const obj = args ? new target(...args) : new target();
       if (save) { // save to instance storage
         this.storage.set(target, obj);
@@ -42,7 +42,7 @@ export class Injector {
  */
 export function Injectable(): ClassDecorator {
   return target => {
-    Injector.generate(target);
+    Injector.instance(target);
   };
 }
 
@@ -53,6 +53,6 @@ export function Injectable(): ClassDecorator {
  */
 export function Inject(): PropertyDecorator {
   return (target, name) => {
-    Injector.generate(target.constructor)[name] = Injector.generate(Reflect.getMetadata('design:type', target, name));
+    Injector.instance(target.constructor)[name] = Injector.instance(Reflect.getMetadata('design:type', target, name));
   };
 }
