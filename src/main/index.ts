@@ -3,4 +3,3 @@ export * from './decorator';
 export * from './Exception';
 export * from './handler';
 export * from './Rester';
-export * from './Router';
