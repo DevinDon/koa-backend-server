@@ -6,6 +6,7 @@ import { ModifyHostHandler } from './ModifyHostHandler';
 import { ModifyPrefixHandler } from './ModifyPrefixHandler';
 import { ModifyAgainHandler } from './ModifyAgainHandler';
 import { UserEntity, User } from './UserEntity';
+import { DelayHandler } from './DelayHandler';
 
 namespace SimpleDemo {
 
@@ -123,7 +124,8 @@ namespace SimpleDemo {
       logging: true,
       synchronize: true
     }
-  }).listen()
-    .addHandlers(LogHandler);
+  }).listen();
+  // .addHandlers(DelayHandler);
+  // .addHandlers(LogHandler);
 
 }
