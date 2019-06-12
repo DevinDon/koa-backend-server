@@ -1,18 +1,13 @@
-import { Method } from '../@types';
-import { HandlerType, Inject } from '../decorator';
-import { Router } from '../Router';
-import { BaseHandler, HandlerOption } from './BaseHandler';
-import { ExceptionHandler } from './ExceptionHandler';
-import { ParameterHandler } from './ParamterHandler';
-import { SchemaHandler } from './SchemaHandler';
+import { HandlerType } from '../decorator';
+import { BaseHandler } from './BaseHandler';
 
 /**
  * Handler pool.
  */
 export class HandlerPool {
 
-  /** Maximum number of handlers per category, default to 10000. */
-  private max = 100 * 100;
+  /** Maximum number of handlers per category, default to 1024. */
+  private max = 1024;
   /** Pools. */
   private pools: Map<string, BaseHandler[]> = new Map();
 
@@ -42,22 +37,16 @@ export class HandlerPool {
   }
 
   /**
-   * Process request.
+   * Process request & response in HTTP/S/2 server.
    *
    * @param {IncomingMessage} request Request.
    * @param {ServerResponse} response Response.
    */
   async process(request: any, response: any): Promise<void> {
-    // TODO: how to catch exception in router
-    const option: HandlerOption = { request, response, route: this.router.get({ method: request.method as Method, path: request.url! })! };
-    /** Handler types on this route. */
-    const handlerTypes = this.handlerTypes.concat((option.route && option.route.handlerTypes) || []);
     // take & compose these handlers
-    this.compose(this.take(handlerTypes[0]).init(option), 0, handlerTypes)()
-      .then(v => {
-        option.response.write(v);
-      })
-      .finally(() => option.response.end());
+    this.compose(this.take(this.handlerTypes[0]).init({ request, response }), 0, this.handlerTypes)()
+      .then(v => response.write(v))
+      .finally(() => response.end());
   }
 
   /**
@@ -66,7 +55,7 @@ export class HandlerPool {
    * @param {THandler extends BaseHandler} current Current handler instance.
    * @param {number} i Index of handler types in this request.
    * @param {HandlerType[]} handlerTypes Handler types in this request.
-   * @returns {() => any} Composed function.
+   * @returns {() => Promise<any>} Composed function.
    */
   compose(current: BaseHandler, i: number, handlerTypes: HandlerType[]): () => Promise<any> {
     if (i + 1 < handlerTypes.length) {
@@ -76,7 +65,11 @@ export class HandlerPool {
       // by the way, it will also make compose faster than before
       return async () => current.handle(() => this.compose(this.take(handlerTypes[++i]).inherit(current), i, handlerTypes)())
         .finally(() => this.give(current));
-    } else {
+    } else if (handlerTypes === this.handlerTypes && current.route.handlerTypes.length) { // global handlers has been composed, and handler.route.HandlerTypes should exist
+      handlerTypes = current.route.handlerTypes;
+      return async () => current.handle(() => this.compose(this.take(handlerTypes[0]).inherit(current), 0, handlerTypes)())
+        .finally(() => this.give(current));
+    } else { // the last handler
       return async () => current.handle(current.run.bind(current))
         .finally(() => this.give(current));
     }
