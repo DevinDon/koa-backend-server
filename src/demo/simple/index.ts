@@ -5,7 +5,7 @@ class DemoController {
 
   @GET('/')
   index() {
-    return 'Hello, world!';
+    return { hello: 'world' };
   }
 
 }
