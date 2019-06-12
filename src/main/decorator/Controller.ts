@@ -1,9 +1,8 @@
-import { MetadataKey } from '../@types';
-import { Mapping, Router } from '../Router';
+import { Mapping, MetadataKey, Route } from '../@types';
 import { HandlerType } from './Handler';
 import { Injector } from './Injector';
 
-const router: Router = Injector.generate(Router);
+export const CONTROLLERS: Function[] = [];
 
 /**
  * Class Decorator.
@@ -14,22 +13,27 @@ const router: Router = Injector.generate(Router);
  */
 export function Controller(prefix: string = ''): ClassDecorator {
   return target => {
+    /** Controller instance. */
     const controller = Injector.instance(target);
+    // TODO: which should first, on class or method
+    // now is `method.in -> class.in.out -> method.out`
+    /** Handler types on controller. */
     const handlerTypesOnController: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target) || [];
-    // TODO: maybe we will use it later
-    // // define metadata: key = DECORATOR$CONTROLLER, value = controller, on = class
-    // Reflect.defineMetadata(DECORATOR$CONTROLLER, controller, target);
-    Object.getOwnPropertyNames(target.prototype)
-      // exclude constructor
-      .filter(v => v !== 'constructor')
-      // put them on Router.router
-      .forEach(name => {
+    /** Routes on methods of this controller. */
+    const routes: Route[] = Object.getOwnPropertyNames(target.prototype)
+      // exclude constructor & method must be decorated by method decorator
+      .filter(name => name !== 'constructor' && Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name))
+      // map to a new array of Route
+      .map<Route>(name => {
         const mapping: Mapping = Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name);
-        if (mapping) {
-          mapping.path = prefix + mapping.path;
-          // set route to each mapping
-          router.set({ controller, handlerTypes: (Reflect.getMetadata(MetadataKey.Handler, target.prototype, name) || []).concat(handlerTypesOnController), mapping, name, target });
-        }
+        const handlerTypesOnMethod: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target.prototype, name) || [];
+        const handlerTypes: HandlerType[] = handlerTypesOnMethod.concat(handlerTypesOnController);
+        mapping.path = prefix + mapping.path;
+        return { controller, handlerTypes, mapping, name, target };
       });
+    // define metadata: key = MetadataKey.Controller, value = routes, on = class
+    Reflect.defineMetadata(MetadataKey.Controller, routes, target);
+    // push controller to const array
+    CONTROLLERS.push(target);
   };
 }
