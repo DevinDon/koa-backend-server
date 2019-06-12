@@ -1,9 +1,9 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { MetadataKey, Method } from '../@types';
+import { MetadataKey, Method, Route } from '../@types';
 import { ParamInjection, ParamInjectionType } from '../decorator';
 import { HTTP400Exception, HTTP404Exception } from '../Exception';
-import { Route, Router } from '../Router';
 import { BaseHandler } from './BaseHandler';
+import { RouterHandler } from './RouterHandler';
 
 /**
  * Parameter handler.
@@ -34,7 +34,7 @@ export class ParameterHandler extends BaseHandler {
      * @returns {string | undefined} Query value of special key, maybe undefined.
      */
     PARAM$PATH$QUERY: (key: string): string | undefined => {
-      const queryObject = Router.format({ method: this.request.method as Method, path: this.request.url! }).queryObject;
+      const queryObject = RouterHandler.format({ method: this.request.method as Method, path: this.request.url! }).queryObject;
       return queryObject && queryObject[key];
     },
     /**
@@ -42,7 +42,7 @@ export class ParameterHandler extends BaseHandler {
      *
      * @returns {string} Path variable.
      */
-    PARAM$PATH$VARIABLE: (key: string, route: Route): string => Router.format({ method: this.request.method as Method, path: this.request.url! }).pathArray![route.mapping.pathArray!.indexOf(`{{${key}}}`)],
+    PARAM$PATH$VARIABLE: (key: string, route: Route): string => RouterHandler.format({ method: this.request.method as Method, path: this.request.url! }).pathArray![route.mapping.pathArray!.indexOf(`{{${key}}}`)],
     /**
      * Inject request body object, should await it to get result.
      *
