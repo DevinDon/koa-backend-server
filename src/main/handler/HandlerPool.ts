@@ -15,12 +15,9 @@ export class HandlerPool {
   private max = 100 * 100;
   /** Pools. */
   private pools: Map<string, BaseHandler[]> = new Map();
-  /** Router. */
-  @Inject()
-  private router!: Router;
 
-  /** Handler types, default to `[ExceptionHandler, SchemaHandler, ParameterHandler]` */
-  handlerTypes: HandlerType[] = [ExceptionHandler, SchemaHandler, ParameterHandler];
+  /** Handler types, default to empty. */
+  handlerTypes: HandlerType[] = [];
 
   /**
    * Take one hander instance with special type.

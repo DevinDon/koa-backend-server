@@ -4,7 +4,10 @@ import HTTP2 from 'http2';
 import HTTPS from 'https';
 import { ConnectionOptions, createConnection, createConnections } from 'typeorm';
 import { HandlerType, Injector } from './decorator';
-import { HandlerPool } from './handler';
+import { HandlerPool, ParameterHandler } from './handler';
+import { ExceptionHandler } from './handler/ExceptionHandler';
+import { RouterHandler } from './handler/RouterHandler';
+import { SchemaHandler } from './handler/SchemaHandler';
 
 /** Rester option. */
 export interface ResterOption {
@@ -84,6 +87,11 @@ export class Rester {
       this.logger.info(`Database connecting.`);
     } else {
       this.logger.warn(`No database connection.`);
+    }
+
+    // TODO: add handler option
+    if (true) {
+      this.pool.handlerTypes = [ExceptionHandler, RouterHandler, SchemaHandler, ParameterHandler];
     }
   }
 
