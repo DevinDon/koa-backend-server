@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { Route } from '../Router';
+import { Route } from '../@types';
 
 /**
  * Handler option.
@@ -30,7 +30,7 @@ export abstract class BaseHandler {
   /** Response instance. */
   protected response!: ServerResponse;
   /** Route of this request. */
-  protected route!: Route;
+  route!: Route;
 
   /**
    * Init handler with rdequest & response.
@@ -40,11 +40,11 @@ export abstract class BaseHandler {
    * @param {HandlerOption} option Handler init option.
    * @returns {this} This handler instance.
    */
-  init(option?: HandlerOption): this {
+  init(option?: Partial<HandlerOption>): this {
     if (option) { // init handler with request, response & route
-      this.request = option.request;
-      this.response = option.response;
-      this.route = option.route;
+      this.request = option.request!;
+      this.response = option.response!;
+      this.route = option.route!;
     } else { // init handler in order to gc
       this.args = undefined as any;
       this.request = undefined as any;
