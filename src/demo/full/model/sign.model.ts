@@ -1,8 +1,14 @@
-import { BaseModel } from './base.model';
+import { User } from '../entity';
+import { BaseRequest, BaseResponse } from './base.model';
 
-export interface SignUpContent {
-  username: string;
-  password: string;
-}
+export type SignInRequest = Pick<User, 'email' | 'password'>;
 
-export type SignUpModel = BaseModel<SignUpContent>;
+export type SignInResponse = BaseResponse<Pick<User, 'email' | 'nickname'>>;
+
+export type SignUpRequest = SignInRequest;
+
+export type SignUpResponse = BaseResponse<User>;
+
+export type SignOutRequest = BaseRequest;
+
+export type SignOutResponse = BaseResponse;
