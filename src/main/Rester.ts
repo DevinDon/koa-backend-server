@@ -40,64 +40,54 @@ interface AddressOption {
  *
  * `new Rester().listen(80, '0.0.0.0')` // listening on http://0.0.0.0:80
  *
- * `new Rester(option).listen()` // use special option
+ * `new Rester().configHandler.add(SomeHandler, AnotherHandler).end().listen()` // add handlers & listening
  *
  * See [FULL README DOCUMENT](https://github.com/DevinDon/rester/blob/master/docs/README.md) for more usage.
  */
 export class Rester {
 
+  /** Address option. */
+  private address: AddressOption;
+  /** Controllers in this rester instance. */
+  private controllers: Function[];
+  /** Database option. */
+  private database: ConnectionOptions;
+  /** Handler types. */
+  private handlers: HandlerType[];
   /** Logger instance, use `getLogger` to get or `setLogger` to set. */
-  private logger: Logger = new Logger(`Rester ${Date.now()}`);
-  /** Rester option. */
-  private option: ResterOption;
+  private logger: Logger;
   /** Handler pool. */
-  private pool: HandlerPool = Injector.instance(HandlerPool);
+  private pool: HandlerPool;
   /** Node.js server. */
-  private server: HTTP.Server | HTTP2.Http2Server | HTTPS.Server;
+  private server!: HTTP.Server | HTTP2.Http2Server | HTTPS.Server;
+
+  /** Zone to storage something about this instance. */
+  zone: { [index: string]: any };
 
   /**
-   * Create a new server.
+   * Create a new rester server.
    *
-   * @param {Partial<ResterOption>} option Rester option.
+   * Use `config*` methods to config rester server.
    */
-  constructor(option?: Partial<ResterOption>) {
-    // assign default option
-    this.option = {
-      address: Object.assign({
-        portocol: 'HTTP',
-        host: 'localhost',
-        port: 8080
-      }, option && option.address),
-      database: option && option.database
+  constructor() {
+    // config default address
+    this.address = {
+      portocol: 'HTTP',
+      host: 'localhost',
+      port: 8080
     };
-    // create server
-    switch (this.option.address.portocol) {
-      // case 'HTTP2':
-      //   this.server = HTTP2.createSecureServer(this.option.address.ssl || {}, this.pool.process.bind(this.pool));
-      //   break;
-      // case 'HTTPS':
-      //   this.server = HTTPS.createServer(this.option.address.ssl || {}, this.pool.process.bind(this.pool));
-      //   break;
-      default:
-        this.server = HTTP.createServer(this.pool.process.bind(this.pool));
-        break;
-    }
-    // connect database
-    if (this.option.database) {
-      if (this.option.database instanceof Array) {
-        createConnections(this.option.database);
-      } else {
-        createConnection(this.option.database);
-      }
-      this.logger.info(`Database connecting.`);
-    } else {
-      this.logger.warn(`No database connection.`);
-    }
-
-    // TODO: add handler option
-    if (true) {
-      this.pool.handlerTypes = [ExceptionHandler, RouterHandler, SchemaHandler, ParameterHandler];
-    }
+    // config empty controllers
+    this.controllers = [];
+    // config empty database
+    this.database = {} as any;
+    // config default global handlers
+    this.handlers = [ExceptionHandler, SchemaHandler, RouterHandler, ParameterHandler];
+    // config logger to new
+    this.logger = new Logger(`Rester ${Date.now()}`);
+    // config handler pool
+    this.pool = new HandlerPool(this);
+    // init zone
+    this.zone = {};
   }
 
   /**
