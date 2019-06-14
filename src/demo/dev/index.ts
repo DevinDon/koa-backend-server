@@ -110,21 +110,41 @@ namespace SimpleDemo {
 
   }
 
-  const server = new Rester({
-    database: {
-      type: 'postgres',
-      host: 't-1.don.red',
-      port: 5432,
-      username: 'shared',
-      password: 'shared',
-      database: 'shared',
-      entities: [
-        UserEntity
-      ],
-      logging: true,
-      synchronize: true
-    }
-  }).listen();
+  const server = new Rester()
+    .configControllers
+    .add(DemoController, PrefixController, UserController)
+    .end()
+    .configDatabase
+    .setType('postgres')
+    .setHost('t-1.don.red')
+    .setPort(5432)
+    .setUsername('shared')
+    .setPassword('shared')
+    .setDatabase('shared')
+    .setEntities([UserEntity])
+    .setLogging(true)
+    .setSynchronize(true)
+    .end()
+    .configHandlers
+    .add(LogHandler)
+    .end()
+    .listen();
+
+  // const server = new Rester({
+  //   database: {
+  //     type: 'postgres',
+  //     host: 't-1.don.red',
+  //     port: 5432,
+  //     username: 'shared',
+  //     password: 'shared',
+  //     database: 'shared',
+  //     entities: [
+  //       UserEntity
+  //     ],
+  //     logging: true,
+  //     synchronize: true
+  //   }
+  // }).listen();
   // .addHandlers(DelayHandler);
   // .addHandlers(LogHandler);
 

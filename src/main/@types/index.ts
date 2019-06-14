@@ -26,7 +26,7 @@ export interface Mapping {
  */
 export interface Route {
   controller: any;
-  handlerTypes: HandlerType[];
+  handlers: HandlerType[];
   mapping: Mapping;
   name: string;
   target: Function;

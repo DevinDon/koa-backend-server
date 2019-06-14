@@ -1,4 +1,5 @@
 import { HandlerType } from '../decorator';
+import { Rester } from '../Rester';
 import { BaseHandler } from './BaseHandler';
 
 /**
@@ -11,18 +12,22 @@ export class HandlerPool {
   /** Pools. */
   private pools: Map<string, BaseHandler[]> = new Map();
 
-  /** Handler types, default to empty. */
-  handlerTypes: HandlerType[] = [];
+  /**
+   * Create a new handler pool.
+   *
+   * @param rester The rester instance to which this handler belongs.
+   */
+  constructor(private rester: Rester) { }
 
   /**
    * Take one hander instance with special type.
    *
-   * @param {HandlerType} type Handler type.
+   * @param {HandlerType} handler Handler type.
    * @returns {T} A handler instance with special type.
    */
-  take<T = BaseHandler>(type: HandlerType): T {
-    const pool = this.pools.get(type.name)! || this.pools.set(type.name, []).get(type.name)!;
-    return pool.pop() || new type() as any;
+  take<T = BaseHandler>(handler: HandlerType): T {
+    const pool = this.pools.get(handler.name)! || this.pools.set(handler.name, []).get(handler.name)!;
+    return pool.pop() || new handler(this.rester) as any;
   }
 
   /**
@@ -44,7 +49,7 @@ export class HandlerPool {
    */
   async process(request: any, response: any): Promise<void> {
     // take & compose these handlers
-    this.compose(this.take(this.handlerTypes[0]).init({ request, response }), 0, this.handlerTypes)()
+    this.compose(this.take(this.rester.configHandlers.get()[0]).init(request, response), 0, this.rester.configHandlers.get())()
       .then(v => response.write(v))
       .finally(() => response.end());
   }
@@ -54,20 +59,20 @@ export class HandlerPool {
    *
    * @param {THandler extends BaseHandler} current Current handler instance.
    * @param {number} i Index of handler types in this request.
-   * @param {HandlerType[]} handlerTypes Handler types in this request.
+   * @param {HandlerType[]} handlers Handler types in this request.
    * @returns {() => Promise<any>} Composed function.
    */
-  compose(current: BaseHandler, i: number, handlerTypes: HandlerType[]): () => Promise<any> {
-    if (i + 1 < handlerTypes.length) {
+  compose(current: BaseHandler, i: number, handlers: HandlerType[]): () => Promise<any> {
+    if (i + 1 < handlers.length) {
       // that is very very very, complex
       // 利用非立即执行函数的特性, 在 current.handle 调用 next 时再进行数据继承绑定
       // 才能正确的获取所有的属性（包括参数和已处理过的其他属性）
       // by the way, it will also make compose faster than before
-      return async () => current.handle(() => this.compose(this.take(handlerTypes[++i]).inherit(current), i, handlerTypes)())
+      return async () => current.handle(() => this.compose(this.take(handlers[++i]).inherit(current), i, handlers)())
         .finally(() => this.give(current));
-    } else if (handlerTypes === this.handlerTypes && current.route.handlerTypes.length) { // global handlers has been composed, and handler.route.HandlerTypes should exist
-      handlerTypes = current.route.handlerTypes;
-      return async () => current.handle(() => this.compose(this.take(handlerTypes[0]).inherit(current), 0, handlerTypes)())
+    } else if (handlers === this.rester.configHandlers.get() && current.route.handlers.length) { // global handlers has been composed, and handler.route.HandlerTypes should exist
+      handlers = current.route.handlers;
+      return async () => current.handle(() => this.compose(this.take(handlers[0]).inherit(current), 0, handlers)())
         .finally(() => this.give(current));
     } else { // the last handler
       return async () => current.handle(current.run.bind(current))
