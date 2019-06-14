@@ -91,15 +91,23 @@ export class Rester {
   }
 
   /**
-   * Add global handlers.
+   * Config address.
    *
-   * @param {HandlerType[]} handlerTypes Handler types.
-   * @returns {this} Rester instance.
+   * - `setHost`: set host
+   * - `setPort`: set port
+   * - `setProxy`: set if proxy mode
+   * - `setPortocol`: set portocol, include `HTTP`, `HTTPS`, `HTTP2`
+   * - `setSSL`: set ssl options, if portocol is `HTTPS` or `HTTP2`
+   * - `end`: end address config & return this rester instance
    */
-  addHandlers(...handlerTypes: HandlerType[]): this {
-    this.pool.handlerTypes.push(...handlerTypes);
-    return this;
-  }
+  configAddress = {
+    setHost: (host: AddressOption['host']) => { this.address.host = host; return this.configAddress; },
+    setPort: (port: AddressOption['port']) => { this.address.port = port; return this.configAddress; },
+    setProxy: (proxy: AddressOption['proxy']) => { this.address.proxy = proxy; return this.configAddress; },
+    setPortocol: (portocol: AddressOption['portocol']) => { this.address.portocol = portocol; return this.configAddress; },
+    setSSL: (ssl: AddressOption['ssl']) => { this.address.ssl = ssl; return this.configAddress; },
+    end: (): Rester => this
+  };
 
   /**
    * Get global handlers
