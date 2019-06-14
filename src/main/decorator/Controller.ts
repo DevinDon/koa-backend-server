@@ -15,10 +15,8 @@ export function Controller(prefix: string = ''): ClassDecorator {
   return target => {
     /** Controller instance. */
     const controller = Injector.instance(target);
-    // TODO: which should first, on class or method
-    // now is `method.in -> class.in.out -> method.out`
     /** Handler types on controller. */
-    const handlerTypesOnController: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target) || [];
+    const handlersOnController: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target) || [];
     /** Routes on methods of this controller. */
     const routes: Route[] = Object.getOwnPropertyNames(target.prototype)
       // exclude constructor & method must be decorated by method decorator
@@ -26,10 +24,10 @@ export function Controller(prefix: string = ''): ClassDecorator {
       // map to a new array of Route
       .map<Route>(name => {
         const mapping: Mapping = Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name);
-        const handlerTypesOnMethod: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target.prototype, name) || [];
-        const handlerTypes: HandlerType[] = handlerTypesOnMethod.concat(handlerTypesOnController);
+        const handlersOnMethod: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target.prototype, name) || [];
+        const handlers: HandlerType[] = handlersOnMethod.concat(handlersOnController);
         mapping.path = prefix + mapping.path;
-        return { controller, handlerTypes, mapping, name, target };
+        return { controller, handlers, mapping, name, target };
       });
     // define metadata: key = MetadataKey.Controller, value = routes, on = class
     Reflect.defineMetadata(MetadataKey.Controller, routes, target);
