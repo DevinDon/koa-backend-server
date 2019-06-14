@@ -2,8 +2,6 @@ import { Mapping, MetadataKey, Route } from '../@types';
 import { HandlerType } from './Handler';
 import { Injector } from './Injector';
 
-export const CONTROLLERS: Function[] = [];
-
 /**
  * Class Decorator.
  *
@@ -31,7 +29,5 @@ export function Controller(prefix: string = ''): ClassDecorator {
       });
     // define metadata: key = MetadataKey.Controller, value = routes, on = class
     Reflect.defineMetadata(MetadataKey.Controller, routes, target);
-    // push controller to const array
-    CONTROLLERS.push(target);
   };
 }
