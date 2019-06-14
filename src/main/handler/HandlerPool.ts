@@ -1,4 +1,5 @@
 import { HandlerType } from '../decorator';
+import { Rester } from '../Rester';
 import { BaseHandler } from './BaseHandler';
 
 /**
@@ -11,18 +12,22 @@ export class HandlerPool {
   /** Pools. */
   private pools: Map<string, BaseHandler[]> = new Map();
 
-  /** Handler types, default to empty. */
-  handlers: HandlerType[] = [];
+  /**
+   * Create a new handler pool.
+   *
+   * @param rester The rester instance to which this handler belongs.
+   */
+  constructor(private rester: Rester) { }
 
   /**
    * Take one hander instance with special type.
    *
-   * @param {HandlerType} type Handler type.
+   * @param {HandlerType} handler Handler type.
    * @returns {T} A handler instance with special type.
    */
-  take<T = BaseHandler>(type: HandlerType): T {
-    const pool = this.pools.get(type.name)! || this.pools.set(type.name, []).get(type.name)!;
-    return pool.pop() || new type() as any;
+  take<T = BaseHandler>(handler: HandlerType): T {
+    const pool = this.pools.get(handler.name)! || this.pools.set(handler.name, []).get(handler.name)!;
+    return pool.pop() || new handler(this.rester) as any;
   }
 
   /**
@@ -44,7 +49,7 @@ export class HandlerPool {
    */
   async process(request: any, response: any): Promise<void> {
     // take & compose these handlers
-    this.compose(this.take(this.handlers[0]).init({ request, response }), 0, this.handlers)()
+    this.compose(this.take(this.rester.configHandlers.get()[0]).init(request, response), 0, this.rester.configHandlers.get())()
       .then(v => response.write(v))
       .finally(() => response.end());
   }
@@ -65,7 +70,7 @@ export class HandlerPool {
       // by the way, it will also make compose faster than before
       return async () => current.handle(() => this.compose(this.take(handlers[++i]).inherit(current), i, handlers)())
         .finally(() => this.give(current));
-    } else if (handlers === this.handlers && current.route.handlers.length) { // global handlers has been composed, and handler.route.HandlerTypes should exist
+    } else if (handlers === this.rester.configHandlers.get() && current.route.handlers.length) { // global handlers has been composed, and handler.route.HandlerTypes should exist
       handlers = current.route.handlers;
       return async () => current.handle(() => this.compose(this.take(handlers[0]).inherit(current), 0, handlers)())
         .finally(() => this.give(current));
