@@ -110,13 +110,21 @@ export class Rester {
   };
 
   /**
-   * Get global handlers
+   * Config controllers.
    *
-   * @returns {HandlerType[]} Handler types.
+   * - `add`: add controllers
+   * - `get`: get controllers
+   * - `set`: reset controllers & then set
+   * - `reset`: reset controllers
+   * - `end`: end controllers config & return this rester instance
    */
-  getHandlers(): HandlerType[] {
-    return this.pool.handlerTypes;
-  }
+  configControllers = {
+    add: (...controllers: Function[]) => { this.controllers = this.controllers.concat(controllers); return this.configControllers; },
+    get: () => this.controllers,
+    set: (...controllers: Function[]) => { this.controllers = controllers || []; return this.configControllers; },
+    reset: () => { this.controllers = []; return this.configControllers; },
+    end: (): Rester => this
+  };
 
   /**
    * Reset global handlers to `[]` .
