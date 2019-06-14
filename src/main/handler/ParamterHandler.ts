@@ -1,9 +1,8 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { MetadataKey, Method, Route } from '../@types';
+import { MetadataKey } from '../@types';
 import { ParamInjection, ParamInjectionType } from '../decorator';
 import { HTTP400Exception, HTTP404Exception } from '../Exception';
 import { BaseHandler } from './BaseHandler';
-import { RouterHandler } from './RouterHandler';
 
 /**
  * Parameter handler.
@@ -15,7 +14,7 @@ import { RouterHandler } from './RouterHandler';
 export class ParameterHandler extends BaseHandler {
 
   /** Parameter injectors, function. */
-  private parameterInjectors: { [index in ParamInjectionType]: (name: string, route: Route) => any } = {
+  private parameterInjectors: { [index in ParamInjectionType]: (name: string) => any } = {
     /**
      * Inject HTTP request instance.
      *
@@ -33,16 +32,13 @@ export class ParameterHandler extends BaseHandler {
      *
      * @returns {string | undefined} Query value of special key, maybe undefined.
      */
-    PARAM$PATH$QUERY: (key: string): string | undefined => {
-      const queryObject = RouterHandler.format({ method: this.request.method as Method, path: this.request.url! }).queryObject;
-      return queryObject && queryObject[key];
-    },
+    PARAM$PATH$QUERY: (key: string): string | undefined => this.mapping.queryObject && this.mapping.queryObject[key],
     /**
      * Inject path variable.
      *
      * @returns {string} Path variable.
      */
-    PARAM$PATH$VARIABLE: (key: string, route: Route): string => RouterHandler.format({ method: this.request.method as Method, path: this.request.url! }).pathArray![route.mapping.pathArray!.indexOf(`{{${key}}}`)],
+    PARAM$PATH$VARIABLE: (key: string): string => this.mapping.pathArray![this.route.mapping.pathArray!.indexOf(`{{${key}}}`)],
     /**
      * Inject request body object, should await it to get result.
      *
@@ -84,9 +80,7 @@ export class ParameterHandler extends BaseHandler {
       /** Parameter injection array. */
       const parameterInjections: ParamInjection[] | undefined = Reflect.getMetadata(MetadataKey.Parameter, this.route.target.prototype, this.route.name);
       /** Arguments, or undefined. */
-      this.args = parameterInjections
-        ? parameterInjections.map(v => this.parameterInjectors[v.type](v.value, this.route))
-        : [];
+      this.args = parameterInjections ? parameterInjections.map(v => this.parameterInjectors[v.type](v.value)) : [];
       try {
         // await promise args, such as `body`
         for (let i = 0; i < this.args.length; i++) {

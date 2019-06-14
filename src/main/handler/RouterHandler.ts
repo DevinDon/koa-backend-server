@@ -113,8 +113,10 @@ export class RouterHandler extends BaseHandler {
   static get(mapping: Mapping, router = RouterHandler.router): Route | undefined {
     /** Special route, maybe undefined(not found). */
     let route: Route | undefined;
+    // format & parse mapping
+    this.mapping = RouterHandler.format(mapping);
     // format mapping to array
-    RouterHandler.formatAndModify(mapping).pathArray!
+    this.mapping.pathArray!
       // foreach & get router / route
       .every((v, i, a) => {
         // if string path doesn't exist, try to get variable path
