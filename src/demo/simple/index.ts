@@ -10,4 +10,6 @@ class DemoController {
 
 }
 
-const server = new Rester().listen(8080);
+const server = new Rester()
+  .configControllers.add(DemoController).end()
+  .listen();
