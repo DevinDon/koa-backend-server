@@ -12,7 +12,7 @@ export class HandlerPool {
   private pools: Map<string, BaseHandler[]> = new Map();
 
   /** Handler types, default to empty. */
-  handlerTypes: HandlerType[] = [];
+  handlers: HandlerType[] = [];
 
   /**
    * Take one hander instance with special type.
@@ -44,7 +44,7 @@ export class HandlerPool {
    */
   async process(request: any, response: any): Promise<void> {
     // take & compose these handlers
-    this.compose(this.take(this.handlerTypes[0]).init({ request, response }), 0, this.handlerTypes)()
+    this.compose(this.take(this.handlers[0]).init({ request, response }), 0, this.handlers)()
       .then(v => response.write(v))
       .finally(() => response.end());
   }
@@ -54,20 +54,20 @@ export class HandlerPool {
    *
    * @param {THandler extends BaseHandler} current Current handler instance.
    * @param {number} i Index of handler types in this request.
-   * @param {HandlerType[]} handlerTypes Handler types in this request.
+   * @param {HandlerType[]} handlers Handler types in this request.
    * @returns {() => Promise<any>} Composed function.
    */
-  compose(current: BaseHandler, i: number, handlerTypes: HandlerType[]): () => Promise<any> {
-    if (i + 1 < handlerTypes.length) {
+  compose(current: BaseHandler, i: number, handlers: HandlerType[]): () => Promise<any> {
+    if (i + 1 < handlers.length) {
       // that is very very very, complex
       // 利用非立即执行函数的特性, 在 current.handle 调用 next 时再进行数据继承绑定
       // 才能正确的获取所有的属性（包括参数和已处理过的其他属性）
       // by the way, it will also make compose faster than before
-      return async () => current.handle(() => this.compose(this.take(handlerTypes[++i]).inherit(current), i, handlerTypes)())
+      return async () => current.handle(() => this.compose(this.take(handlers[++i]).inherit(current), i, handlers)())
         .finally(() => this.give(current));
-    } else if (handlerTypes === this.handlerTypes && current.route.handlerTypes.length) { // global handlers has been composed, and handler.route.HandlerTypes should exist
-      handlerTypes = current.route.handlerTypes;
-      return async () => current.handle(() => this.compose(this.take(handlerTypes[0]).inherit(current), 0, handlerTypes)())
+    } else if (handlers === this.handlers && current.route.handlers.length) { // global handlers has been composed, and handler.route.HandlerTypes should exist
+      handlers = current.route.handlers;
+      return async () => current.handle(() => this.compose(this.take(handlers[0]).inherit(current), 0, handlers)())
         .finally(() => this.give(current));
     } else { // the last handler
       return async () => current.handle(current.run.bind(current))
