@@ -158,13 +158,21 @@ export class Rester {
   };
 
   /**
-   * Get logger.
+   * Config handlers.
    *
-   * @returns {Logger} Logger instance.
+   * - `add`:
+   * - `get`:
+   * - `set`:
+   * - `reset`:
+   * - `end`: end handlers config & return this rester instance
    */
-  getLogger(): Logger {
-    return this.logger;
-  }
+  configHandlers = {
+    add: (...handlers: HandlerType[]) => { this.handlers = this.handlers.concat(handlers); return this.configHandlers; },
+    get: () => this.handlers,
+    set: (...handlers: HandlerType[]) => { this.handlers = handlers || []; return this.handlers; },
+    reset: () => { this.handlers = []; return this.configHandlers; },
+    end: (): Rester => this
+  };
 
   /**
    * Set logger.
