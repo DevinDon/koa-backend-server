@@ -35,6 +35,13 @@ export abstract class BaseHandler {
   route!: Route;
 
   /**
+   * Create a new handler instance.
+   *
+   * @param {Rester} rester The rester instance to which this handler belongs.
+   */
+  constructor(protected rester: Rester) { }
+
+  /**
    * Init handler with rdequest & response.
    *
    * If call init() without arguments, it mean set request, response & route to undefined.
