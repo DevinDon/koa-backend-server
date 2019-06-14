@@ -9,21 +9,26 @@ import { ExceptionHandler } from './handler/ExceptionHandler';
 import { RouterHandler } from './handler/RouterHandler';
 import { SchemaHandler } from './handler/SchemaHandler';
 
-/** Rester option. */
-export interface ResterOption {
-  address: {
-    /** Rester Server portocol. */
-    portocol: 'HTTP' | 'HTTPS' | 'HTTP2';
-    /** Rester Server host. */
-    host: string;
-    /** Rester Server port. */
-    port: number;
-    /** Rester Server ssl option, only required in secure server (HTTPS or HTTP2). */
-    ssl?: HTTPS.ServerOptions | HTTP2.SecureServerOptions;
-    /** In proxy mode or not. */
-    proxy?: boolean;
-  };
-  database?: ConnectionOptions | ConnectionOptions[];
+/**
+ * Address option.
+ *
+ * - portocol: 'HTTP' | 'HTTPS' | 'HTTP2'
+ * - host: string
+ * - port: number
+ * - ssl?: HTTPS.ServerOptions | HTTP2.SecureServerOptions
+ * - proxy?: boolean
+ */
+interface AddressOption {
+  /** Rester Server portocol. */
+  portocol: 'HTTP' | 'HTTPS' | 'HTTP2';
+  /** Rester Server host. */
+  host: string;
+  /** Rester Server port. */
+  port: number;
+  /** Rester Server ssl option, only required in secure server (HTTPS or HTTP2). */
+  ssl?: HTTPS.ServerOptions | HTTP2.SecureServerOptions;
+  /** In proxy mode or not. */
+  proxy?: boolean;
 }
 
 /**
