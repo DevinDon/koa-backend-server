@@ -127,14 +127,35 @@ export class Rester {
   };
 
   /**
-   * Reset global handlers to `[]` .
+   * Config database.
    *
-   * @returns {this} Rester instance.
+   * - `set`:
+   * - `setType`:
+   * - `setHost`:
+   * - `setPort`:
+   * - `setUsername`:
+   * - `setPassword`:
+   * - `setDatabase`:
+   * - `setEntities`:
+   * - `setLogger`:
+   * - `setLogging`:
+   * - `setStnchronize`:
+   * - `end`: end database config & return this rester instance
    */
-  resetHandlers(): this {
-    this.pool.handlerTypes = [];
-    return this;
-  }
+  configDatabase = {
+    set: (option: ConnectionOptions) => { this.database = option; return this.configDatabase; },
+    setType: (type: ConnectionOptions['type']) => { (this.database as any).type = type; return this.configDatabase; },
+    setHost: (host: string) => { (this.database as any).host = host; return this.configDatabase; },
+    setPort: (port: number) => { (this.database as any).port = port; return this.configDatabase; },
+    setUsername: (username: string) => { (this.database as any).username = username; return this.configDatabase; },
+    setPassword: (password: string) => { (this.database as any).password = password; return this.configDatabase; },
+    setDatabase: (database: ConnectionOptions['database']) => { (this.database as any).database = database; return this.configDatabase; },
+    setEntities: (entities: ConnectionOptions['entities']) => { (this.database as any).entities = entities; return this.configDatabase; },
+    setLogger: (logger: ConnectionOptions['logger']) => { (this.database as any).logger = logger; return this.configDatabase; },
+    setLogging: (logging: ConnectionOptions['logging']) => { (this.database as any).logging = logging; return this.configDatabase; },
+    setSynchronize: (synchronize: boolean) => { (this.database as any).synchronize = synchronize; return this.configDatabase; },
+    end: (): Rester => this
+  };
 
   /**
    * Get logger.
