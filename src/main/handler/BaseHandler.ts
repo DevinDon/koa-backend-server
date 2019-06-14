@@ -25,6 +25,8 @@ export abstract class BaseHandler {
 
   /** Arguments of controller method. */
   protected args!: any[];
+  /** Mapping of this request. */
+  protected mapping!: Mapping;
   /** Request instance. */
   protected request!: IncomingMessage;
   /** Response instance. */
@@ -62,6 +64,7 @@ export abstract class BaseHandler {
    */
   inherit<THandler extends BaseHandler>(handler: THandler): this {
     this.args = handler.args;
+    this.mapping = handler.mapping;
     this.request = handler.request;
     this.response = handler.response;
     this.route = handler.route;
