@@ -1,15 +1,12 @@
 import { Mapping, MetadataKey, Method, Route } from '../@types';
-import { CONTROLLERS } from '../decorator';
 import { HTTP404Exception } from '../Exception';
+import { Rester } from '../Rester';
 import { BaseHandler } from './BaseHandler';
 
 export class RouterHandler extends BaseHandler {
 
   /** Special path in router. `Map.get(''); Map.set('%');` */
   private static SpecialPath = { regexp: /{{(.+)}}/, route: '', variable: '%' };
-
-  /** Core router. `Map<Method, Map>` */
-  private static router: Map<string, any> = new Map();
 
   /**
    * Format mapping, it will **not** modify raw mapping.
@@ -110,7 +107,7 @@ export class RouterHandler extends BaseHandler {
    * @param {Mapping} mapping Mapping information.
    * @returns Route. If not found, return undefined.
    */
-  static get(mapping: Mapping, router = RouterHandler.router): Route | undefined {
+  get(mapping: Mapping, router: Map<string, any> = this.rester.zone.router): Route | undefined {
     /** Special route, maybe undefined(not found). */
     let route: Route | undefined;
     // format & parse mapping
@@ -137,9 +134,9 @@ export class RouterHandler extends BaseHandler {
    * @param {Route} route Route.
    * @throws If the path already has a route, throw an error.
    */
-  static set(route: Route, router: Map<string, any> = RouterHandler.router): Map<string, any> {
+  set(route: Route, router: Map<string, any> = this.rester.zone.router): Map<string, any> {
     // format mapping
-    RouterHandler.formatAndModify(route.mapping).pathArray!
+    RouterHandler.format(route.mapping).pathArray!
       // foreach & get router / route
       .forEach((v, i, a) => {
         // if router variable, get & set it
@@ -166,12 +163,16 @@ export class RouterHandler extends BaseHandler {
    *
    * If router is empty, try to get route in CONTROLLERS.
    */
-  constructor() {
-    super();
-    if (RouterHandler.router.size === 0) {
-      for (const controller of CONTROLLERS) {
+  constructor(protected rester: Rester) {
+    // set rester instance
+    super(rester);
+    // if router is not init
+    if (!rester.zone.router) {
+      // init it
+      rester.zone.router = new Map();
+      for (const controller of rester.configControllers.get()) {
         const routes: Route[] = Reflect.getMetadata(MetadataKey.Controller, controller) || [];
-        routes.forEach(route => RouterHandler.set(route));
+        routes.forEach(route => this.set(route));
       }
     }
   }
@@ -184,7 +185,7 @@ export class RouterHandler extends BaseHandler {
    * @throws {HTTP404Exception} Not found exception.
    */
   handle(next: () => Promise<any>): Promise<any> {
-    this.route = RouterHandler.get({ method: this.request.method as Method, path: this.request.url! })!;
+    this.route = this.get({ method: this.request.method as Method, path: this.request.url! })!;
     if (this.route) {
       return next();
     }
