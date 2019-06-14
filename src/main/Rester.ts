@@ -2,8 +2,8 @@ import { Logger } from '@iinfinity/logger';
 import HTTP from 'http';
 import HTTP2 from 'http2';
 import HTTPS from 'https';
-import { ConnectionOptions, createConnection, createConnections } from 'typeorm';
-import { HandlerType, Injector } from './decorator';
+import { ConnectionOptions, createConnection } from 'typeorm';
+import { HandlerType } from './decorator';
 import { HandlerPool, ParameterHandler } from './handler';
 import { ExceptionHandler } from './handler/ExceptionHandler';
 import { RouterHandler } from './handler/RouterHandler';
@@ -190,13 +190,40 @@ export class Rester {
   /**
    * Start listening.
    *
-   * @param {number} port Listening port, default to `option.address.port || 8080` .
-   * @param {string} host Listening host, default to `option.address.host || 'localhost'` .
+   * @param {Function} callback Callback funcation after listen.
+   * @param {number} port Listening port, default to `address.port || 8080` .
+   * @param {string} host Listening host, default to `address.host || 'localhost'` .
    * @returns {this} This instance.
    */
-  listen(port: number = this.option.address.port, host: string = this.option.address.host): this {
-    this.server.listen(port, host);
-    this.logger.log(`Server online, listening on: ${host}:${port}.`);
+  listen(callback?: Function, port: number = this.address.port, host: string = this.address.host): this {
+    // create server
+    switch (this.address.portocol) {
+      // case 'HTTP2':
+      //   this.server = HTTP2.createSecureServer(this.option.address.ssl || {}, this.pool.process.bind(this.pool));
+      //   break;
+      // case 'HTTPS':
+      //   this.server = HTTPS.createServer(this.option.address.ssl || {}, this.pool.process.bind(this.pool));
+      //   break;
+      default:
+        this.server = HTTP.createServer(this.pool.process.bind(this.pool));
+        break;
+    }
+    // connect database
+    if (this.database.type) {
+      createConnection(this.database)
+        .then(() => this.logger.info(`Database connecting.`))
+        .catch(error => this.logger.error(`Database connect failed: ${error}`))
+        .then(() => this.logger.info(`Database connected.`));
+    } else {
+      this.logger.warn(`No database connection.`);
+    }
+    // listen to address
+    this.server.listen(port, host, () => {
+      if (typeof callback === 'function') {
+        callback();
+      }
+      this.logger.info(`Server online, listening on: ${host}:${port}.`);
+    });
     return this;
   }
 
