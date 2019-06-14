@@ -175,14 +175,17 @@ export class Rester {
   };
 
   /**
-   * Set logger.
+   * Config logger.
    *
-   * @param {Logger} logger Logger.
-   * @returns {Logger} And return it.
+   * - `get`:
+   * - `set`:
+   * - `end`: end logger config & return this rester instance
    */
-  setLogger(logger: Logger): Logger {
-    return this.logger = logger;
-  }
+  configLogger = {
+    get: () => this.logger,
+    set: (logger: Logger) => { this.logger = logger; return this.configLogger; },
+    end: (): Rester => this
+  };
 
   /**
    * Start listening.
