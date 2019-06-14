@@ -17,13 +17,13 @@ export type HandlerType = Function & typeof BaseHandler;
 export function Handler(handler: typeof BaseHandler): ClassDecorator | MethodDecorator | any {
   return (target: Function | Object, name: string | symbol, descriptor: PropertyDecorator) => {
     if (target instanceof Function) { // if on class
-      const array: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target) || [];
-      array.push(handler);
-      Reflect.defineMetadata(MetadataKey.Handler, array, target);
+      const handlers: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target) || [];
+      handlers.push(handler);
+      Reflect.defineMetadata(MetadataKey.Handler, handlers, target);
     } else { // if on method
-      const array: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target, name) || [];
-      array.push(handler);
-      Reflect.defineMetadata(MetadataKey.Handler, array, target, name);
+      const handlers: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target, name) || [];
+      handlers.push(handler);
+      Reflect.defineMetadata(MetadataKey.Handler, handlers, target, name);
     }
   };
 }
