@@ -1,7 +1,24 @@
-export * from './@types';
-export * from './controller';
-export * from './entity';
-export * from './guard';
-export * from './model';
-export * from './plugin';
-export * from './service';
+import { Rester } from '../../main';
+import { UserEntity } from './entity';
+import { LogHandler } from './handler';
+import { SignController } from './controller';
+
+const server = new Rester()
+  .configControllers
+  .add(SignController)
+  .end()
+  .configDatabase
+  .setType('postgres')
+  .setHost('t-1.don.red')
+  .setPort(5432)
+  .setUsername('shared')
+  .setPassword('shared')
+  .setDatabase('shared')
+  .setEntities([UserEntity])
+  .setLogging(true)
+  .setSynchronize(true)
+  .end()
+  .configHandlers
+  .add(LogHandler)
+  .end()
+  .listen();
