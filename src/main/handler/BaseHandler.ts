@@ -1,18 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { Route } from '../@types';
-
-/**
- * Handler option.
- *
- * @property request.
- * @property response.
- * @property route.
- */
-export interface HandlerOption {
-  request: IncomingMessage;
-  response: ServerResponse;
-  route: Route;
-}
+import { Mapping, Route } from '../@types';
+import { Rester } from '../Rester';
 
 /**
  * Abstract class BaseHandler.
@@ -31,6 +19,7 @@ export abstract class BaseHandler {
   protected request!: IncomingMessage;
   /** Response instance. */
   protected response!: ServerResponse;
+
   /** Route of this request. */
   route!: Route;
 
@@ -46,20 +35,16 @@ export abstract class BaseHandler {
    *
    * If call init() without arguments, it mean set request, response & route to undefined.
    *
-   * @param {HandlerOption} option Handler init option.
+   * @param {IncomingMessage} request Incoming message.
+   * @param {ServerResponse} response Server response.
    * @returns {this} This handler instance.
    */
-  init(option?: Partial<HandlerOption>): this {
-    if (option) { // init handler with request, response & route
-      this.request = option.request!;
-      this.response = option.response!;
-      this.route = option.route!;
-    } else { // init handler in order to gc
-      this.args = undefined as any;
-      this.request = undefined as any;
-      this.response = undefined as any;
-      this.route = undefined as any;
-    }
+  init(request?: IncomingMessage, response?: ServerResponse): this {
+    this.args = undefined as any;
+    this.mapping = undefined as any;
+    this.request = request!;
+    this.response = response!;
+    this.route = undefined as any;
     return this;
   }
 
