@@ -83,7 +83,7 @@ export class ParameterHandler extends BaseHandler {
       this.args = parameterInjections ? parameterInjections.map(v => this.parameterInjectors[v.type](v.value)) : [];
       try {
         // await promise args, such as `body`
-        for (let i = 0; i < this.args.length; i++) {
+        for (let i = this.args.length; i; i--) {
           if (this.args[i] instanceof Promise) {
             this.args[i] = await this.args[i];
           }
