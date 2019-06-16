@@ -7,28 +7,28 @@ namespace PerformanceDemo {
 
     // push
     console.time('push');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const temp = arr.push('1');
     }
     console.timeEnd('push');
 
     // pop
     console.time('pop');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const temp = arr.pop();
     }
     console.timeEnd('pop');
 
     // unshift
     console.time('unshift');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const temp = arr.unshift('1');
     }
     console.timeEnd('unshift');
 
     // shift
     console.time('shift');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const temp = arr.shift();
     }
     console.timeEnd('shift');
@@ -50,32 +50,32 @@ namespace PerformanceDemo {
     const times = 10 * 10000;
 
     console.time('await async');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const result = await a();
     }
     console.timeEnd('await async');
 
     console.time('await sync');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const result = await s();
     }
     console.timeEnd('await sync');
 
     console.time('sync');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const result = s();
     }
     console.timeEnd('sync');
 
     console.time('async');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       let result;
       a().then(v => result = v);
     }
     console.timeEnd('async');
 
     console.time('async without return');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const result = a();
     }
     console.timeEnd('async without return');
@@ -98,13 +98,13 @@ namespace PerformanceDemo {
     const times = 10 * 10000;
 
     console.time('func');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const result = doit();
     }
     console.timeEnd('func');
 
     console.time('class');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const result = new ABC().doit();
     }
     console.timeEnd('class');
@@ -120,13 +120,13 @@ namespace PerformanceDemo {
     console.log(map.get('1'), obj['1']);
 
     console.time('map');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const result = map.get('1');
     }
     console.timeEnd('map');
 
     console.time('object');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const result = obj[1];
     }
     console.timeEnd('object');
@@ -140,13 +140,13 @@ namespace PerformanceDemo {
     const text = 'abcabcabcabcabcabcabcabcabcabc';
 
     console.time('regexp');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const result = regexp.test('abcabcabcabcabcabcabcabcabcabc');
     }
     console.timeEnd('regexp');
 
     console.time('string');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const result = text === 'abcabcabcabcabcabcabcabcabcabc';
     }
     console.timeEnd('string');
@@ -159,7 +159,7 @@ namespace PerformanceDemo {
     const text = '/abc/def/ghi/jkl';
 
     console.time('split');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const result = text.split('/');
     }
     console.timeEnd('split');
@@ -175,13 +175,13 @@ namespace PerformanceDemo {
     mapFunctionKey.set(ABC, ABC);
 
     console.time('string');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const result = mapStringKey.get(ABC.name);
     }
     console.timeEnd('string');
 
     console.time('function');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const result = mapFunctionKey.get(ABC);
     }
     console.timeEnd('function');
@@ -202,13 +202,13 @@ namespace PerformanceDemo {
     const def = new DEF();
 
     console.time('bind');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const result = def.hello.bind(def)();
     }
     console.timeEnd('bind');
 
     console.time('no');
-    for (let i = 0; i < times; i++) {
+    for (let i = times; i; i--) {
       const result = def.hello();
     }
     console.timeEnd('no');
