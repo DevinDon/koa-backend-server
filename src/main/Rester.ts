@@ -1,7 +1,7 @@
 import { Logger } from '@iinfinity/logger';
-import HTTP from 'http';
-import HTTP2 from 'http2';
-import HTTPS from 'https';
+import * as HTTP from 'http';
+import * as HTTP2 from 'http2';
+import * as HTTPS from 'https';
 import { ConnectionOptions, createConnection } from 'typeorm';
 import { HandlerType } from './decorator';
 import { HandlerPool, ParameterHandler } from './handler';
