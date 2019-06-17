@@ -6,7 +6,7 @@ describe('injector', () => {
   class ABC {
     name: string = 'ABC';
     hello() {
-      return `Hello, ${name}!`;
+      return `Hello, ${this.name}!`;
     }
   }
 
