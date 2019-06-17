@@ -1,16 +1,3 @@
-import { IncomingMessage, ServerResponse } from 'http';
-
-/**
- * Exception content.
- *
- * @property {IncomingMessage} request Request instance.
- * @property {ServerResponse} response Response instance.
- */
-interface ExceptionContent {
-  request: IncomingMessage;
-  response: ServerResponse;
-}
-
 /**
  * Base HTTPException class.
  *
