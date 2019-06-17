@@ -1,11 +1,11 @@
 import { MetadataKey, Method } from '../@types';
 
 /**
- * Generate a method decorator.
+ * Generate a mapping decorator.
  *
  * @param {Method} method Method name.
  */
-function baseMethod(method: Method) {
+function baseMapping(method: Method) {
   return (path: string = ''): MethodDecorator => (target: any, name, descriptor) => {
     Reflect.defineMetadata(MetadataKey.Mapping, { method, path }, target, name);
   };
@@ -16,60 +16,60 @@ function baseMethod(method: Method) {
  *
  * @param {string} path Path to mapping.
  */
-export const CONNECT = baseMethod(Method.CONNECT);
+export const CONNECT = baseMapping(Method.CONNECT);
 
 /**
  * **DELETE** Method decorator.
  *
  * @param {string} path Path to mapping.
  */
-export const DELETE = baseMethod(Method.DELETE);
+export const DELETE = baseMapping(Method.DELETE);
 
 /**
  * **GET** Method decorator.
  *
  * @param {string} path Path to mapping.
  */
-export const GET = baseMethod(Method.GET);
+export const GET = baseMapping(Method.GET);
 
 /**
  * **HEAD** Method decorator.
  *
  * @param {string} path Path to mapping.
  */
-export const HEAD = baseMethod(Method.HEAD);
+export const HEAD = baseMapping(Method.HEAD);
 
 /**
  * **OPTIONS** Method decorator.
  *
  * @param {string} path Path to mapping.
  */
-export const OPTIONS = baseMethod(Method.OPTIONS);
+export const OPTIONS = baseMapping(Method.OPTIONS);
 
 /**
  * **PATCH** Method decorator.
  *
  * @param {string} path Path to mapping.
  */
-export const PATCH = baseMethod(Method.PATCH);
+export const PATCH = baseMapping(Method.PATCH);
 
 /**
  * **DELETE** Method decorator.
  *
  * @param {string} path Path to mapping.
  */
-export const POST = baseMethod(Method.POST);
+export const POST = baseMapping(Method.POST);
 
 /**
  * **PUT** Method decorator.
  *
  * @param {string} path Path to mapping.
  */
-export const PUT = baseMethod(Method.PUT);
+export const PUT = baseMapping(Method.PUT);
 
 /**
  * **TRACE** Method decorator.
  *
  * @param {string} path Path to mapping.
  */
-export const TRACE = baseMethod(Method.TRACE);
+export const TRACE = baseMapping(Method.TRACE);
