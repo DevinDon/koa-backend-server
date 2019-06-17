@@ -41,8 +41,7 @@
     "@iinfinity/delay": "0.1.1",
     "@iinfinity/jwt": "0.1.1",
     "@iinfinity/logger": "0.3.3",
-    "reflect-metadata": "0.1.13",
-    "typeorm": "0.2.18"
+    "reflect-metadata": "0.1.13"
   },
   "devDependencies": {
     "@types/jasmine": "3.3.13",
@@ -53,6 +52,7 @@
     "typescript": "3.5.1"
   },
   "optionalDependencies": {
-    "pg": "7.11.0"
+    "pg": "7.11.0",
+    "typeorm": "0.2.18"
   }
 }
