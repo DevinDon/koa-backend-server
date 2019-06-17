@@ -4,6 +4,8 @@
 
 **In Node.js & TypeScript!**
 
+> :books: ​See the [full documents](https://github.com/DevinDon/rester/tree/master/docs) here.
+
 # Attention
 
 <span style="color: red">**:warning: WARNING: This project is currently in an *UNSTABLE* phase.**</span>
@@ -18,13 +20,11 @@ This project has released on [NPMJS.COM, @rester/rester](https://www.npmjs.com/p
 npm i --save @rester/rester
 ```
 
-> :loudspeaker: ​The **Command-Line Interface** will be coming soon. Watch [@rester/cli](https://www.npmjs.com/package/@rester/cli).
+> :dizzy: ​The **Command-Line Interface** will be coming soon. Watch [@rester/cli](https://www.npmjs.com/package/@rester/cli).
 
 # Usage
 
-Use **Rester** just like **Spring Boot**.
-
-## Quick Start
+Use **Rester** just like **Spring Boot**, and easier!
 
 ```typescript
 import { Controller, GET, Rester } from '@rester/rester';
@@ -32,6 +32,7 @@ import { Controller, GET, Rester } from '@rester/rester';
 @Controller()
 class DemoController {
 
+  /** GET http://localhost:8080 */
   @GET('/')
   index() {
     return { hello: 'world' };
@@ -39,46 +40,15 @@ class DemoController {
 
 }
 
+/** Create a rester server listening on http://localhost:8080. */
 const server = new Rester()
   .configControllers.add(DemoController).end()
   .listen();
 ```
 
-## Full Usage
-
-See the [full usage](https://github.com/DevinDon/rester/blob/master/docs/README.md) here.
-
 > :card_index_dividers: See more [demo](https://github.com/DevinDon/rester/blob/master/src/demo) here.
 
 # Feature
-
-## Decorator support
-
-Coding like Spring Boot!
-
-### @Controller
-
-Use this decorator to mark the controller.
-
-### @Method
-
-Use these decorators to mark the methods mapping.
-
-Such as `@GET('/path')`, `@POST('/where')`, `@PUT('/put')` and so on.
-
-### @Parameter
-
-Use these decorators to mark the injectable parameters.
-
-Such as `@PathQuery('key')`, `@PathVariable('key')`, `@RequestBody('application/json')`, `@RequestHeader('header')` and so on.
-
-### @Service
-
-Just like its name.
-
-### @Handler
-
-Set the hander(like middleware) for the controllers & method mappings.
 
 > :sparkles: See [issue #4](https://github.com/DevinDon/rester/issues/4) for detail.
 
