@@ -1,334 +1,304 @@
-# Rester Document
+# Rester
 
-**:warning: WARNING: This document is *OUTDATED*, new document coming soon!**
+Rester is a TypeScript web framework, like Spring Boot, and better use!
 
-**:warning: WARNING: This document is *OUTDATED*, new document coming soon!**
+# Installation
 
-**:warning: WARNING: This document is *OUTDATED*, new document coming soon!**
-
-## Full config
-
-*It will create a HTTP server which is listening on port 8080.*
-
-```typescript
-import { Server } from '@iinfinity/rester';
-
-const server = new Server({
-  address: {
-    portocol: 'HTTP', // Optional, HTTP, HTTPS or HTTP2.
-    host: '0.0.0.0', // Optional, default to 0.0.0.0.
-    port: 8080, // Optional, default to 8080.
-    ssl: {cert: 'CERT', key: 'KEY'} // Required if portocol is HTTP2 or HTTPS.
-  },
-  database: { // If undefined, it will disable database connection
-    name: 'default',
-    type: 'mysql',
-    host: 'localhost',
-    port: 3306,
-    database: 'database',
-    username: 'username',
-    password: 'password',
-    synchronize: true, // auto generate database table (or document), but you may lost all data of this database
-    logging: true, // log all query statements
-    entities: ['somewhere/entity/**/*.entity.ts'] // your database table(entity)
-  },
-  router: { // If undefined, it will disable koa router.
-    paths: { // router paths
-      POST: {
-        'index': {
-          path: '/',
-          ware: async (c, next) => {
-            c.session.data = c.request.body;
-            c.body = {
-              status: Boolean(c.session),
-              data: c.session
-            };
-            await User.insert({
-              name: 'test',
-              password: 'password',
-              disable: false,
-              value: 100
-            });
-            await next();
-          }
-        }
-      }
-    },
-    static: { // Static files path.
-      path: 'test/html/'
-    }
-  },
-  session: { // If undefined, it will disable redisession.
-    domain: 'your.domain',
-    httpOnly: true,
-    maxAge: 3600, // expire time, second
-    name: 'session.id', // cookie key name
-    redis: { // redis server
-      host: 'your.redis.address',
-      port: 6379
-    },
-    secert: ['your', 'secert', 'keys']
-  }
-});
-
-// Start listening.
-server.listen();
+```shell
+npm i @rester/rester
 ```
 
-## **Step by step**
+# Feature
 
-### 0. Know about the [interface KBSConfig](https://github.com/DevinDon/koa-backend-server/blob/master/src/type/server.ts).
+Let me show you some important features.
+
+## Decorator
+
+Coding like Spring Boot!
+
+### @Controller
+
+Use this decorator to mark the controller.
 
 ```typescript
-/** KBS config. */
-export interface KBSConfig {
-  /** KBS address. */
-  address: KBSAddress;
-  /** KBS database connection, if undefined it will disable the typeorm connection. */
-  database?: KBSDatabase;
-  /** KBS router, if undefined it will disable the koa router. */
-  router?: KBSRouter;
-  /** KBS session, if undefined it will disable the koa session. */
-  session?: Options;
+@Controller()
+class DemoController { /* ... */ }
+
+/** Add perfix to all sub mappings. */
+@Controller('/prefix')
+class PrefixController { /* ... */ }
+```
+
+### Mapping
+
+Use these decorators to mark the mapping.
+
+Such as `@GET('/path')`, `@POST('/where')`, `@PUT('/user')` and so on.
+
+```typescript
+@Controller()
+class DemoController {
+
+  @CONNECT('/connect')
+  connect() {
+    return 'Hello, CONNECT!';
+  }
+
+  @DELETE('/delete')
+  delete() {
+    return 'Hello, DELETE!';
+  }
+
+  @GET('/get')
+  get() {
+    return 'Hello, GET!';
+  }
+
+  @HEAD('/head')
+  head() {
+    return 'Hello, HEAD!';
+  }
+
+  @OPTIONS('/options')
+  options() {
+    return 'Hello, OPTIONS!';
+  }
+
+  @PATCH('/patch')
+  patch() {
+    return 'Hello, PATCH!';
+  }
+
+  @POST('/post')
+  post() {
+    return 'Hello, POST!';
+  }
+
+  @PUT('/put')
+  put() {
+    return 'Hello, PUT!';
+  }
+
+  @TRACE('/trace')
+  trace() {
+    return 'Hello, TRACE!';
+  }
+
 }
 ```
 
-### 1. Set your address information.
+### Parameter
 
-> **Use [*KBSAddress*](https://github.com/DevinDon/koa-backend-server/blob/master/dist/type/server.d.ts) to configure your address info.**
+Use these decorators to mark the injectable parameters.
+
+Such as `@PathQuery('key')`, `@PathVariable('key')`, `@RequestBody('application/json')`, `@RequestHeader('header')` and so on.
+
+#### @PathVariable
 
 ```typescript
-const address: KBSAddress = { // optional, default to http://0.0.0.0:8080
-  portocol: 'HTTP', // optional, HTTP, HTTPS or HTTP2
-  host: '0.0.0.0', // optional, default to 0.0.0.0
-  port: 8080, // optional, default to 8080
-  ssl: {cert: 'CERT', key: 'KEY'} // required if portocol is HTTPS or HTTP2
-};
-```
+// GET /get/Lily
+// return "Hello, Lily!"
+@GET('/get/{{name}}')
+get(@PathVariable('name') name: string) {
+  return `Hello, ${name}!`;
+}
 
-> **Or use [*server.config.json*](https://github.com/DevinDon/koa-backend-server/blob/master/server.config.json) to do this.**
-
-```json
-{
-  "address": {
-    "portocol": "HTTP",
-    "host": "0.0.0.0",
-    "port": 8080,
-    "ssl": {
-      "cert": "CERT content here if HTTP2/S",
-      "key": "KEY content here if HTTP2/S"
-    }
-  }
+// GET /get/Lisa/and/Lisa@email.com
+// return "name: Lisa, email: Lisa@email.com."
+@GET('/get/{{name}}/and/{{email}}')
+get(@PathVariable('name') name: string, @PathVariable('email') email: string) {
+  return `name: ${name}, email: ${email}.`;
 }
 ```
 
-*It will cover KBSDatabase config.*
-
-### 2. (Optional) Connect database via [TypeORM](https://www.npmjs.com/package/typeorm).
-
-> **Use [*KBSDatabase*](https://github.com/DevinDon/koa-backend-server/blob/master/dist/type/server.d.ts) to create connection.**
+#### @PathQuery
 
 ```typescript
-const database: KBSDatabase = { // If undefined, it will disable database connection
-  name: 'default',
-  type: 'mysql',
-  host: 'localhost',
-  port: 3306,
-  database: 'database',
-  username: 'username',
-  password: 'password',
-  synchronize: true, // auto generate database table (or document), but you may lost all data of this database
-  logging: true, // log all query statements
-  entities: ['somewhere/entity/**/*.entity.ts'] // your database table(entity)
-};
-```
+// GET /query?name=Allen
+// return "name: Allen"
+@GET('/query')
+get(@PathQuery('name') name: string) {
+  return `name: ${name}`;
+}
 
-> **Or use [*server.config.json*](https://github.com/DevinDon/koa-backend-server/blob/master/server.config.json) to do this.**
-
-```json
-{
-  "database": {
-    "type": "mysql",
-    "host": "your.database.host",
-    "port": 3306,
-    "username": "username",
-    "password": "password",
-    "database": "database",
-    "synchronize": true,
-    "logging": true,
-    "entities": [
-      "test/entity/**/*.entity.ts"
-    ],
-    "migrations": [],
-    "subscribers": []
-  }
+// GET /query?name=Allen&email=Allen@email.com
+// return "name: Allen, email: Allen@email.com."
+@GET('/query')
+get(@PathQuery('name') name: string, @PathQuery('email') email: string) {
+  return `name: ${name}, email: ${email}.`;
 }
 ```
 
-*It will cover KBSDatabase config.*
-
-### 3. (Optional but **important**) Set router paths.
-
-> **Here is the [*router path interface*](https://github.com/DevinDon/koa-backend-server/blob/master/src/type/router.ts).**
+#### @RequestBody
 
 ```typescript
-interface RouterPaths {
-  [index: string]: {
-    path: string | RegExp | (string | RegExp)[];
-    ware: any;
-    cors?: CORS;
-    withoutPrefix: boolean;
-  };
+interface User {
+  email: string;
+  name: string;
+}
+
+// POST /post {"email":"Stave@email.com","name":"Stave"}
+// return "Stave@email.comStave"
+@POST('/post')
+post(@RequestBody() user: User) {
+  return user.email + user.name;
 }
 ```
 
-> **And the post path looks like this**.
+#### @RequestHeader
 
 ```typescript
-// post/index.ts
-import { AMiddleware, now, RouterPaths } from '@iinfinity/rester';
-import { User } from '../entity';
-import test from './test';
+// GET / Connection: keep-alive
+// return "keep-alive"
+@GET('/')
+get(@RequestHeader('connection') connection: string) {
+  return connection;
+}
+```
 
-const index: AMiddleware = async (c, next) => {
-  const request = c.request.body;
-  const insert = await User.insert({ name: now(), password: 'any' });
-  const data = await User.find();
-  c.session.user = data;
-  c.body = {
-    status: true,
-    data
-  };
-  await next();
-};
+#### @HTTPRequest
 
-export const postPaths: RouterPaths = {
-  '/test': {
-    path: '/test',
-    ware: test,
-    cors: {
-      'Access-Control-Allow-Headers': 'Content-Type',
-      'Access-Control-Allow-Methods': ['POST', 'OPTIONS', 'GET'],
-      'Access-Control-Allow-Origin': '*'
-    }
-  },
-  'all': {
-    path: /\/.*/,
-    ware: index,
-    withoutPrefix: true
+```typescript
+@GET('/')
+get(@HTTPRequest() request: IncomingMessage) {
+  return 'raw request' + request;
+}
+```
+
+#### @HTTPResponse
+
+```typescript
+@GET('/')
+get(@HTTPResponse() response: ServerResponse) {
+  return 'raw response' + response;
+}
+```
+
+### @Service
+
+Alias of `@Injectable()`.
+
+```typescript
+@Service()
+class DemoService {
+
+  private count = 0;
+
+  add() {
+    return ++this.count;
   }
-};
 
-export default postPaths;
-```
+}
 
-> **Don't forget to define the [*KBSRouter*](https://github.com/DevinDon/koa-backend-server/blob/master/src/type/router.ts).**
+@Controller()
+class DemoController {
 
-```typescript
-const router: KBSRouter = { // if undefined, it will disable koa router
-  paths: { // router paths
-    POST: postPaths
-  },
-  static: { // static files dir, without version prefix
-    path: 'static/files/dir',
-    options: { /* Some options. */ }
+  @Inject()
+  private service!: DemoService;
+
+  @GET('/add')
+  add() {
+    return this.service.add();
   }
-};
+
+}
 ```
 
-> **The same way to use [*server.config.json*](https://github.com/DevinDon/koa-backend-server/blob/master/server.config.json) to do this.**
+## Injector
 
-### 4. (Optional) Config your session options.
+Auto generate `Service`, `Controller` or other singal instance class, and save them.
 
-> **Use [*KBSSession*](https://github.com/DevinDon/koa-backend-server/blob/master/dist/type/server.d.ts) to do this.**
+## Handler
 
-```typescript
-const session: KBSSession = { // If undefined, it will disable redisession.
-  domain: 'your.domain',
-  httpOnly: true,
-  maxAge: 3600, // expire time, second
-  name: 'session.id', // cookie key name
-  redis: { // redis server
-    host: 'your.redis.address',
-    port: 6379
-  },
-  secert: ['your', 'secert', 'keys']
-};
-```
+Use for set the hander(like middleware) for the controllers & mappings.
 
-> **The same way to use [*server.config.json*](https://github.com/DevinDon/koa-backend-server/blob/master/server.config.json) to do this.**
+This is a design that includes **Aspect** & **Middleware** features. It can provide features like `Around`
 
-### 5. And now, it looks like this.
+### Define
 
-> **Enter point: [*test/index.ts*](https://github.com/DevinDon/koa-backend-server/blob/master/test/index.ts)**
+Custom handler must extends [`BaseHandler`](https://github.com/DevinDon/rester/blob/master/src/main/handler/base.handler.ts):
 
 ```typescript
-import { KBSAddress, KBSDatabase, KBSRouter, KBSSession, Server } from '@iinfinity/rester';
-import postPaths from './post';
+class DemoHandler extends BaseHandler {
 
-const address: KBSAddress = { // optional, default to http://0.0.0.0:8080
-  portocol: 'HTTP', // optional, HTTP, HTTPS or HTTP2
-  host: '0.0.0.0', // optional, default to 0.0.0.0
-  port: 8080, // optional, default to 8080
-  ssl: {cert: 'CERT', key: 'KEY'} // required if portocol is HTTPS or HTTP2
-};
-
-const database: KBSDatabase = { // If undefined, it will disable database connection
-  name: 'default',
-  type: 'mysql',
-  host: 'localhost',
-  port: 3306,
-  database: 'database',
-  username: 'username',
-  password: 'password',
-  synchronize: true, // auto generate database table (or document), but you may lost all data of this database
-  logging: true, // log all query statements
-  entities: ['somewhere/entity/**/*.entity.ts'] // your database table(entity)
-};
-
-const router: KBSRouter = { // if undefined, it will disable koa router
-  paths: { // router paths
-    POST: postPaths
-  },
-  static: { // static files dir, without version prefix
-    path: 'static/files/dir',
-    options: { /* Some options. */ }
+  // override this method
+  handle(next: () => Promise<any>): Promise<any> {
+    /* Do something and return the next(). */
+    return next();
   }
-};
 
-const session: KBSSession = { // If undefined, it will disable redisession.
-  domain: 'your.domain',
-  httpOnly: true,
-  maxAge: 3600, // expire time, second
-  name: 'session.id', // cookie key name
-  redis: { // redis server
-    host: 'your.redis.address',
-    port: 6379
-  },
-  secert: ['your', 'secert', 'keys']
-};
-
-const server: Server = new Server({address, database, router, session});
-
-server.listen();
+}
 ```
 
-> **See the [*Work tree*](https://github.com/DevinDon/koa-backend-server/).**
+### In Global
 
-```text
-┏━ src/
-┃   ┣━ entity/
-┃   ┃   ┣━ index.ts
-┃   ┃   ┗━ user.entity.ts
-┃   ┣━ post/
-┃   ┃   ┃━ index.ts
-┃   ┃   ┗━ test.ts
-┃   ┗━ index.ts
-┣━ .gitignore
-┣━ LICENSE
-┣━ package-lock.json
-┣━ package.json
-┣━ README.md
-┣━ tsconfig.json
-┗━ tslint.json
+```typescript
+const server = new Rester()
+  .configHandlers
+  .add(G1Handler, G2Handler, G3Handler)
+  .end()
+  .listen();
 ```
+
+### On Controller
+
+```typescript
+@Controller() // must in the top
+@Handler(C1Handler)
+@Handler(C2Handler)
+@Handler(C3Handler)
+class DemoController { /* ... */ }
+```
+
+### On Mapping
+
+```typescript
+@Controller()
+class DemoHandler {
+
+  @GET('/')
+  @Handler(M1Handler)
+  @Handler(M2Handler)
+  @Handler(M3Handler)
+  get() {
+    return 'Hello, world!';
+  }
+
+}
+```
+
+If there are more than one handler above it, it works like stack: first in, last out.
+
+For example, the all handler above:
+
+`GlobalHandler` => `ControllerHandler` => `MappingHandler` => `ControllerHandler` => `GlobalHandler`
+
+And the each part:
+
+`G1Handler` => `G2Handler` => `G3Handler` => `G2Handler` => `G1Handler`
+
+`C1Handler` => `C2Handler` => `C3Handler` => `C2Handler` => `C1Handler`
+
+`M1Handler` => `M2Handler` => `M3Handler` => `M2Handler` => `M1Handler`
+
+Not very complex, aha.
+
+### Example
+
+[`ExceptionHandler`](https://github.com/DevinDon/rester/blob/master/src/main/handler/exception.handler.ts): Catch exception & return status code
+
+[`ParameterHandler`](https://github.com/DevinDon/rester/blob/master/src/main/handler/paramter.handler.ts): Inject parameter to mapping
+
+[`RouterHandler`](https://github.com/DevinDon/rester/blob/master/src/main/handler/router.handler.ts): Handle & route
+
+[`SchemaHandler`](https://github.com/DevinDon/rester/blob/master/src/main/handler/schema.handler.ts): JSON schema, validation & stringify
+
+# Author
+
+IInfinity 夜寒苏, [Email](mailto:I.INF@Outlook.com), [Github](https://github.com/DevinDon), [Home Page (Under construction)](https://don.red).
+
+# License
+
+[THE MIT LICENSE](https://github.com/DevinDon/rester/blob/master/LICENSE) for code.
+
+[THE CC-BY-NC-4.0 LICENSE](https://github.com/DevinDon/rester/blob/master/docs/LICENSE) for documents.

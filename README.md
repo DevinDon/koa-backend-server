@@ -1,146 +1,67 @@
 # Rester
 
-<del>A RESTful server with db & session support based Koa & TypeScript.</del>
-
-<del>[FULL DOCUMENT IS HERE.](https://github.com/DevinDon/koa-backend-server/blob/master/docs/README.md)</del>
-
 **How do you think about Spring Boot?**
 
 **In Node.js & TypeScript!**
 
-See [demo script(in developing)](https://github.com/DevinDon/rester/blob/master/src/demo/simple/index.ts) here! It is easy to understand!
+> :books: ​See the [full documents](https://github.com/DevinDon/rester/tree/master/docs) here.
 
 # Attention
 
-<span style="color: red">**:loudspeaker: Attention: This project is being refactored, I will take some new feature to you!**</span>
+<span style="color: red">**:warning: WARNING: This project is currently in an *UNSTABLE* phase.**</span>
 
-**:warning: WARNING: This project is currently in an *UNSTABLE* phase.**
-
-STABLE version will be 1.0.0 in future.
-
-**And this document is outdated.**
-
-# Feature
-
-- [ ] support for creating cluster servers
-- [x] database support
-- [x] redis session support
-- [x] static file support
-- [x] CORS router support
-- [x] RESTful api support
-- [x] local session storage by [Redion](https://github.com/DevinDon/redion)
-- [ ] **Refactor project by DI & AOP, like Angular & Spring Boot.**
-
-# Change log
-
-> [See Full Change Log on GitHub.](https://github.com/DevinDon/koa-backend-server/blob/master/docs/CHANGELOG.md)
-
-## 0.7.3 => 0.7.4
-
-- fix: fix database connection exception
-
-## 0.6.0 => 0.7.0
-
-- feat: add development / production mode in Server Config
-- refactor: refactor namespace / module
-- perf: show middleware name when use
-- fix: fix some bugs & update package
+> :loudspeaker: Attention: The **STABLE** version will arrive at 1.0.0.
 
 # Installation
 
-> *This project has released on [NPMJS.COM](https://www.npmjs.com/package/@iinfinity/rester).*
+This project has released on [NPMJS.COM, @rester/rester](https://www.npmjs.com/package/@rester/rester).
 
 ```shell
-npm i --save @iinfinity/rester
+npm i --save @rester/rester
 ```
 
-**DO NOT install koa and other dependencies AGAIN!**
+> :dizzy: ​The **Command-Line Interface** will be coming soon. Watch [@rester/cli](https://www.npmjs.com/package/@rester/cli).
 
 # Usage
 
-## Quick Start
-
-### 1. Install Rester
-
-```shell
-npm install --save @iinfinity/rester
-```
-
-### 2. Create index.ts file
-
-And fill it with following code, see [source code](https://github.com/DevinDon/rester/blob/master/src/demo/simple/index.ts) on GitHub.
+Use **Rester** just like **Spring Boot**, and easier!
 
 ```typescript
-import { RouterPaths, Rester, Option } from '@iinfinity/rester';
+import { Controller, GET, Rester } from '@rester/rester';
 
-/** Router path. */
-const GET: RouterPaths = {
-  '/ get index': {
-    path: '/',
-    ware: async (c, next) => {
-      next();
-      c.body = 'Hello, world!';
-    }
+@Controller()
+class DemoController {
+
+  /** GET http://localhost:8080 */
+  @GET('/')
+  index() {
+    return { hello: 'world' };
   }
-};
 
-/** Simple option. */
-const option: Option = {
-  router: {
-    paths: { GET }
-  }
-};
+}
 
-const server = new Rester(option);
-
-server.listen();
+/** Create a rester server listening on http://localhost:8080. */
+const server = new Rester()
+  .configControllers.add(DemoController).end()
+  .listen();
 ```
 
-And then, run `ts-node index.ts` or `tsc && node dist` to start Rester.
+> :card_index_dividers: See more [demo](https://github.com/DevinDon/rester/blob/master/src/demo) here.
 
-Now, open your browser and enter `localhost:8080`, you will see `Hello, world!` on your screen.
+# Feature
 
-See [Full Document](https://github.com/DevinDon/rester/tree/master/docs) for more help.
+> :sparkles: See [issue #4](https://github.com/DevinDon/rester/issues/4) for detail.
 
-## Example
+# Change log
 
-- [APP template with client Angular & server Rester *@latest*](https://github.com/DevinDon/app-template)
-- [Blog Server *@0.5.0* (Named *koa-backend-server*)](https://github.com/DevinDon/blog-2018)
-- [Demo](https://github.com/DevinDon/rester/tree/master/src/demo)
-
-## **Advanced usage**
-
-### Use your own middlewares
-
-```typescript
-server.use({
-  'Middleware name': middleware,
-  'another one': ware,
-  'again': ware3,
-  /** ... */
-});
-```
-
-# Thanks
-
-[Koa: Expressive HTTP middleware framework for Node.JS.](https://www.npmjs.com/package/koa)
-
-[Koa Body: A full-featured koa body parser middleware.](https://www.npmjs.com/package/koa-body)
-
-[Koa Router: Router middleware for koa.](https://www.npmjs.com/package/koa-router)
-
-[Koa Static: Koa static file serving middleware, wrapper for koa-send.](https://www.npmjs.com/package/koa-static)
-
-[Logger: TypeScript / JavaScript logger.](https://www.npmjs.com/package/@iinfinity/logger)
-
-[Redion: Session with redis.](https://www.npmjs.com/package/@iinfinity/redion)
-
-[TypeORM: Cross-platform ORM framework.](https://www.npmjs.com/package/typeorm)
-
-# License
-
-[THE MIT LICENSE](https://github.com/DevinDon/rester/blob/master/LICENSE)
+> :bookmark_tabs: See [change log](https://github.com/DevinDon/koa-backend-server/blob/master/docs/CHANGELOG.md) for detail.
 
 # Author
 
-IInfinity, [Email](mailto:I.INF@Outlook.com), [Github](https://www.npmjs.com/package/@iinfinity/rester), [Home Page (Under construction)](https://don.red).
+IInfinity 夜寒苏, [Email](mailto:I.INF@Outlook.com), [Github](https://github.com/DevinDon), [Home Page (Under construction)](https://don.red).
+
+# License
+
+[THE MIT LICENSE](https://github.com/DevinDon/rester/blob/master/LICENSE) for code.
+
+[THE CC-BY-NC-4.0 LICENSE](https://github.com/DevinDon/rester/blob/master/docs/LICENSE) for documents.
