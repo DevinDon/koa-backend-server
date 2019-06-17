@@ -1,7 +1,7 @@
 import { Mapping, MetadataKey, Method, Route } from '../@types';
-import { HTTP404Exception } from '../exception.temp';
-import { Rester } from '../rester.temp';
-import { BaseHandler } from './BaseHandler';
+import { HTTP404Exception } from '../exception';
+import { Rester } from '../rester';
+import { BaseHandler } from './base.handler';
 
 export class RouterHandler extends BaseHandler {
 

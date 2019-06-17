@@ -1,8 +1,8 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { MetadataKey } from '../@types';
 import { ParamInjection, ParamInjectionType } from '../decorator';
-import { HTTP400Exception, HTTP404Exception } from '../exception.temp';
-import { BaseHandler } from './BaseHandler';
+import { HTTP400Exception, HTTP404Exception } from '../exception';
+import { BaseHandler } from './base.handler';
 
 /**
  * Parameter handler.

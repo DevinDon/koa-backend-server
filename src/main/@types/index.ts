@@ -42,4 +42,4 @@ export interface Route {
   target: Function;
 }
 
-export * from './MetadataKey';
+export * from './metadata-key';
