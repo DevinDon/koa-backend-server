@@ -2,7 +2,7 @@
 name: Question
 about: Create a report to help us improve
 title: "[QUES] How to use something?"
-labels: Need-Help, Question, Need-Confirm
+labels: Need-Confirm, Need-Help, Question
 assignees: DevinDon
 
 ---

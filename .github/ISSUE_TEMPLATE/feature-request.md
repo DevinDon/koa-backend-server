@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggestions, ideas or something functions you want.
+about: Suggestions, ideas or some new functions you want.
 title: "[FEAT] Input your idea"
 labels: Enhancement, Need-Confirm
 assignees: DevinDon
