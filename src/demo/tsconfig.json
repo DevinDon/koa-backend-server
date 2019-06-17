@@ -1,8 +1,6 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "declarationMap": true,
-    "inlineSourceMap": true,
     "strictPropertyInitialization": false,
     "outDir": "../../out/demo"
   },
