@@ -1,4 +1,4 @@
-import { BaseHandler } from './BaseHandler';
+import { BaseHandler } from './base.handler';
 
 /**
  * Schema handler, draft.
