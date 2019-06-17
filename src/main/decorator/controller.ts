@@ -1,6 +1,6 @@
 import { Mapping, MetadataKey, Route } from '../@types';
-import { HandlerType } from './Handler';
-import { Injector } from './Injector';
+import { HandlerType } from './handler';
+import { Injector } from './injector';
 
 /**
  * Class Decorator.

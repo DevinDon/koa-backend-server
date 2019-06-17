@@ -1,4 +1,4 @@
-import { Injectable } from './Injector';
+import { Injectable } from './injector';
 
 /**
  * Class Decorator.

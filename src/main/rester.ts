@@ -5,9 +5,9 @@ import * as HTTPS from 'https';
 import { ConnectionOptions, createConnection } from 'typeorm';
 import { HandlerType } from './decorator';
 import { HandlerPool, ParameterHandler } from './handler';
-import { ExceptionHandler } from './handler/ExceptionHandler';
-import { RouterHandler } from './handler/RouterHandler';
-import { SchemaHandler } from './handler/SchemaHandler';
+import { ExceptionHandler } from './handler/exception.handler';
+import { RouterHandler } from './handler/router.handler';
+import { SchemaHandler } from './handler/schema.handler';
 
 /**
  * Address option.
