@@ -1,5 +1,5 @@
 import { HandlerType } from '../decorator';
-import { Rester } from '../Rester';
+import { Rester } from '../rester.temp';
 import { BaseHandler } from './BaseHandler';
 
 /**

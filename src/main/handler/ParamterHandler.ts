@@ -1,7 +1,7 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { MetadataKey } from '../@types';
 import { ParamInjection, ParamInjectionType } from '../decorator';
-import { HTTP400Exception, HTTP404Exception } from '../Exception';
+import { HTTP400Exception, HTTP404Exception } from '../exception.temp';
 import { BaseHandler } from './BaseHandler';
 
 /**

@@ -1,6 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { Mapping, Route } from '../@types';
-import { Rester } from '../Rester';
+import { Rester } from '../rester.temp';
 
 /**
  * Abstract class BaseHandler.

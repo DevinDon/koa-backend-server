@@ -1,4 +1,4 @@
-import { HTTP500Exception, HTTPException } from '../Exception';
+import { HTTP500Exception, HTTPException } from '../exception.temp';
 import { BaseHandler } from './BaseHandler';
 
 export class ExceptionHandler extends BaseHandler {
