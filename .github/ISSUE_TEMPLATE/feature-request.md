@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggestions, ideas or something functions you want.
 title: "[FEAT] Input your idea"
-labels: Need-Confirm, Enhancement
+labels: Enhancement, Need-Confirm
 assignees: DevinDon
 
 ---
