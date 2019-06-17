@@ -1,6 +1,6 @@
 import { HandlerType } from '../decorator';
-import { Rester } from '../rester.temp';
-import { BaseHandler } from './BaseHandler';
+import { Rester } from '../rester';
+import { BaseHandler } from './base.handler';
 
 /**
  * Handler pool.
