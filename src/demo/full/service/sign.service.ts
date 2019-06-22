@@ -4,6 +4,10 @@ import { User, UserEntity } from '../entity';
 @Service()
 export class SignService {
 
+  async signCheck(email: string): Promise<User | undefined> {
+    return UserEntity.findOne({ email });
+  }
+
   async signIn(user: Pick<User, 'email' | 'password'>): Promise<User | undefined> {
     return UserEntity.findOne(user);
   }
