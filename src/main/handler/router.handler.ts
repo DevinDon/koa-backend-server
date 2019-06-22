@@ -136,7 +136,7 @@ export class RouterHandler extends BaseHandler {
    */
   set(route: Route, router: Map<string, any> = this.rester.zone.router): Map<string, any> {
     // format mapping
-    RouterHandler.format(route.mapping).pathArray!
+    RouterHandler.formatAndModify(route.mapping).pathArray!
       // foreach & get router / route
       .forEach((v, i, a) => {
         // if router variable, get & set it
