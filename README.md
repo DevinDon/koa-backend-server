@@ -14,10 +14,10 @@
 
 # Installation
 
-This project has released on [NPMJS.COM, @rester/rester](https://www.npmjs.com/package/@rester/rester).
+This project has released on [NPMJS.COM, @rester/core](https://www.npmjs.com/package/@rester/core).
 
 ```shell
-npm i --save @rester/rester
+npm i --save @rester/core
 ```
 
 > :dizzy: ​The **Command-Line Interface** will be coming soon. Watch [@rester/cli](https://www.npmjs.com/package/@rester/cli).
@@ -27,7 +27,7 @@ npm i --save @rester/rester
 Use **Rester** just like **Spring Boot**, and easier!
 
 ```typescript
-import { Controller, GET, Rester } from '@rester/rester';
+import { Controller, GET, Rester } from '@rester/core';
 
 @Controller()
 class DemoController {
