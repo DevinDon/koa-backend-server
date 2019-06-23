@@ -16,9 +16,10 @@
     "restful",
     "server",
     "di",
-    "springmvc",
+    "spring mvc",
     "spring boot",
-    "typescript"
+    "typescript",
+    "nodejs"
   ],
   "homepage": "https://github.com/DevinDon/rester",
   "scripts": {
