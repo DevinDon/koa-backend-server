@@ -24,9 +24,9 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **System:**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+ - OS: [e.g. CentOS]
+ - Type: [Development or production]
+ - Version: [e.g. 0.8.0]
 
 **Additional context**
 Add any other context about the problem here.
