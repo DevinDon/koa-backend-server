@@ -5,7 +5,7 @@ Rester is a TypeScript web framework, like Spring Boot, and better use!
 # Installation
 
 ```shell
-npm i @rester/rester
+npm i --save @rester/core
 ```
 
 # Feature
