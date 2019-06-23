@@ -11,6 +11,8 @@ import { Rester } from '../rester';
  */
 export abstract class BaseHandler {
 
+  protected static option: any;
+
   /** Arguments of controller method. */
   protected args!: any[];
   /** Mapping of this request. */
@@ -20,8 +22,17 @@ export abstract class BaseHandler {
   /** Response instance. */
   protected response!: ServerResponse;
 
-  /** Route of this request. */
+  /** Route get form rester.zone.router. */
   route!: Route;
+
+  /**
+   * Config option.
+   *
+   * @param {T} option Handler option.
+   */
+  static config<T>(option: T): void {
+    this.option = option;
+  }
 
   /**
    * Create a new handler instance.
