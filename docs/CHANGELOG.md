@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.8.0 => 0.8.1
+
+- docs: fix readme document
+
 ## 0.7.4 => 0.8.0
 
 - feat: work like spring boot
