@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.7.4 => 0.8.0
+
+- feat: work like spring boot
+- chore: change package name to `@rester/core`
+
 ## 0.7.3 => 0.7.4
 
 - fix: fix database connection exception
