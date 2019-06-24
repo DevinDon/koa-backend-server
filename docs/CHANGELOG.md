@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.8.1 => 0.8.2
+
+- fix(rester): fix return declaration of config* methods, close #11
+
 ## 0.8.0 => 0.8.1
 
 - docs: fix readme document
