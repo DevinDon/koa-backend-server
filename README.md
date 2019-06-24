@@ -52,7 +52,11 @@ const server = new Rester()
 
 > :sparkles: See [issue #4](https://github.com/DevinDon/rester/issues/4) for detail.
 
-# Change log
+# Change Log
+
+## 0.8.1 => 0.8.2
+
+- fix(rester): fix return declaration of config* methods, close #11
 
 > :bookmark_tabs: See [change log](https://github.com/DevinDon/koa-backend-server/blob/master/docs/CHANGELOG.md) for detail.
 
