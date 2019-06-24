@@ -32,6 +32,103 @@ interface AddressOption {
 }
 
 /**
+ * Config address.
+ *
+ * - `setHost`: set host
+ * - `setPort`: set port
+ * - `setProxy`: set if proxy mode
+ * - `setPortocol`: set portocol, include `HTTP`, `HTTPS`, `HTTP2`
+ * - `setSSL`: set ssl options, if portocol is `HTTPS` or `HTTP2`
+ * - `end`: end address config & return this rester instance
+ */
+interface ConfigAddress {
+  setHost: (host: AddressOption['host']) => ConfigAddress;
+  setPort: (port: AddressOption['port']) => ConfigAddress;
+  setProxy: (proxy: AddressOption['proxy']) => ConfigAddress;
+  setPortocol: (portocol: AddressOption['portocol']) => ConfigAddress;
+  setSSL: (ssl: AddressOption['ssl']) => ConfigAddress;
+  end: () => Rester;
+}
+
+/**
+ * Config controllers.
+ *
+ * - `add`: add controllers
+ * - `get`: get controllers
+ * - `set`: reset controllers & then set
+ * - `reset`: reset controllers
+ * - `end`: end controllers config & return this rester instance
+ */
+interface ConfigControllers {
+  add: (...controllers: Function[]) => ConfigControllers;
+  get: () => Function[];
+  set: (...controllers: Function[]) => ConfigControllers;
+  reset: () => ConfigControllers;
+  end: () => Rester;
+}
+
+/**
+ * Config database.
+ *
+ * - `set`:
+ * - `setType`:
+ * - `setHost`:
+ * - `setPort`:
+ * - `setUsername`:
+ * - `setPassword`:
+ * - `setDatabase`:
+ * - `setEntities`:
+ * - `setLogger`:
+ * - `setLogging`:
+ * - `setStnchronize`:
+ * - `end`: end database config & return this rester instance
+ */
+interface ConfigDatabase {
+  set: (option: ConnectionOptions) => ConfigDatabase;
+  setType: (type: ConnectionOptions['type']) => ConfigDatabase;
+  setHost: (host: string) => ConfigDatabase;
+  setPort: (port: number) => ConfigDatabase;
+  setUsername: (username: string) => ConfigDatabase;
+  setPassword: (password: string) => ConfigDatabase;
+  setDatabase: (database: ConnectionOptions['database']) => ConfigDatabase;
+  setEntities: (entities: ConnectionOptions['entities']) => ConfigDatabase;
+  setLogger: (logger: ConnectionOptions['logger']) => ConfigDatabase;
+  setLogging: (logging: ConnectionOptions['logging']) => ConfigDatabase;
+  setSynchronize: (synchronize: boolean) => ConfigDatabase;
+  end: () => Rester;
+}
+
+/**
+ * Config handlers.
+ *
+ * - `add`:
+ * - `get`:
+ * - `set`:
+ * - `reset`:
+ * - `end`: end handlers config & return this rester instance
+ */
+interface ConfigHandlers {
+  add: (...handlers: HandlerType[]) => ConfigHandlers;
+  get: () => HandlerType[];
+  set: (...handlers: HandlerType[]) => ConfigHandlers;
+  reset: () => ConfigHandlers;
+  end: () => Rester;
+}
+
+/**
+ * Config logger.
+ *
+ * - `get`:
+ * - `set`:
+ * - `end`: end logger config & return this rester instance
+ */
+interface ConfigLogger {
+  get: () => Logger;
+  set: (logger: Logger) => ConfigLogger;
+  end: () => Rester;
+}
+
+/**
  * Rester server.
  *
  * **Usage:**
@@ -100,13 +197,13 @@ export class Rester {
    * - `setSSL`: set ssl options, if portocol is `HTTPS` or `HTTP2`
    * - `end`: end address config & return this rester instance
    */
-  configAddress = {
-    setHost: (host: AddressOption['host']) => { this.address.host = host; return this.configAddress; },
-    setPort: (port: AddressOption['port']) => { this.address.port = port; return this.configAddress; },
-    setProxy: (proxy: AddressOption['proxy']) => { this.address.proxy = proxy; return this.configAddress; },
-    setPortocol: (portocol: AddressOption['portocol']) => { this.address.portocol = portocol; return this.configAddress; },
-    setSSL: (ssl: AddressOption['ssl']) => { this.address.ssl = ssl; return this.configAddress; },
-    end: (): Rester => this
+  configAddress: ConfigAddress = {
+    setHost: host => { this.address.host = host; return this.configAddress; },
+    setPort: port => { this.address.port = port; return this.configAddress; },
+    setProxy: proxy => { this.address.proxy = proxy; return this.configAddress; },
+    setPortocol: portocol => { this.address.portocol = portocol; return this.configAddress; },
+    setSSL: ssl => { this.address.ssl = ssl; return this.configAddress; },
+    end: () => this
   };
 
   /**
@@ -118,12 +215,12 @@ export class Rester {
    * - `reset`: reset controllers
    * - `end`: end controllers config & return this rester instance
    */
-  configControllers = {
-    add: (...controllers: Function[]) => { this.controllers = this.controllers.concat(controllers); return this.configControllers; },
+  configControllers: ConfigControllers = {
+    add: (...controllers) => { this.controllers = this.controllers.concat(controllers); return this.configControllers; },
     get: () => this.controllers,
-    set: (...controllers: Function[]) => { this.controllers = controllers || []; return this.configControllers; },
+    set: (...controllers) => { this.controllers = controllers || []; return this.configControllers; },
     reset: () => { this.controllers = []; return this.configControllers; },
-    end: (): Rester => this
+    end: () => this
   };
 
   /**
@@ -142,19 +239,19 @@ export class Rester {
    * - `setStnchronize`:
    * - `end`: end database config & return this rester instance
    */
-  configDatabase = {
-    set: (option: ConnectionOptions) => { this.database = option; return this.configDatabase; },
-    setType: (type: ConnectionOptions['type']) => { (this.database as any).type = type; return this.configDatabase; },
-    setHost: (host: string) => { (this.database as any).host = host; return this.configDatabase; },
-    setPort: (port: number) => { (this.database as any).port = port; return this.configDatabase; },
-    setUsername: (username: string) => { (this.database as any).username = username; return this.configDatabase; },
-    setPassword: (password: string) => { (this.database as any).password = password; return this.configDatabase; },
-    setDatabase: (database: ConnectionOptions['database']) => { (this.database as any).database = database; return this.configDatabase; },
-    setEntities: (entities: ConnectionOptions['entities']) => { (this.database as any).entities = entities; return this.configDatabase; },
-    setLogger: (logger: ConnectionOptions['logger']) => { (this.database as any).logger = logger; return this.configDatabase; },
-    setLogging: (logging: ConnectionOptions['logging']) => { (this.database as any).logging = logging; return this.configDatabase; },
-    setSynchronize: (synchronize: boolean) => { (this.database as any).synchronize = synchronize; return this.configDatabase; },
-    end: (): Rester => this
+  configDatabase: ConfigDatabase = {
+    set: option => { this.database = option; return this.configDatabase; },
+    setType: type => { (this.database as any).type = type; return this.configDatabase; },
+    setHost: host => { (this.database as any).host = host; return this.configDatabase; },
+    setPort: port => { (this.database as any).port = port; return this.configDatabase; },
+    setUsername: username => { (this.database as any).username = username; return this.configDatabase; },
+    setPassword: password => { (this.database as any).password = password; return this.configDatabase; },
+    setDatabase: database => { (this.database as any).database = database; return this.configDatabase; },
+    setEntities: entities => { (this.database as any).entities = entities; return this.configDatabase; },
+    setLogger: logger => { (this.database as any).logger = logger; return this.configDatabase; },
+    setLogging: logging => { (this.database as any).logging = logging; return this.configDatabase; },
+    setSynchronize: synchronize => { (this.database as any).synchronize = synchronize; return this.configDatabase; },
+    end: () => this
   };
 
   /**
@@ -166,12 +263,12 @@ export class Rester {
    * - `reset`:
    * - `end`: end handlers config & return this rester instance
    */
-  configHandlers = {
-    add: (...handlers: HandlerType[]) => { this.handlers = this.handlers.concat(handlers); return this.configHandlers; },
+  configHandlers: ConfigHandlers = {
+    add: (...handlers) => { this.handlers = this.handlers.concat(handlers); return this.configHandlers; },
     get: () => this.handlers,
-    set: (...handlers: HandlerType[]) => { this.handlers = handlers || []; return this.handlers; },
+    set: (...handlers) => { this.handlers = handlers || []; return this.configHandlers; },
     reset: () => { this.handlers = []; return this.configHandlers; },
-    end: (): Rester => this
+    end: () => this
   };
 
   /**
@@ -181,10 +278,10 @@ export class Rester {
    * - `set`:
    * - `end`: end logger config & return this rester instance
    */
-  configLogger = {
+  configLogger: ConfigLogger = {
     get: () => this.logger,
-    set: (logger: Logger) => { this.logger = logger; return this.configLogger; },
-    end: (): Rester => this
+    set: logger => { this.logger = logger; return this.configLogger; },
+    end: () => this
   };
 
   /**
