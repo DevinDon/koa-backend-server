@@ -20,13 +20,15 @@ export function Controller(prefix: string = ''): ClassDecorator {
       // exclude constructor & method must be decorated by method decorator
       .filter(name => name !== 'constructor' && Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name))
       // map to a new array of Route
-      .map<Route>(name => {
-        const mapping: Mapping = Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name);
+      .map<Route[]>(name => {
+        const mapping: Mapping[] = Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name);
         const handlersOnMethod: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target.prototype, name) || [];
         const handlers: HandlerType[] = handlersOnMethod.concat(handlersOnController);
-        mapping.path = prefix + mapping.path;
-        return { controller, handlers, mapping, name, target };
-      });
+        return mapping.map(v => {
+          v.path = prefix + v.path;
+          return { controller, handlers, mapping: v, name, target };
+        });
+      }).flat();
     // define metadata: key = MetadataKey.Controller, value = routes, on = class
     Reflect.defineMetadata(MetadataKey.Controller, routes, target);
   };
