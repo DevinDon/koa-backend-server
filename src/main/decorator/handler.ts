@@ -12,18 +12,16 @@ export type HandlerType = Function & typeof BaseHandler;
  * If there are handlers on both controller & method, handlers on method will
  * run first, and then on controller.
  *
- * @param {HandlerType} handler Handler class type.
+ * @param {HandlerType[]} handlers Handler class type.
  */
-export function Handler(handler: typeof BaseHandler): ClassDecorator | MethodDecorator | any {
+export function Handler(...handlers: typeof BaseHandler[]): ClassDecorator | MethodDecorator | any {
   return (target: Function | Object, name: string | symbol, descriptor: PropertyDecorator) => {
     if (target instanceof Function) { // if on class
-      const handlers: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target) || [];
-      handlers.push(handler);
-      Reflect.defineMetadata(MetadataKey.Handler, handlers, target);
+      const result: HandlerType[] = (Reflect.getMetadata(MetadataKey.Handler, target) || []).concat(handlers);
+      Reflect.defineMetadata(MetadataKey.Handler, result, target);
     } else { // if on method
-      const handlers: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target, name) || [];
-      handlers.push(handler);
-      Reflect.defineMetadata(MetadataKey.Handler, handlers, target, name);
+      const result: HandlerType[] = (Reflect.getMetadata(MetadataKey.Handler, target, name) || []).concat(handlers);
+      Reflect.defineMetadata(MetadataKey.Handler, result, target, name);
     }
   };
 }
