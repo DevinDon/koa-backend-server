@@ -1,4 +1,4 @@
-import { MetadataKey, Method } from '../@types';
+import { Mapping, MetadataKey, Method } from '../@types';
 
 /**
  * Generate a mapping decorator.
@@ -7,7 +7,9 @@ import { MetadataKey, Method } from '../@types';
  */
 function baseMapping(method: Method) {
   return (path: string = ''): MethodDecorator => (target: any, name, descriptor) => {
-    Reflect.defineMetadata(MetadataKey.Mapping, { method, path }, target, name);
+    const mapping: Mapping[] = Reflect.getMetadata(MetadataKey.Mapping, target, name) || [];
+    mapping.push({ method, path });
+    Reflect.defineMetadata(MetadataKey.Mapping, mapping, target, name);
   };
 }
 
