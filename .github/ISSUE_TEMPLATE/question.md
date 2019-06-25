@@ -1,6 +1,6 @@
 ---
 name: Question
-about: Create a report to help us improve
+about: Ask some questions about rester
 title: "[QUES] How to use something?"
 labels: Need-Confirm, Need-Help, Question
 assignees: DevinDon
@@ -8,10 +8,10 @@ assignees: DevinDon
 ---
 
 **Describe your question**
-A clear and concise description of what the bug is.
+A clear and concise description of what the question is.
 
 **What do you want to know?**
-For example, how to use it?
+For example, how to use it? How it works?
 
 **Additional context**
 Add any other context about the problem here.
