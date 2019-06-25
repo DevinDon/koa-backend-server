@@ -30,7 +30,10 @@
     // "jsx": "preserve",
     // "jsxFactory": "React.createElement",
     "keyofStringsOnly": false,
-    // "lib": [],
+    "lib": [
+      "es2019",
+      "es2020"
+    ],
     "listEmittedFiles": true,
     "listFiles": false,
     // "mapRoot": "",
