@@ -123,12 +123,11 @@ export class RouterHandler extends BaseHandler {
         }
         // if match end, set the route
         if (a.length === i + 1) {
-          if (router.has(RouterHandler.SpecialPath.route)) { // duplicate route
-            // throw new Error(`Path ${route.mapping.path} already has route.`);
-            logger.warn(`Path ${route.mapping.path} already has route.`);
-          } else {
-            router.set(RouterHandler.SpecialPath.route, route);
+          // if duplicate route, issue a warning message
+          if (router.has(RouterHandler.SpecialPath.route)) {
+            logger.warn(`Path ${route.mapping.method} ${route.mapping.path} already has route, now the mapping is ${route.controller && route.controller[route.name]}`);
           }
+          router.set(RouterHandler.SpecialPath.route, route);
         }
       });
     return router;
@@ -161,13 +160,11 @@ export class RouterHandler extends BaseHandler {
     // format mapping to array
     this.mapping.pathArray!
       // foreach & get router / route
-      .every((v, i, a) => {
+      .every((path, i, a) => {
         // if string path doesn't exist, try to get variable path
-        router = router.get(v) || router.get(RouterHandler.SpecialPath.variable);
+        router = router.get(path) || router.get(RouterHandler.SpecialPath.variable);
         // if match end, return the route
-        if (a.length === i + 1) {
-          route = router && router.get(RouterHandler.SpecialPath.route);
-        }
+        if (a.length === i + 1) { route = router && router.get(RouterHandler.SpecialPath.route); }
         // if router is undefined, break
         return Boolean(router);
       });
@@ -183,9 +180,7 @@ export class RouterHandler extends BaseHandler {
    */
   handle(next: () => Promise<any>): Promise<any> {
     this.route = this.get({ method: this.request.method as Method, path: this.request.url! })!;
-    if (this.route) {
-      return next();
-    }
+    if (this.route) { return next(); }
     throw new HTTP404Exception(`Can't ${this.request.method} ${this.request.url}`);
   }
 
