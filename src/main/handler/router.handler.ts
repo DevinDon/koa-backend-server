@@ -1,3 +1,4 @@
+import { logger } from '@iinfinity/logger';
 import { Mapping, MetadataKey, Method, Route } from '../@types';
 import { HTTP404Exception } from '../exception';
 import { Rester } from '../rester';
@@ -104,8 +105,9 @@ export class RouterHandler extends BaseHandler {
   /**
    * Set mapping to core router.
    *
+   * If the path already has a route, it will issue a warning message.
+   *
    * @param {Route} route Route.
-   * @throws If the path already has a route, throw an error.
    */
   public static set(route: Route, router: Map<string, any>): Map<string, any> {
     // format mapping
@@ -122,7 +124,8 @@ export class RouterHandler extends BaseHandler {
         // if match end, set the route
         if (a.length === i + 1) {
           if (router.has(RouterHandler.SpecialPath.route)) { // duplicate route
-            throw new Error(`Path ${route.mapping.path} already has route.`);
+            // throw new Error(`Path ${route.mapping.path} already has route.`);
+            logger.warn(`Path ${route.mapping.path} already has route.`);
           } else {
             router.set(RouterHandler.SpecialPath.route, route);
           }
