@@ -54,9 +54,15 @@ const server = new Rester()
 
 # Change Log
 
-## 0.8.1 => 0.8.2
+## 0.8.2 => 0.9.0
 
-- fix(rester): fix return declaration of config* methods, close #11
+- feat(rester): add chained call methods, PR #6, ISSUE #11
+- feat(handler/base): configurable handler support, PR #10, ISSUE #9
+- fix(decorator/mapping): fix the error that multi-mapping not works, PR #16, ISSUE #13
+- feat(decorator/handler): multi-handler support, PR #17, ISSUE #14
+- feat(handler/cors): CORS support, PR #19, ISSUE #15
+- feat(rester): JSON config file support, ISSUE #20
+- perf: some optimizations, PR #19
 
 > :bookmark_tabs: See [change log](https://github.com/DevinDon/koa-backend-server/blob/master/docs/CHANGELOG.md) for detail.
 
