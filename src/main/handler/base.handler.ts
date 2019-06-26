@@ -28,9 +28,9 @@ export abstract class BaseHandler {
   /**
    * Config option.
    *
-   * @param {T} option Handler option.
+   * @param {any} option Handler option.
    */
-  static config<T>(option: T): void {
+  static config(option: any): void {
     this.option = option;
   }
 
@@ -90,7 +90,9 @@ export abstract class BaseHandler {
    * @returns {Promise<any>} Return a promise result.
    */
   async run(): Promise<any> {
-    return this.route.controller[this.route.name](...this.args);
+    if (this.route.controller && this.route.controller[this.route.name]) {
+      return this.route.controller[this.route.name](...this.args);
+    }
   }
 
 }
