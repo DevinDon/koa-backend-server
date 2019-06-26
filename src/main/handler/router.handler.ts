@@ -132,6 +132,19 @@ export class RouterHandler extends BaseHandler {
   }
 
   /**
+   * Init router of rester instance.
+   *
+   * @param rester Rester instance.
+   */
+  static init(rester: Rester): void {
+    rester.zone.router = new Map();
+    for (const controller of rester.configControllers.get()) {
+      const routes: Route[] = Reflect.getMetadata(MetadataKey.Controller, controller) || [];
+      routes.forEach(route => RouterHandler.set(route, rester.zone.router));
+    }
+  }
+
+  /**
    * Get special route.
    *
    * @param {Mapping} mapping Mapping information.
@@ -156,25 +169,6 @@ export class RouterHandler extends BaseHandler {
         return Boolean(router);
       });
     return route;
-  }
-
-  /**
-   * Create a new RouterHandler.
-   *
-   * If router is empty, try to get route in CONTROLLERS.
-   */
-  constructor(protected rester: Rester) {
-    // set rester instance
-    super(rester);
-    // if router is not init
-    if (!rester.zone.router) {
-      // init it
-      rester.zone.router = new Map();
-      for (const controller of rester.configControllers.get()) {
-        const routes: Route[] = Reflect.getMetadata(MetadataKey.Controller, controller) || [];
-        routes.forEach(route => RouterHandler.set(route, this.rester.zone.router));
-      }
-    }
   }
 
   /**
