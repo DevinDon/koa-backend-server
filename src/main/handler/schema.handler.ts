@@ -10,7 +10,9 @@ export class SchemaHandler extends BaseHandler {
   async handle(next: () => Promise<any>): Promise<any> {
     return next()
       .then(v => {
-        if (typeof v === 'object') {
+        if (typeof v === 'undefined') {
+          return '';
+        } else if (typeof v === 'object') {
           if (v instanceof Buffer) {
             // content-type should be application/json when v is an object & not instanceof Buffer
             this.response.setHeader('content-type', 'application/octet-stream');
