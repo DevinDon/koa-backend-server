@@ -6,7 +6,7 @@ import { BaseHandler } from './base.handler';
 export class RouterHandler extends BaseHandler {
 
   /** Special path in router. `Map.get(''); Map.set('%');` */
-  private static SpecialPath = { regexp: /{{(.+)}}/, route: '', variable: '%' };
+  public static readonly SpecialPath = { regexp: /{{(.+)}}/, route: '', variable: '%' };
 
   /**
    * Format mapping, it will **not** modify raw mapping.
@@ -102,12 +102,42 @@ export class RouterHandler extends BaseHandler {
   }
 
   /**
+   * Set mapping to core router.
+   *
+   * @param {Route} route Route.
+   * @throws If the path already has a route, throw an error.
+   */
+  public static set(route: Route, router: Map<string, any>): Map<string, any> {
+    // format mapping
+    RouterHandler.formatAndModify(route.mapping).pathArray!
+      // foreach & get router / route
+      .forEach((path, i, a) => {
+        // if router variable, get & set it
+        if (RouterHandler.SpecialPath.regexp.test(path)) {
+          router = router.get(RouterHandler.SpecialPath.variable) || router.set(RouterHandler.SpecialPath.variable, new Map()).get(RouterHandler.SpecialPath.variable);
+        } else {
+          // if router has key of `v`, get it; else set `v` & get it
+          router = router.get(path) || router.set(path, new Map()).get(path);
+        }
+        // if match end, set the route
+        if (a.length === i + 1) {
+          if (router.has(RouterHandler.SpecialPath.route)) { // duplicate route
+            throw new Error(`Path ${route.mapping.path} already has route.`);
+          } else {
+            router.set(RouterHandler.SpecialPath.route, route);
+          }
+        }
+      });
+    return router;
+  }
+
+  /**
    * Get special route.
    *
    * @param {Mapping} mapping Mapping information.
    * @returns Route. If not found, return undefined.
    */
-  get(mapping: Mapping, router: Map<string, any> = this.rester.zone.router): Route | undefined {
+  private get(mapping: Mapping, router: Map<string, any> = this.rester.zone.router): Route | undefined {
     /** Special route, maybe undefined(not found). */
     let route: Route | undefined;
     // format & parse mapping
@@ -129,36 +159,6 @@ export class RouterHandler extends BaseHandler {
   }
 
   /**
-   * Set mapping to core router.
-   *
-   * @param {Route} route Route.
-   * @throws If the path already has a route, throw an error.
-   */
-  set(route: Route, router: Map<string, any> = this.rester.zone.router): Map<string, any> {
-    // format mapping
-    RouterHandler.formatAndModify(route.mapping).pathArray!
-      // foreach & get router / route
-      .forEach((v, i, a) => {
-        // if router variable, get & set it
-        if (RouterHandler.SpecialPath.regexp.test(v)) {
-          router = router.get(RouterHandler.SpecialPath.variable) || router.set(RouterHandler.SpecialPath.variable, new Map()).get(RouterHandler.SpecialPath.variable);
-        } else {
-          // if router has key of `v`, get it; else set `v` & get it
-          router = router.get(v) || router.set(v, new Map()).get(v);
-        }
-        // if match end, set the route
-        if (a.length === i + 1) {
-          if (router.has(RouterHandler.SpecialPath.route)) { // duplicate route
-            throw new Error(`Path ${route.mapping.path} already has route.`);
-          } else {
-            router.set(RouterHandler.SpecialPath.route, route);
-          }
-        }
-      });
-    return router;
-  }
-
-  /**
    * Create a new RouterHandler.
    *
    * If router is empty, try to get route in CONTROLLERS.
@@ -172,7 +172,7 @@ export class RouterHandler extends BaseHandler {
       rester.zone.router = new Map();
       for (const controller of rester.configControllers.get()) {
         const routes: Route[] = Reflect.getMetadata(MetadataKey.Controller, controller) || [];
-        routes.forEach(route => this.set(route));
+        routes.forEach(route => RouterHandler.set(route, this.rester.zone.router));
       }
     }
   }
