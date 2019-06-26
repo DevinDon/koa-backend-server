@@ -43,6 +43,7 @@ interface AddressOption {
  * - `end`: end address config & return this rester instance
  */
 interface ConfigAddress {
+  unconfigured: boolean;
   setHost: (host: AddressOption['host']) => ConfigAddress;
   setPort: (port: AddressOption['port']) => ConfigAddress;
   setProxy: (proxy: AddressOption['proxy']) => ConfigAddress;
@@ -61,6 +62,7 @@ interface ConfigAddress {
  * - `end`: end controllers config & return this rester instance
  */
 interface ConfigControllers {
+  unconfigured: boolean;
   add: (...controllers: Function[]) => ConfigControllers;
   get: () => Function[];
   set: (...controllers: Function[]) => ConfigControllers;
@@ -85,6 +87,7 @@ interface ConfigControllers {
  * - `end`: end database config & return this rester instance
  */
 interface ConfigDatabase {
+  unconfigured: boolean;
   set: (option: ConnectionOptions) => ConfigDatabase;
   setType: (type: ConnectionOptions['type']) => ConfigDatabase;
   setHost: (host: string) => ConfigDatabase;
@@ -109,6 +112,7 @@ interface ConfigDatabase {
  * - `end`: end handlers config & return this rester instance
  */
 interface ConfigHandlers {
+  unconfigured: boolean;
   /**
    * Add global handlers.
    *
@@ -130,6 +134,7 @@ interface ConfigHandlers {
  * - `end`: end logger config & return this rester instance
  */
 interface ConfigLogger {
+  unconfigured: boolean;
   get: () => Logger;
   set: (logger: Logger) => ConfigLogger;
   end: () => Rester;
@@ -204,12 +209,13 @@ export class Rester {
    * - `end`: end address config & return this rester instance
    */
   configAddress: ConfigAddress = {
+    unconfigured: true,
     setHost: host => { this.address.host = host; return this.configAddress; },
     setPort: port => { this.address.port = port; return this.configAddress; },
     setProxy: proxy => { this.address.proxy = proxy; return this.configAddress; },
     setPortocol: portocol => { this.address.portocol = portocol; return this.configAddress; },
     setSSL: ssl => { this.address.ssl = ssl; return this.configAddress; },
-    end: () => this
+    end: () => { this.configAddress.unconfigured = false; return this; }
   };
 
   /**
@@ -222,11 +228,12 @@ export class Rester {
    * - `end`: end controllers config & return this rester instance
    */
   configControllers: ConfigControllers = {
+    unconfigured: true,
     add: (...controllers) => { this.controllers = this.controllers.concat(controllers); return this.configControllers; },
     get: () => this.controllers,
     set: (...controllers) => { this.controllers = controllers || []; return this.configControllers; },
     reset: () => { this.controllers = []; return this.configControllers; },
-    end: () => this
+    end: () => { this.configControllers.unconfigured = false; return this; }
   };
 
   /**
@@ -246,6 +253,7 @@ export class Rester {
    * - `end`: end database config & return this rester instance
    */
   configDatabase: ConfigDatabase = {
+    unconfigured: true,
     set: option => { this.database = option; return this.configDatabase; },
     setType: type => { (this.database as any).type = type; return this.configDatabase; },
     setHost: host => { (this.database as any).host = host; return this.configDatabase; },
@@ -257,7 +265,7 @@ export class Rester {
     setLogger: logger => { (this.database as any).logger = logger; return this.configDatabase; },
     setLogging: logging => { (this.database as any).logging = logging; return this.configDatabase; },
     setSynchronize: synchronize => { (this.database as any).synchronize = synchronize; return this.configDatabase; },
-    end: () => this
+    end: () => { this.configDatabase.unconfigured = false; return this; }
   };
 
   /**
@@ -270,6 +278,7 @@ export class Rester {
    * - `end`: end handlers config & return this rester instance
    */
   configHandlers: ConfigHandlers = {
+    unconfigured: true,
     add: (...handlers) => { this.handlers = this.handlers.concat(handlers); return this.configHandlers; },
     get: () => this.handlers,
     set: (...handlers) => { this.handlers = handlers || []; return this.configHandlers; },
@@ -282,6 +291,7 @@ export class Rester {
         routes.map(route => route.handlers).flat().forEach(handler => set.add(handler));
       });
       set.forEach(handler => handler.init(this));
+      this.configHandlers.unconfigured = false;
       return this;
     }
   };
@@ -294,9 +304,10 @@ export class Rester {
    * - `end`: end logger config & return this rester instance
    */
   configLogger: ConfigLogger = {
+    unconfigured: true,
     get: () => this.logger,
     set: logger => { this.logger = logger; return this.configLogger; },
-    end: () => this
+    end: () => { this.configLogger.unconfigured = false; return this; }
   };
 
   /**
@@ -308,12 +319,12 @@ export class Rester {
    * @returns {this} This instance.
    */
   listen(callback?: Function, port: number = this.address.port, host: string = this.address.host): this {
-    this.configAddress.end();
-    this.configControllers.end();
-    this.configDatabase.end();
-    this.configHandlers.end();
-    this.configLogger.end();
-    // create server
+    // if (this.configAddress.unconfigured) { this.configAddress.end(); }
+    // if (this.configControllers.unconfigured) { this.configControllers.end(); }
+    // if (this.configDatabase.unconfigured) { this.configDatabase.end(); }
+    // if (this.configHandlers.unconfigured) { this.configHandlers.end(); }
+    // if (this.configLogger.unconfigured) { this.configLogger.end(); }
+    // // create server
     switch (this.address.portocol) {
       // case 'HTTP2':
       //   this.server = HTTP2.createSecureServer(this.option.address.ssl || {}, this.pool.process.bind(this.pool));
