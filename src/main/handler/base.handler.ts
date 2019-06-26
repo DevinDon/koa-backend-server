@@ -35,6 +35,16 @@ export abstract class BaseHandler {
   }
 
   /**
+   * Init handler.
+   *
+   * @param {any[]} args Arguments.
+   * @returns {boolean} Success init or not.
+   */
+  static init(...args: any[]): boolean {
+    return true;
+  }
+
+  /**
    * Create a new handler instance.
    *
    * @param {Rester} rester The rester instance to which this handler belongs.
@@ -42,7 +52,7 @@ export abstract class BaseHandler {
   constructor(protected rester: Rester) { }
 
   /**
-   * Init handler with rdequest & response.
+   * Init handler with request & response.
    *
    * If call init() without arguments, it mean set request, response & route to undefined.
    *
@@ -50,7 +60,7 @@ export abstract class BaseHandler {
    * @param {ServerResponse} response Server response.
    * @returns {this} This handler instance.
    */
-  init(request?: IncomingMessage, response?: ServerResponse): this {
+  from(request?: IncomingMessage, response?: ServerResponse): this {
     this.args = undefined as any;
     this.mapping = undefined as any;
     this.request = request!;
