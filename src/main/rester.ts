@@ -3,6 +3,7 @@ import * as HTTP from 'http';
 import * as HTTP2 from 'http2';
 import * as HTTPS from 'https';
 import { ConnectionOptions, createConnection } from 'typeorm';
+import { MetadataKey, Route } from './@types';
 import { HandlerType } from './decorator';
 import { HandlerPool, ParameterHandler } from './handler';
 import { ExceptionHandler } from './handler/exception.handler';
@@ -108,6 +109,12 @@ interface ConfigDatabase {
  * - `end`: end handlers config & return this rester instance
  */
 interface ConfigHandlers {
+  /**
+   * Add global handlers.
+   *
+   * @param {HandlerType[]} handlers Handler type.
+   * @returns {ConfigHandlers} Return config handler chain.
+   */
   add: (...handlers: HandlerType[]) => ConfigHandlers;
   get: () => HandlerType[];
   set: (...handlers: HandlerType[]) => ConfigHandlers;
@@ -157,9 +164,8 @@ export class Rester {
   private pool: HandlerPool;
   /** Node.js server. */
   private server!: HTTP.Server | HTTP2.Http2Server | HTTPS.Server;
-
   /** Zone to storage something about this instance. */
-  zone: { [index: string]: any };
+  public zone: { [index: string]: any };
 
   /**
    * Create a new rester server.
@@ -268,7 +274,16 @@ export class Rester {
     get: () => this.handlers,
     set: (...handlers) => { this.handlers = handlers || []; return this.configHandlers; },
     reset: () => { this.handlers = []; return this.configHandlers; },
-    end: () => this
+    end: () => {
+      this.handlers.forEach(handler => handler.init(this));
+      const set: Set<HandlerType> = new Set();
+      this.controllers.forEach(controller => {
+        const routes: Route[] = Reflect.getMetadata(MetadataKey.Controller, controller) || [];
+        routes.map(route => route.handlers).flat().forEach(handler => set.add(handler));
+      });
+      set.forEach(handler => handler.init(this));
+      return this;
+    }
   };
 
   /**
@@ -293,6 +308,11 @@ export class Rester {
    * @returns {this} This instance.
    */
   listen(callback?: Function, port: number = this.address.port, host: string = this.address.host): this {
+    this.configAddress.end();
+    this.configControllers.end();
+    this.configDatabase.end();
+    this.configHandlers.end();
+    this.configLogger.end();
     // create server
     switch (this.address.portocol) {
       // case 'HTTP2':
