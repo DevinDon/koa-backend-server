@@ -1,7 +1,6 @@
-import { Controller, POST, RequestBody, Inject, Handler, OPTIONS, GET, PathVariable } from '../../../main';
-import { SignInRequest, SignInResponse, SignOutRequest, SignOutResponse, SignUpRequest, SignUpResponse, BaseResponse } from '../model';
-import { SignService } from '../service';
-import { CORSHandler } from '../handler/cors.handler';
+import { Controller, CORSHandler, GET, Handler, Inject, PathVariable, POST, RequestBody, OPTIONS } from '../../../main';
+import { BaseResponse, SignInRequest, SignInResponse, SignOutRequest, SignOutResponse, SignUpRequest, SignUpResponse } from '../model';
+import { SignService } from '../service/sign.service';
 
 @Controller('/sign')
 @Handler(CORSHandler)
@@ -9,11 +8,6 @@ export class SignController {
 
   @Inject()
   private service!: SignService;
-
-  @OPTIONS('/check/{{email}}')
-  signCheckOption() {
-    return '';
-  }
 
   @GET('/check/{{email}}')
   async signCheck(@PathVariable('email') email: string): Promise<BaseResponse> {
@@ -23,11 +17,6 @@ export class SignController {
     } else {
       return { status: false };
     }
-  }
-
-  @OPTIONS('/in')
-  signInOption() {
-    return '';
   }
 
   @POST('/in')
@@ -40,19 +29,9 @@ export class SignController {
     }
   }
 
-  @OPTIONS('/out')
-  signOutOption() {
-    return '';
-  }
-
   @POST('/out')
   async signOut(@RequestBody() body: SignOutRequest): Promise<SignOutResponse> {
     return { status: await this.service.signOut() };
-  }
-
-  @OPTIONS('/up')
-  signUpOption() {
-    return '';
   }
 
   @POST('/up')
@@ -63,6 +42,12 @@ export class SignController {
     } else {
       return { status: false };
     }
+  }
+
+  @GET('/test')
+  @GET('/test/{{id}}')
+  test() {
+    return { OK: 'Test' };
   }
 
 }

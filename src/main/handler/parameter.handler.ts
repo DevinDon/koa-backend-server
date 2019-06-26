@@ -78,7 +78,7 @@ export class ParameterHandler extends BaseHandler {
     // if route exist
     if (this.route) {
       /** Parameter injection array. */
-      const parameterInjections: ParamInjection[] | undefined = Reflect.getMetadata(MetadataKey.Parameter, this.route.target.prototype, this.route.name);
+      const parameterInjections: ParamInjection[] | undefined = this.route.target && Reflect.getMetadata(MetadataKey.Parameter, this.route.target.prototype, this.route.name);
       /** Arguments, or undefined. */
       this.args = parameterInjections ? parameterInjections.map(v => this.parameterInjectors[v.type](v.value)) : [];
       try {

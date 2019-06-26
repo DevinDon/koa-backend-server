@@ -28,10 +28,20 @@ export abstract class BaseHandler {
   /**
    * Config option.
    *
-   * @param {T} option Handler option.
+   * @param {any} option Handler option.
    */
-  static config<T>(option: T): void {
+  static config(option: any): void {
     this.option = option;
+  }
+
+  /**
+   * Init handler.
+   *
+   * @param {any[]} args Arguments.
+   * @returns {any} Success init or not.
+   */
+  static init(...args: any[]): any {
+    return true;
   }
 
   /**
@@ -42,7 +52,7 @@ export abstract class BaseHandler {
   constructor(protected rester: Rester) { }
 
   /**
-   * Init handler with rdequest & response.
+   * Init handler with request & response.
    *
    * If call init() without arguments, it mean set request, response & route to undefined.
    *
@@ -50,7 +60,7 @@ export abstract class BaseHandler {
    * @param {ServerResponse} response Server response.
    * @returns {this} This handler instance.
    */
-  init(request?: IncomingMessage, response?: ServerResponse): this {
+  from(request?: IncomingMessage, response?: ServerResponse): this {
     this.args = undefined as any;
     this.mapping = undefined as any;
     this.request = request!;
@@ -90,7 +100,9 @@ export abstract class BaseHandler {
    * @returns {Promise<any>} Return a promise result.
    */
   async run(): Promise<any> {
-    return this.route.controller[this.route.name](...this.args);
+    if (this.route.controller && this.route.controller[this.route.name]) {
+      return this.route.controller[this.route.name](...this.args);
+    }
   }
 
 }

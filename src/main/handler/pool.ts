@@ -38,7 +38,7 @@ export class HandlerPool {
    */
   give(handler: BaseHandler): number {
     const pool = this.pools.get(handler.constructor.name)! || this.pools.set(handler.constructor.name, []).get(handler.constructor.name)!;
-    return pool.length < this.max ? pool.push(handler.init()) : pool.length;
+    return pool.length < this.max ? pool.push(handler.from()) : pool.length;
   }
 
   /**
@@ -49,7 +49,7 @@ export class HandlerPool {
    */
   async process(request: any, response: any): Promise<void> {
     // take & compose these handlers
-    this.compose(this.take(this.rester.configHandlers.get()[0]).init(request, response), 0, this.rester.configHandlers.get())()
+    this.compose(this.take(this.rester.configHandlers.get()[0]).from(request, response), 0, this.rester.configHandlers.get())()
       .then(v => response.write(v))
       .finally(() => response.end());
   }
