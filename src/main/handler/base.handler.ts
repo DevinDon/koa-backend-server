@@ -38,9 +38,9 @@ export abstract class BaseHandler {
    * Init handler.
    *
    * @param {any[]} args Arguments.
-   * @returns {boolean} Success init or not.
+   * @returns {any} Success init or not.
    */
-  static init(...args: any[]): boolean {
+  static init(...args: any[]): any {
     return true;
   }
 
