@@ -319,12 +319,12 @@ export class Rester {
    * @returns {this} This instance.
    */
   listen(callback?: Function, port: number = this.address.port, host: string = this.address.host): this {
-    // if (this.configAddress.unconfigured) { this.configAddress.end(); }
-    // if (this.configControllers.unconfigured) { this.configControllers.end(); }
-    // if (this.configDatabase.unconfigured) { this.configDatabase.end(); }
-    // if (this.configHandlers.unconfigured) { this.configHandlers.end(); }
-    // if (this.configLogger.unconfigured) { this.configLogger.end(); }
-    // // create server
+    if (this.configAddress.unconfigured) { this.configAddress.end(); }
+    if (this.configControllers.unconfigured) { this.configControllers.end(); }
+    if (this.configDatabase.unconfigured) { this.configDatabase.end(); }
+    if (this.configHandlers.unconfigured) { this.configHandlers.end(); }
+    if (this.configLogger.unconfigured) { this.configLogger.end(); }
+    // create server
     switch (this.address.portocol) {
       // case 'HTTP2':
       //   this.server = HTTP2.createSecureServer(this.option.address.ssl || {}, this.pool.process.bind(this.pool));
