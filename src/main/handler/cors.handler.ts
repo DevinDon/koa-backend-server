@@ -53,24 +53,22 @@ export class CORSHandler extends BaseHandler {
         const routes: Route[] = Reflect.getMetadata(MetadataKey.Controller, controller) || [];
         // for each & set OPTIONS mapping
         routes
-          .filter(route => route.mapping.method !== Method.OPTIONS)
-          .forEach(route => {
-            if (allCORS || allCORSOnController || route.handlers.includes(CORSHandler)) {
-              RouterHandler.set(
-                {
-                  controller: undefined as any,
-                  handlers: route.handlers,
-                  mapping: {
-                    method: Method.OPTIONS,
-                    path: route.mapping.path
-                  },
-                  name: undefined as any,
-                  target: route.target
-                },
-                rester.zone.router
-              );
-            }
-          });
+          .filter(route => allCORS || allCORSOnController || route.handlers.includes(CORSHandler))
+          .filter((route, index, array) => index === array.findIndex(v => v.mapping.path === route.mapping.path))
+          .map(route => route.mapping.path)
+          .forEach(path => RouterHandler.set(
+            {
+              controller: undefined as any,
+              handlers: [],
+              mapping: {
+                method: Method.OPTIONS,
+                path
+              },
+              name: undefined as any,
+              target: undefined as any
+            },
+            rester.zone.router
+          ));
       });
   }
 
