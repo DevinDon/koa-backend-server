@@ -1,4 +1,5 @@
 import { Logger } from '@iinfinity/logger';
+import { readFileSync } from 'fs';
 import * as HTTP from 'http';
 import * as HTTP2 from 'http2';
 import * as HTTPS from 'https';
@@ -196,6 +197,7 @@ export class Rester {
     this.pool = new HandlerPool(this);
     // init zone
     this.zone = {};
+    this.load();
   }
 
   /**
@@ -309,6 +311,30 @@ export class Rester {
     set: logger => { this.logger = logger; return this.configLogger; },
     end: () => { this.configLogger.unconfigured = false; return this; }
   };
+
+  /**
+   * Load config file.
+   */
+  load(): Rester {
+    try {
+      let json;
+      if (process.env.MODE === 'DEV') {
+        json = readFileSync('rester.dev.json');
+      } else if (process.env.MODE === 'PROD') {
+        json = readFileSync('rester.json');
+      } else {
+        return this;
+      }
+      const config = JSON.parse(json.toString());
+      console.log(config);
+      this.address = config.address || this.address;
+      this.database = config.database || this.database;
+    } catch (error) {
+      this.logger.error(`Load config failed: ${error}.`);
+    } finally {
+      return this;
+    }
+  }
 
   /**
    * Start listening.
