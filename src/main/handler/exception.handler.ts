@@ -3,7 +3,7 @@ import { BaseHandler } from './base.handler';
 
 export class ExceptionHandler extends BaseHandler {
 
-  async handle(next: () => Promise<any>): Promise<any> {
+  handle(next: () => Promise<any>): Promise<any> {
     return next()
       .catch((exception: HTTPException) => {
         if (!(exception instanceof HTTPException)) { // default to 500
