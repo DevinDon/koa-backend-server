@@ -4,13 +4,79 @@ Rester is a TypeScript web framework, like Spring Boot, and better use!
 
 # Installation
 
+This project has released on [NPMJS.COM, @rester/core](https://www.npmjs.com/package/@rester/core).
+
 ```shell
 npm i --save @rester/core
 ```
 
-# Feature
+# Usage
 
-Let me show you some important features.
+Let me show you some important features and how to use it.
+
+## Start
+
+### Quick Start
+
+```typescript
+const rester = new Rester().listen(); // listening on http://localhost:8080
+```
+
+### Load Config
+
+#### MODE = DEV
+
+**rester.dev.json**
+
+```json
+{
+  "address": {
+    "host": "localhost",
+    "port": 1234
+  }
+}
+```
+
+**index.ts**
+
+```typescript
+const rester = new Rester()
+  .load()
+  .listen();
+```
+
+**command**
+
+```bash
+MODE=DEV ts-node index.ts # listening on http://localhost:1234
+```
+
+#### MODE = PROD
+
+**rester.json**
+
+```json
+{
+  "address": {
+    "host": "0.0.0.0",
+    "port": 80
+  }
+}
+```
+
+**index.ts**
+
+```typescript
+const rester = new Rester()
+  .load()
+  .listen();
+```
+
+**command**
+
+```bash
+MODE=PROD ts-node index.ts # listening on http://0.0.0.0:80
+```
 
 ## Decorator
 
