@@ -1,4 +1,5 @@
 export * from './base.handler';
+export * from './cors.handler';
 export * from './exception.handler';
 export * from './paramter.handler';
 export * from './pool';
