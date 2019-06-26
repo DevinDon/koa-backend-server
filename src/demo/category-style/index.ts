@@ -1,7 +1,7 @@
 import { Rester } from '../../main';
+import { SignController } from './controller';
 import { UserEntity } from './entity';
 import { LogHandler } from './handler';
-import { SignController } from './controller';
 
 const server = new Rester()
   .configControllers
