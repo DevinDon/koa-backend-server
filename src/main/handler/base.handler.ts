@@ -1,5 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { Mapping, Route } from '../@types';
+import { HandlerType } from '../decorator';
 import { Rester } from '../rester';
 
 /**
@@ -11,8 +12,6 @@ import { Rester } from '../rester';
  */
 export abstract class BaseHandler {
 
-  protected static option: any;
-
   /** Arguments of controller method. */
   protected args!: any[];
   /** Mapping of this request. */
@@ -21,27 +20,28 @@ export abstract class BaseHandler {
   protected request!: IncomingMessage;
   /** Response instance. */
   protected response!: ServerResponse;
-
   /** Route get form rester.zone.router. */
-  route!: Route;
+  public route!: Route;
 
   /**
-   * Config option.
+   * Config handler on rester.
    *
-   * @param {any} option Handler option.
+   * @param rester Rester instance.
+   * @param config Handler config.
+   * @returns {HandlerType} Handler class.
    */
-  static config(option: any): typeof BaseHandler {
-    this.option = option;
+  static config(rester: Rester, config?: any): HandlerType {
     return this;
   }
 
   /**
-   * Init handler.
+   * Config & init handler.
    *
-   * @param {any[]} args Arguments.
-   * @returns {any} Success init or not.
+   * @param {Rester} rester Rester instance.
+   * @param {any} config Config.
+   * @returns {HandlerType} Handler class.
    */
-  static init(...args: any[]): typeof BaseHandler {
+  static init(rester: Rester, config?: any): HandlerType {
     return this;
   }
 
