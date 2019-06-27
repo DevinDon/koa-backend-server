@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.9.3 => 0.9.4
+
+- perf(rester): support retry when db connect failed, PR [#22](https://github.com/DevinDon/rester/pull/22)
+
 ## 0.9.2 => 0.9.3
 
 - perf(handler/base): perf handler config, PR [#21](https://github.com/DevinDon/rester/pull/21)

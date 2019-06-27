@@ -54,10 +54,9 @@ const server = new Rester()
 
 # Change Log
 
-## 0.9.2 => 0.9.3
+## 0.9.3 => 0.9.4
 
-- perf(handler/base): perf handler config, PR [#21](https://github.com/DevinDon/rester/pull/21)
-- fix(handler/cors): fix cors handler, PR [#21](https://github.com/DevinDon/rester/pull/21)
+- perf(rester): support retry when db connect failed, PR [#22](https://github.com/DevinDon/rester/pull/22)
 
 ## 0.8.2 => 0.9.0
 
