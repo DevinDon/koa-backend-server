@@ -19,30 +19,24 @@ export interface CORSConfig {
  */
 export class CORSHandler extends BaseHandler {
 
-  static option = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': '*',
-    'Access-Control-Allow-Headers': '*',
-    'Access-Control-Max-Age': 86400
-  };
-
-  /**
-   * Config option.
-   *
-   * @param {CORSConfig} option Handler option.
-   */
-  static config(option: CORSConfig): typeof CORSHandler {
-    this.option = option;
+  static config(rester: Rester, config?: CORSConfig): HandlerType {
+    rester.zone.cors = config || {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': '*',
+      'Access-Control-Allow-Headers': '*',
+      'Access-Control-Max-Age': 86400
+    };
     return CORSHandler;
   }
 
   /**
-   * Init CORS of rester instance.
+   * Config & init CORS handler of rester instance.
    *
    * @param rester Rester instance.
    */
-  static init(rester: Rester): typeof CORSHandler {
-    CORSHandler.config({} as any);
+  static init(rester: Rester, config?: CORSConfig): HandlerType {
+    // CORS config
+    CORSHandler.config(rester, config);
     /** If CORS handler on global. */
     const allCORS = rester.configHandlers.get().includes(CORSHandler);
     // map all controllers
@@ -57,28 +51,25 @@ export class CORSHandler extends BaseHandler {
         routes
           .filter(route => allCORS || allCORSOnController || route.handlers.includes(CORSHandler))
           .filter((route, index, array) => index === array.findIndex(v => v.mapping.path === route.mapping.path))
-          .map(route => route.mapping.path)
-          .forEach(path => RouterHandler.set(
-            {
-              controller: undefined as any,
-              handlers: [],
-              mapping: {
-                method: Method.OPTIONS,
-                path
-              },
-              name: undefined as any,
-              target: undefined as any
+          .map(route => ({
+            controller: undefined as any,
+            handlers: route.handlers,
+            mapping: {
+              method: Method.OPTIONS,
+              path: route.mapping.path
             },
-            rester.zone.router
-          ));
+            name: undefined as any,
+            target: undefined as any
+          }))
+          .forEach(route => RouterHandler.set(route, rester.zone.router));
       });
     return CORSHandler;
   }
 
   handle(next: () => Promise<any>): Promise<any> {
-    for (const header in CORSHandler.option) {
-      if (CORSHandler.option.hasOwnProperty(header)) {
-        this.response.setHeader(header, CORSHandler.option[header]);
+    for (const header in this.rester.zone.cors) {
+      if (this.rester.zone.cors.hasOwnProperty(header)) {
+        this.response.setHeader(header, this.rester.zone.cors[header]);
       }
     }
     return next();
