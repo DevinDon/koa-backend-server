@@ -45,7 +45,6 @@
   "private": false,
   "dependencies": {
     "@iinfinity/delay": "0.1.1",
-    "@iinfinity/jwt": "0.1.1",
     "@iinfinity/logger": "0.3.3",
     "reflect-metadata": "0.1.13",
     "typeorm": "0.2.18"
