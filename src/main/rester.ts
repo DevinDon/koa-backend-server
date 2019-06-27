@@ -1,3 +1,4 @@
+import { delay } from '@iinfinity/delay';
 import { Logger } from '@iinfinity/logger';
 import { readFileSync } from 'fs';
 import * as HTTP from 'http';
@@ -337,6 +338,30 @@ export class Rester {
   }
 
   /**
+   * Connect database.
+   *
+   * @param {number} retry Retry times, default to 0.
+   */
+  async connectDatabase(retry: number = 0): Promise<void> {
+    while (retry) {
+      try {
+        this.logger.info(`Database connecting...`);
+        await createConnection(this.database);
+        this.logger.info(`Database connected.`);
+        retry = 0;
+      } catch (error) {
+        if (--retry) {
+          this.logger.warn(`Database connect failed: ${error}, retry in 10 seconds...`);
+        } else {
+          this.logger.error(`Database connect failed, database offline.`);
+        }
+      } finally {
+        await delay(10000);
+      }
+    }
+  }
+
+  /**
    * Start listening.
    *
    * @param {Function} callback Callback funcation after listen.
@@ -364,10 +389,7 @@ export class Rester {
     }
     // connect database
     if (this.database.type) {
-      createConnection(this.database)
-        .then(() => this.logger.info(`Database connecting.`))
-        .catch(error => this.logger.error(`Database connect failed: ${error}`))
-        .then(() => this.logger.info(`Database connected.`));
+      this.connectDatabase(10);
     } else {
       this.logger.warn(`No database connection.`);
     }
