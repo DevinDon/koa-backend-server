@@ -138,12 +138,13 @@ export class RouterHandler extends BaseHandler {
    *
    * @param rester Rester instance.
    */
-  static init(rester: Rester): void {
+  static init(rester: Rester): typeof RouterHandler {
     rester.zone.router = new Map();
     for (const controller of rester.configControllers.get()) {
       const routes: Route[] = Reflect.getMetadata(MetadataKey.Controller, controller) || [];
       routes.forEach(route => RouterHandler.set(route, rester.zone.router));
     }
+    return RouterHandler;
   }
 
   /**

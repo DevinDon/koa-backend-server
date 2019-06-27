@@ -31,8 +31,9 @@ export class CORSHandler extends BaseHandler {
    *
    * @param {CORSConfig} option Handler option.
    */
-  static config(option: CORSConfig): void {
+  static config(option: CORSConfig): typeof CORSHandler {
     this.option = option;
+    return CORSHandler;
   }
 
   /**
@@ -40,7 +41,8 @@ export class CORSHandler extends BaseHandler {
    *
    * @param rester Rester instance.
    */
-  static init(rester: Rester): void {
+  static init(rester: Rester): typeof CORSHandler {
+    CORSHandler.config({} as any);
     /** If CORS handler on global. */
     const allCORS = rester.configHandlers.get().includes(CORSHandler);
     // map all controllers
@@ -70,6 +72,7 @@ export class CORSHandler extends BaseHandler {
             rester.zone.router
           ));
       });
+    return CORSHandler;
   }
 
   handle(next: () => Promise<any>): Promise<any> {

@@ -30,8 +30,9 @@ export abstract class BaseHandler {
    *
    * @param {any} option Handler option.
    */
-  static config(option: any): void {
+  static config(option: any): typeof BaseHandler {
     this.option = option;
+    return this;
   }
 
   /**
@@ -40,8 +41,8 @@ export abstract class BaseHandler {
    * @param {any[]} args Arguments.
    * @returns {any} Success init or not.
    */
-  static init(...args: any[]): any {
-    return true;
+  static init(...args: any[]): typeof BaseHandler {
+    return this;
   }
 
   /**
