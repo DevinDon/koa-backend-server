@@ -1,22 +1,31 @@
 # Change Log
 
+## 0.9.2 => 0.9.3
+
+- perf(handler/base): perf handler config, PR [#21](https://github.com/DevinDon/rester/pull/21)
+- fix(handler/cors): fix cors handler, PR [#21](https://github.com/DevinDon/rester/pull/21)
+
+## 0.9.1 => 0.9.2
+
+- chore(npm): add typeorm to deps
+
 ## 0.9.0 => 0.9.1
 
 - perf(handler): perf return type of handler#init & config
 
 ## 0.8.2 => 0.9.0
 
-- feat(rester): add chained call methods, PR #6, ISSUE #11
-- feat(handler/base): configurable handler support, PR #10, ISSUE #9
-- fix(decorator/mapping): fix the error that multi-mapping not works, PR #16, ISSUE #13
-- feat(decorator/handler): multi-handler support, PR #17, ISSUE #14
-- feat(handler/cors): CORS support, PR #19, ISSUE #15
-- feat(rester): JSON config file support, ISSUE #20
-- perf: some optimizations, PR #19
+- feat(rester): add chained call methods, PR [#6](https://github.com/DevinDon/rester/pull/6), ISSUE [#11](https://github.com/DevinDon/rester/issues/11)
+- feat(handler/base): configurable handler support, PR [#10](https://github.com/DevinDon/rester/pull/10), ISSUE [#9](https://github.com/DevinDon/rester/issues/9)
+- fix(decorator/mapping): fix the error that multi-mapping not works, PR [#16](https://github.com/DevinDon/rester/pull/16), ISSUE [#13](https://github.com/DevinDon/rester/issues/13)
+- feat(decorator/handler): multi-handler support, PR [#17](https://github.com/DevinDon/rester/pull/17), ISSUE [#14](https://github.com/DevinDon/rester/issues/14)
+- feat(handler/cors): CORS support, PR [#19](https://github.com/DevinDon/rester/pull/19), ISSUE [#15](https://github.com/DevinDon/rester/issues/15)
+- feat(rester): JSON config file support, ISSUE [#20](https://github.com/DevinDon/rester/issues/20)
+- perf: some optimizations, PR [#19](https://github.com/DevinDon/rester/pull/19)
 
 ## 0.8.1 => 0.8.2
 
-- fix(rester): fix return declaration of config* methods, close #11
+- fix(rester): fix return declaration of config* methods, PR [#11](https://github.com/DevinDon/rester/pull/11)
 
 ## 0.8.0 => 0.8.1
 
