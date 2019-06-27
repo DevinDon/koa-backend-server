@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.9.0 => 0.9.1
+
+- perf(handler): perf return type of handler#init & config
+
 ## 0.8.2 => 0.9.0
 
 - feat(rester): add chained call methods, PR #6, ISSUE #11
