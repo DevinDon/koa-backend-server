@@ -198,7 +198,6 @@ export class Rester {
     this.pool = new HandlerPool(this);
     // init zone
     this.zone = {};
-    this.load();
   }
 
   /**
@@ -313,23 +312,26 @@ export class Rester {
     end: () => { this.configLogger.unconfigured = false; return this; }
   };
 
+
   /**
    * Load config file.
+   *
+   * @param {'DEV' | 'PROD'} mode Depoly mode, 'DEV' or 'PROD'.
+   * @returns {Rester} Rester instance.
    */
-  load(): Rester {
+  private loadConfig(mode: 'DEV' | 'PROD' | undefined = process.env.MODE as any): Rester {
     try {
       let json;
-      if (process.env.MODE === 'DEV') {
+      if (mode === 'DEV') {
         json = readFileSync('rester.dev.json');
-      } else if (process.env.MODE === 'PROD') {
+      } else if (mode === 'PROD') {
         json = readFileSync('rester.json');
       } else {
         return this;
       }
       const config = JSON.parse(json.toString());
-      console.log(config);
-      this.address = config.address || this.address;
-      this.database = config.database || this.database;
+      Object.assign(this.address, config.address);
+      Object.assign(this.database, config.database);
     } catch (error) {
       this.logger.error(`Load config failed: ${error}.`);
     } finally {
@@ -365,11 +367,12 @@ export class Rester {
    * Start listening.
    *
    * @param {Function} callback Callback funcation after listen.
-   * @param {number} port Listening port, default to `address.port || 8080` .
-   * @param {string} host Listening host, default to `address.host || 'localhost'` .
+   * @param {number} port Listening port.
+   * @param {string} host Listening host.
    * @returns {this} This instance.
    */
-  listen(callback?: Function, port: number = this.address.port, host: string = this.address.host): this {
+  listen(callback?: Function, port?: number, host?: string): this {
+    this.loadConfig();
     if (this.configAddress.unconfigured) { this.configAddress.end(); }
     if (this.configControllers.unconfigured) { this.configControllers.end(); }
     if (this.configDatabase.unconfigured) { this.configDatabase.end(); }
@@ -394,6 +397,8 @@ export class Rester {
       this.logger.warn(`No database connection.`);
     }
     // listen to address
+    host = host || this.address.host || 'localhost';
+    port = port || this.address.port || 8080;
     this.server.listen(port, host, () => {
       if (typeof callback === 'function') {
         callback();
