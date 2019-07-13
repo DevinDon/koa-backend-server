@@ -39,20 +39,20 @@ export class CORSHandler extends BaseHandler {
     CORSHandler.config(rester, config);
     /** If CORS handler on global. */
     const allCORS = rester.configHandlers.get().includes(CORSHandler);
-    // map all controllers
-    rester.configControllers.get()
-      .forEach(controller => {
-        const handlersOnController: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, controller) || [];
-        /** If CORS handler on controller. */
-        const allCORSOnController = handlersOnController.includes(CORSHandler);
+    // map all views
+    rester.configViews.get()
+      .forEach(view => {
+        const handlersOnView: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, view) || [];
+        /** If CORS handler on view. */
+        const allCORSOnView = handlersOnView.includes(CORSHandler);
         /** Get routes. */
-        const routes: Route[] = Reflect.getMetadata(MetadataKey.Controller, controller) || [];
+        const routes: Route[] = Reflect.getMetadata(MetadataKey.View, view) || [];
         // for each & set OPTIONS mapping
         routes
-          .filter(route => allCORS || allCORSOnController || route.handlers.includes(CORSHandler))
+          .filter(route => allCORS || allCORSOnView || route.handlers.includes(CORSHandler))
           .filter((route, index, array) => index === array.findIndex(v => v.mapping.path === route.mapping.path))
           .map(route => ({
-            controller: undefined as any,
+            view: undefined as any,
             handlers: route.handlers,
             mapping: {
               method: Method.OPTIONS,
