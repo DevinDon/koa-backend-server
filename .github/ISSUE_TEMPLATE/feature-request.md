@@ -1,8 +1,8 @@
 ---
 name: Feature request
 about: Suggestions, ideas or some new functions you want.
-title: "[FEAT] Tell me your idea"
-labels: Enhancement, Need-Confirm
+title: "[FEAT] Tell me your ideas"
+labels: Optimization, Need-Confirm
 assignees: DevinDon
 
 ---

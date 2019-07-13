@@ -1,8 +1,8 @@
 ---
 name: Question
-about: Ask some questions about rester
+about: Ask some questions about rester.
 title: "[QUES] How to use something?"
-labels: Need-Confirm, Need-Help, Question
+labels: Question, Need-Confirm, Need-Help
 assignees: DevinDon
 
 ---
