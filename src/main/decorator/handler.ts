@@ -7,10 +7,10 @@ export type HandlerType = Function & typeof BaseHandler;
 /**
  * Class / Method decorator.
  *
- * Specify the handler to use for this controller / method.
+ * Specify the handler to use for this view / method.
  *
- * If there are handlers on both controller & method, handlers on method will
- * run first, and then on controller.
+ * If there are handlers on both view & method, handlers on method will
+ * run first, and then run those on view.
  *
  * @param {HandlerType[]} handlers Handler class type.
  */

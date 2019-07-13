@@ -27,7 +27,7 @@ export interface Mapping {
 /**
  * Route.
  *
- * - Controller instance.
+ * - View instance.
  * - Mapping
  *  - Method
  *  - Path
@@ -35,7 +35,7 @@ export interface Mapping {
  * - Target
  */
 export interface Route {
-  controller: any;
+  view: any;
   handlers: HandlerType[];
   mapping: Mapping;
   name: string;

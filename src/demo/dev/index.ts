@@ -1,17 +1,17 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import 'reflect-metadata';
-import { Controller, GET, Handler, HTTPRequest, HTTPResponse, PathQuery, PathVariable, POST, RequestBody, RequestHeader, Rester, HTTP401Exception } from '../../main';
+import { GET, Handler, HTTP401Exception, HTTPRequest, HTTPResponse, PathQuery, PathVariable, POST, RequestBody, RequestHeader, Rester, View } from '../../main';
+import { DelayHandler } from './DelayHandler';
 import { LogHandler } from './LogHandler';
+import { ModifyAgainHandler } from './ModifyAgainHandler';
 import { ModifyHostHandler } from './ModifyHostHandler';
 import { ModifyPrefixHandler } from './ModifyPrefixHandler';
-import { ModifyAgainHandler } from './ModifyAgainHandler';
-import { UserEntity, User } from './UserEntity';
-import { DelayHandler } from './DelayHandler';
+import { User, UserEntity } from './UserEntity';
 
 namespace SimpleDemo {
 
-  @Controller('/')
-  class DemoController {
+  @View('/')
+  class DemoView {
 
     private count = 0;
 
@@ -78,9 +78,9 @@ namespace SimpleDemo {
 
   }
 
-  @Controller('/prefix')
-  @Handler(ModifyPrefixHandler) // Controller must be the decorator farthest from this class
-  class PrefixController {
+  @View('/prefix')
+  @Handler(ModifyPrefixHandler) // View must be the decorator farthest from this class
+  class PrefixView {
 
     @GET('/')
     index() {
@@ -95,8 +95,8 @@ namespace SimpleDemo {
 
   }
 
-  @Controller('/user')
-  class UserController {
+  @View('/user')
+  class UserView {
 
     @POST('/add')
     async add(@RequestBody() user: User) {
@@ -111,8 +111,8 @@ namespace SimpleDemo {
   }
 
   const server = new Rester()
-    .configControllers
-    .add(DemoController, PrefixController, UserController)
+    .configViews
+    .add(DemoView, PrefixView, UserView)
     .end()
     .configDatabase
     .setType('postgres')
@@ -126,7 +126,7 @@ namespace SimpleDemo {
     .setSynchronize(true)
     .end()
     .configHandlers
-    .add(LogHandler)
+    .add(LogHandler, DelayHandler)
     .end()
     .listen();
 

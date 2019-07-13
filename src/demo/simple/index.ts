@@ -1,7 +1,7 @@
-import { Controller, GET, Rester } from '../../main';
+import { GET, Rester, View } from '../../main';
 
-@Controller()
-class DemoController {
+@View()
+class DemoView {
 
   @GET('/')
   index() {
@@ -11,5 +11,5 @@ class DemoController {
 }
 
 const server = new Rester()
-  .configControllers.add(DemoController).end()
+  .configViews.add(DemoView).end()
   .listen();
