@@ -1,11 +1,11 @@
 import { Rester } from '../../main';
-import { SignController } from './controller';
 import { UserEntity } from './entity';
 import { LogHandler } from './handler';
+import { SignView } from './view';
 
 const server = new Rester()
-  .configControllers
-  .add(SignController)
+  .configViews
+  .add(SignView)
   .end()
   .configDatabase
   .setType('postgres')
