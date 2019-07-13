@@ -14,9 +14,9 @@ export namespace MetadataKey {
   export const Mapping = Symbol('Mapping');
 
   /**
-   * Metadata key in Controller.
+   * Metadata key in View.
    */
-  export const Controller = Symbol('Controller');
+  export const View = Symbol('View');
 
   /**
    * Metadata key in Handler.
