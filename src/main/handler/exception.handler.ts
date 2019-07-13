@@ -14,6 +14,11 @@ export class ExceptionHandler extends BaseHandler {
     return ExceptionHandler;
   }
 
+  static init(rester: Rester, config?: any): HandlerType {
+    ExceptionHandler.config(rester, config);
+    return ExceptionHandler;
+  }
+
   handle(next: () => Promise<any>): Promise<any> {
     return next()
       .catch((exception: HTTPException) => {
