@@ -12,7 +12,7 @@ import { Rester } from '../rester';
  */
 export abstract class BaseHandler {
 
-  /** Arguments of controller method. */
+  /** Mapping method arguments of this view. */
   protected args!: any[];
   /** Mapping of this request. */
   protected mapping!: Mapping;
@@ -94,15 +94,15 @@ export abstract class BaseHandler {
   async abstract handle(next: () => Promise<any>): Promise<any>;
 
   /**
-   * Run controller method with args.
+   * Run mapping method with args of this view.
    *
-   * `this.route.controller[this.route.name](...this.args)`
+   * `this.route.view[this.route.name](...this.args)`
    *
    * @returns {Promise<any>} Return a promise result.
    */
   async run(): Promise<any> {
-    if (this.route.controller && this.route.controller[this.route.name]) {
-      return this.route.controller[this.route.name](...this.args);
+    if (this.route.view && this.route.view[this.route.name]) {
+      return this.route.view[this.route.name](...this.args);
     }
   }
 

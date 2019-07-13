@@ -7,7 +7,7 @@ import { BaseHandler } from './base.handler';
 /**
  * Parameter handler.
  *
- * Inject parameter to controller method.
+ * Inject parameter to view method.
  *
  * @extends BaseHandler
  */

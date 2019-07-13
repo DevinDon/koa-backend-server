@@ -125,7 +125,7 @@ export class RouterHandler extends BaseHandler {
         if (a.length === i + 1) {
           // if duplicate route, issue a warning message
           if (router.has(RouterHandler.SpecialPath.route)) {
-            logger.warn(`Path ${route.mapping.method} ${route.mapping.path} already has route, now the mapping is ${route.controller && route.controller[route.name]}`);
+            logger.warn(`Path ${route.mapping.method} ${route.mapping.path} already has route, now the mapping is ${route.view && route.view[route.name]}`);
           }
           router.set(RouterHandler.SpecialPath.route, route);
         }
@@ -140,8 +140,8 @@ export class RouterHandler extends BaseHandler {
    */
   static init(rester: Rester): typeof RouterHandler {
     rester.zone.router = new Map();
-    for (const controller of rester.configControllers.get()) {
-      const routes: Route[] = Reflect.getMetadata(MetadataKey.Controller, controller) || [];
+    for (const view of rester.configViews.get()) {
+      const routes: Route[] = Reflect.getMetadata(MetadataKey.View, view) || [];
       routes.forEach(route => RouterHandler.set(route, rester.zone.router));
     }
     return RouterHandler;
