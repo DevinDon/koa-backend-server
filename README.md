@@ -54,9 +54,9 @@ const server = new Rester()
 
 # Change Log
 
-## 0.9.4 => 0.9.5
+## 0.9.5 => 0.9.6
 
-- perf(rester): perf load config method
+- perf(handler): configurable exception handler, PR [#24](https://github.com/DevinDon/rester/pull/24), ISSUE [#23](https://github.com/DevinDon/rester/issues/23)
 
 ## 0.8.2 => 0.9.0
 
