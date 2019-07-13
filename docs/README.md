@@ -82,17 +82,21 @@ MODE=PROD ts-node index.ts # listening on http://0.0.0.0:80
 
 Coding like Spring Boot!
 
-### @Controller
+![MVC](assets/MVC.png)
 
-Use this decorator to mark the controller.
+### @View
+
+Use this decorator `@View('/path')` to mark the view.
+
+![View](assets/View.png)
 
 ```typescript
-@Controller()
-class DemoController { /* ... */ }
+@View()
+class DemoView { /* ... */ }
 
 /** Add perfix to all sub mappings. */
-@Controller('/prefix')
-class PrefixController { /* ... */ }
+@View('/prefix')
+class PrefixView { /* ... */ }
 ```
 
 ### Mapping
@@ -102,8 +106,8 @@ Use these decorators to mark the mapping.
 Such as `@GET('/path')`, `@POST('/where')`, `@PUT('/user')` and so on.
 
 ```typescript
-@Controller()
-class DemoController {
+@View()
+class DemoView {
 
   @CONNECT('/connect')
   connect() {
@@ -240,13 +244,13 @@ get(@HTTPResponse() response: ServerResponse) {
 }
 ```
 
-### @Service
+### @Controller
 
 Alias of `@Injectable()`.
 
 ```typescript
-@Service()
-class DemoService {
+@Controller()
+class DemoController {
 
   private count = 0;
 
@@ -256,11 +260,11 @@ class DemoService {
 
 }
 
-@Controller()
-class DemoController {
+@View()
+class DemoView {
 
   @Inject()
-  private service!: DemoService;
+  private controller!: DemoController;
 
   @GET('/add')
   add() {
@@ -272,7 +276,7 @@ class DemoController {
 
 ## Injector
 
-Auto generate `Service`, `Controller` or other singal instance class, and save them.
+Auto generate `View`, `Controller` or other singal instance class, and save them.
 
 ## Handler
 
@@ -306,21 +310,21 @@ const server = new Rester()
   .listen();
 ```
 
-### On Controller
+### On View
 
 ```typescript
-@Controller() // must in the top
+@View() // must in the top
 @Handler(C1Handler)
 @Handler(C2Handler)
 @Handler(C3Handler)
-class DemoController { /* ... */ }
+class DemoView { /* ... */ }
 ```
 
 ### On Mapping
 
 ```typescript
-@Controller()
-class DemoHandler {
+@View()
+class DemoView {
 
   @GET('/')
   @Handler(M1Handler)
@@ -350,6 +354,8 @@ And the each part:
 Not very complex, aha.
 
 ### Example
+
+[`CORSHandler`](https://github.com/DevinDon/rester/blob/master/src/main/handler/cors.handler.ts): control the CORS assess
 
 [`ExceptionHandler`](https://github.com/DevinDon/rester/blob/master/src/main/handler/exception.handler.ts): Catch exception & return status code
 
