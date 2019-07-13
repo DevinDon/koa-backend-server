@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.9.6 => 0.10.0
+
+- refactor: refactor MVC Arch Mode, PR [#25](https://github.com/DevinDon/rester/pull/25)
+- fix(handler/exception): fix exception handler
+
 ## 0.9.5 => 0.9.6
 
 - perf(handler): configurable exception handler, PR [#24](https://github.com/DevinDon/rester/pull/24), ISSUE [#23](https://github.com/DevinDon/rester/issues/23)

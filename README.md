@@ -27,10 +27,10 @@ npm i --save @rester/core
 Use **Rester** just like **Spring Boot**, and easier!
 
 ```typescript
-import { Controller, GET, Rester } from '@rester/core';
+import { View, GET, Rester } from '@rester/core';
 
-@Controller()
-class DemoController {
+@View()
+class DemoView {
 
   /** GET http://localhost:8080 */
   @GET('/')
@@ -42,7 +42,7 @@ class DemoController {
 
 /** Create a rester server listening on http://localhost:8080. */
 const server = new Rester()
-  .configControllers.add(DemoController).end()
+  .configViews.add(DemoView).end()
   .listen();
 ```
 
@@ -54,19 +54,10 @@ const server = new Rester()
 
 # Change Log
 
-## 0.9.5 => 0.9.6
+## 0.9.6 => 0.10.0
 
-- perf(handler): configurable exception handler, PR [#24](https://github.com/DevinDon/rester/pull/24), ISSUE [#23](https://github.com/DevinDon/rester/issues/23)
-
-## 0.8.2 => 0.9.0
-
-- feat(rester): add chained call methods, PR [#6](https://github.com/DevinDon/rester/pull/6), ISSUE [#11](https://github.com/DevinDon/rester/issues/11)
-- feat(handler/base): configurable handler support, PR [#10](https://github.com/DevinDon/rester/pull/10), ISSUE [#9](https://github.com/DevinDon/rester/issues/9)
-- fix(decorator/mapping): fix the error that multi-mapping not works, PR [#16](https://github.com/DevinDon/rester/pull/16), ISSUE [#13](https://github.com/DevinDon/rester/issues/13)
-- feat(decorator/handler): multi-handler support, PR [#17](https://github.com/DevinDon/rester/pull/17), ISSUE [#14](https://github.com/DevinDon/rester/issues/14)
-- feat(handler/cors): CORS support, PR [#19](https://github.com/DevinDon/rester/pull/19), ISSUE [#15](https://github.com/DevinDon/rester/issues/15)
-- feat(rester): JSON config file support, ISSUE [#20](https://github.com/DevinDon/rester/issues/20)
-- perf: some optimizations, PR [#19](https://github.com/DevinDon/rester/pull/19)
+- refactor: refactor MVC Arch Mode, PR [#25](https://github.com/DevinDon/rester/pull/25)
+- fix(handler/exception): fix exception handler
 
 > :bookmark_tabs: See [change log](https://github.com/DevinDon/koa-backend-server/blob/master/docs/CHANGELOG.md) for detail.
 
