@@ -55,20 +55,20 @@ interface ConfigAddress {
 }
 
 /**
- * Config controllers.
+ * Config views.
  *
- * - `add`: add controllers
- * - `get`: get controllers
- * - `set`: reset controllers & then set
- * - `reset`: reset controllers
- * - `end`: end controllers config & return this rester instance
+ * - `add`: add views
+ * - `get`: get views
+ * - `set`: reset views & then set
+ * - `reset`: reset views
+ * - `end`: end views config & return this rester instance
  */
-interface ConfigControllers {
+interface ConfigViews {
   unconfigured: boolean;
-  add: (...controllers: Function[]) => ConfigControllers;
+  add: (...views: Function[]) => ConfigViews;
   get: () => Function[];
-  set: (...controllers: Function[]) => ConfigControllers;
-  reset: () => ConfigControllers;
+  set: (...views: Function[]) => ConfigViews;
+  reset: () => ConfigViews;
   end: () => Rester;
 }
 
@@ -159,8 +159,8 @@ export class Rester {
 
   /** Address option. */
   private address: AddressOption;
-  /** Controllers in this rester instance. */
-  private controllers: Function[];
+  /** Views in this rester instance. */
+  private views: Function[];
   /** Database option. */
   private database: ConnectionOptions;
   /** Handler types. */
@@ -186,8 +186,8 @@ export class Rester {
       host: 'localhost',
       port: 8080
     };
-    // config empty controllers
-    this.controllers = [];
+    // config empty views
+    this.views = [];
     // config empty database
     this.database = {} as any;
     // config default global handlers
@@ -221,21 +221,21 @@ export class Rester {
   };
 
   /**
-   * Config controllers.
+   * Config views.
    *
-   * - `add`: add controllers
-   * - `get`: get controllers
-   * - `set`: reset controllers & then set
-   * - `reset`: reset controllers
-   * - `end`: end controllers config & return this rester instance
+   * - `add`: add views
+   * - `get`: get views
+   * - `set`: reset views & then set
+   * - `reset`: reset views
+   * - `end`: end views config & return this rester instance
    */
-  configControllers: ConfigControllers = {
+  configViews: ConfigViews = {
     unconfigured: true,
-    add: (...controllers) => { this.controllers = this.controllers.concat(controllers); return this.configControllers; },
-    get: () => this.controllers,
-    set: (...controllers) => { this.controllers = controllers || []; return this.configControllers; },
-    reset: () => { this.controllers = []; return this.configControllers; },
-    end: () => { this.configControllers.unconfigured = false; return this; }
+    add: (...views) => { this.views = this.views.concat(views); return this.configViews; },
+    get: () => this.views,
+    set: (...views) => { this.views = views || []; return this.configViews; },
+    reset: () => { this.views = []; return this.configViews; },
+    end: () => { this.configViews.unconfigured = false; return this; }
   };
 
   /**
@@ -288,8 +288,8 @@ export class Rester {
     end: () => {
       this.handlers.forEach(handler => handler.init(this));
       const set: Set<HandlerType> = new Set();
-      this.controllers.forEach(controller => {
-        const routes: Route[] = Reflect.getMetadata(MetadataKey.Controller, controller) || [];
+      this.views.forEach(view => {
+        const routes: Route[] = Reflect.getMetadata(MetadataKey.View, view) || [];
         routes.map(route => route.handlers).flat().forEach(handler => set.add(handler));
       });
       set.forEach(handler => handler.init(this));
@@ -374,7 +374,7 @@ export class Rester {
   listen(callback?: Function, port?: number, host?: string): this {
     this.loadConfig();
     if (this.configAddress.unconfigured) { this.configAddress.end(); }
-    if (this.configControllers.unconfigured) { this.configControllers.end(); }
+    if (this.configViews.unconfigured) { this.configViews.end(); }
     if (this.configDatabase.unconfigured) { this.configDatabase.end(); }
     if (this.configHandlers.unconfigured) { this.configHandlers.end(); }
     if (this.configLogger.unconfigured) { this.configLogger.end(); }
