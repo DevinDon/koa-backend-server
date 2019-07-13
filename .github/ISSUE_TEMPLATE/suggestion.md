@@ -1,8 +1,8 @@
 ---
 name: Suggestion
-about: Give us some suggestions to improve rester
+about: Give us some suggestions to improve rester.
 title: "[PERF] Tell me your suggestions"
-labels: Enhancement, Need-Confirm, Perfect
+labels: Optimization, Need-Confirm
 assignees: DevinDon
 
 ---
