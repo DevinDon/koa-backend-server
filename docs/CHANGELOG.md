@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.10.0 => 0.10.2
+
+- perf(handler/exception): add warn & error message when server exception
+
 ## 0.9.6 => 0.10.0
 
 - refactor: refactor MVC Arch Mode, PR [#25](https://github.com/DevinDon/rester/pull/25)
