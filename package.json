@@ -28,7 +28,7 @@
     "build:demo": "cd src/demo && tsc",
     "build:main": "cd src/main && tsc",
     "build:test": "cd src/test && tsc",
-    "clean": "bash -c \"rm -rf dist out\"",
+    "clean": "sh -c \"rm -rf dist out\"",
     "demo:full": "node -r ts-node/register src/demo/full",
     "demo:simple": "node -r ts-node/register src/demo/simple",
     "prepare": "npm run clean && npm run build",
