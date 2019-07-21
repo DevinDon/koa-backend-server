@@ -23,7 +23,10 @@ export class ExceptionHandler extends BaseHandler {
     return next()
       .catch((exception: HTTPException) => {
         if (!(exception instanceof HTTPException)) { // default to 500
+          this.rester.configLogger.get().error(`Exception: ${JSON.stringify(exception)}`);
           exception = new HTTP500Exception('Internal Server Error');
+        } else {
+          this.rester.configLogger.get().warn(`Exception: ${exception.code} ${exception.message}.`);
         }
         if (!exception.content) { // response content default to {}
           exception.content = this.rester.zone.exception.response;
