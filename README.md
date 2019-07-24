@@ -4,13 +4,13 @@
 
 **In Node.js & TypeScript!**
 
-> :books: ​See the [full documents](https://github.com/DevinDon/rester/tree/master/docs) here.
+> :books: ​See the [full documents](https://github.com/DevinDon/rester-core/tree/master/docs) here.
 
 # Attention
 
 <span style="color: red">**:warning: WARNING: This project is currently in an *UNSTABLE* phase.**</span>
 
-> :loudspeaker: Attention: The **STABLE** version will arrive at 1.0.0.
+> :loudspeaker: Attention: The **STABLE** version will arrive at 1.0.0
 
 # Installation
 
@@ -46,11 +46,11 @@ const server = new Rester()
   .listen();
 ```
 
-> :card_index_dividers: See more [demo](https://github.com/DevinDon/rester/blob/master/src/demo) here.
+> :card_index_dividers: See more [demo](https://github.com/DevinDon/rester-core/blob/master/src/demo) here.
 
 # Feature
 
-> :sparkles: See [issue #4](https://github.com/DevinDon/rester/issues/4) for detail.
+> :sparkles: See issue [#4](https://github.com/DevinDon/rester-core/issues/4) for detail.
 
 # Change Log
 
@@ -60,17 +60,17 @@ const server = new Rester()
 
 ## 0.9.6 => 0.10.0
 
-- refactor: refactor MVC Arch Mode, PR [#25](https://github.com/DevinDon/rester/pull/25)
+- refactor: refactor MVC Arch Mode, PR [#25](https://github.com/DevinDon/rester-core/pull/25)
 - fix(handler/exception): fix exception handler
 
-> :bookmark_tabs: See [change log](https://github.com/DevinDon/koa-backend-server/blob/master/docs/CHANGELOG.md) for detail.
+> :bookmark_tabs: See [change log](https://github.com/DevinDon/rester-core/blob/master/docs/CHANGELOG.md) for detail.
 
 # Author
 
-IInfinity 夜寒苏, [Email](mailto:I.INF@Outlook.com), [Github](https://github.com/DevinDon), [Home Page (Under construction)](https://don.red).
+IInfinity 夜寒苏, [Email](mailto:I.INF@Outlook.com), [Github](https://github.com/DevinDon), [Home Page (Under construction)](https://blog.don.red).
 
 # License
 
-[THE MIT LICENSE](https://github.com/DevinDon/rester/blob/master/LICENSE) for code.
+[THE MIT LICENSE](https://github.com/DevinDon/rester-core/blob/master/LICENSE) for code.
 
-[THE CC-BY-NC-4.0 LICENSE](https://github.com/DevinDon/rester/blob/master/docs/LICENSE) for documents.
+[THE CC-BY-NC-4.0 LICENSE](https://github.com/DevinDon/rester-core/blob/master/docs/LICENSE) for documents.

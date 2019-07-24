@@ -6,12 +6,12 @@
 
 ## 0.9.6 => 0.10.0
 
-- refactor: refactor MVC Arch Mode, PR [#25](https://github.com/DevinDon/rester/pull/25)
+- refactor: refactor MVC Arch Mode, PR [#25](https://github.com/DevinDon/rester-core/pull/25)
 - fix(handler/exception): fix exception handler
 
 ## 0.9.5 => 0.9.6
 
-- perf(handler): configurable exception handler, PR [#24](https://github.com/DevinDon/rester/pull/24), ISSUE [#23](https://github.com/DevinDon/rester/issues/23)
+- perf(handler): configurable exception handler, PR [#24](https://github.com/DevinDon/rester-core/pull/24), ISSUE [#23](https://github.com/DevinDon/rester-core/issues/23)
 
 ## 0.9.4 => 0.9.5
 
@@ -19,12 +19,12 @@
 
 ## 0.9.3 => 0.9.4
 
-- perf(rester): support retry when db connect failed, PR [#22](https://github.com/DevinDon/rester/pull/22)
+- perf(rester): support retry when db connect failed, PR [#22](https://github.com/DevinDon/rester-core/pull/22)
 
 ## 0.9.2 => 0.9.3
 
-- perf(handler/base): perf handler config, PR [#21](https://github.com/DevinDon/rester/pull/21)
-- fix(handler/cors): fix cors handler, PR [#21](https://github.com/DevinDon/rester/pull/21)
+- perf(handler/base): perf handler config, PR [#21](https://github.com/DevinDon/rester-core/pull/21)
+- fix(handler/cors): fix cors handler, PR [#21](https://github.com/DevinDon/rester-core/pull/21)
 
 ## 0.9.1 => 0.9.2
 
@@ -36,17 +36,17 @@
 
 ## 0.8.2 => 0.9.0
 
-- feat(rester): add chained call methods, PR [#6](https://github.com/DevinDon/rester/pull/6), ISSUE [#11](https://github.com/DevinDon/rester/issues/11)
-- feat(handler/base): configurable handler support, PR [#10](https://github.com/DevinDon/rester/pull/10), ISSUE [#9](https://github.com/DevinDon/rester/issues/9)
-- fix(decorator/mapping): fix the error that multi-mapping not works, PR [#16](https://github.com/DevinDon/rester/pull/16), ISSUE [#13](https://github.com/DevinDon/rester/issues/13)
-- feat(decorator/handler): multi-handler support, PR [#17](https://github.com/DevinDon/rester/pull/17), ISSUE [#14](https://github.com/DevinDon/rester/issues/14)
-- feat(handler/cors): CORS support, PR [#19](https://github.com/DevinDon/rester/pull/19), ISSUE [#15](https://github.com/DevinDon/rester/issues/15)
-- feat(rester): JSON config file support, ISSUE [#20](https://github.com/DevinDon/rester/issues/20)
-- perf: some optimizations, PR [#19](https://github.com/DevinDon/rester/pull/19)
+- feat(rester): add chained call methods, PR [#6](https://github.com/DevinDon/rester-core/pull/6), ISSUE [#11](https://github.com/DevinDon/rester-core/issues/11)
+- feat(handler/base): configurable handler support, PR [#10](https://github.com/DevinDon/rester-core/pull/10), ISSUE [#9](https://github.com/DevinDon/rester-core/issues/9)
+- fix(decorator/mapping): fix the error that multi-mapping not works, PR [#16](https://github.com/DevinDon/rester-core/pull/16), ISSUE [#13](https://github.com/DevinDon/rester-core/issues/13)
+- feat(decorator/handler): multi-handler support, PR [#17](https://github.com/DevinDon/rester-core/pull/17), ISSUE [#14](https://github.com/DevinDon/rester-core/issues/14)
+- feat(handler/cors): CORS support, PR [#19](https://github.com/DevinDon/rester-core/pull/19), ISSUE [#15](https://github.com/DevinDon/rester-core/issues/15)
+- feat(rester): JSON config file support, ISSUE [#20](https://github.com/DevinDon/rester-core/issues/20)
+- perf: some optimizations, PR [#19](https://github.com/DevinDon/rester-core/pull/19)
 
 ## 0.8.1 => 0.8.2
 
-- fix(rester): fix return declaration of config* methods, PR [#11](https://github.com/DevinDon/rester/pull/11)
+- fix(rester): fix return declaration of config* methods, PR [#11](https://github.com/DevinDon/rester-core/pull/11)
 
 ## 0.8.0 => 0.8.1
 

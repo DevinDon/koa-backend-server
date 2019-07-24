@@ -286,7 +286,7 @@ This is a design that includes **Aspect** & **Middleware** features. It can prov
 
 ### Define
 
-Custom handler must extends [`BaseHandler`](https://github.com/DevinDon/rester/blob/master/src/main/handler/base.handler.ts):
+Custom handler must extends [`BaseHandler`](https://github.com/DevinDon/rester-core/blob/master/src/main/handler/base.handler.ts):
 
 ```typescript
 class DemoHandler extends BaseHandler {
@@ -355,15 +355,15 @@ Not very complex, aha.
 
 ### Example
 
-[`CORSHandler`](https://github.com/DevinDon/rester/blob/master/src/main/handler/cors.handler.ts): control the CORS assess
+[`CORSHandler`](https://github.com/DevinDon/rester-core/blob/master/src/main/handler/cors.handler.ts): control the CORS assess
 
-[`ExceptionHandler`](https://github.com/DevinDon/rester/blob/master/src/main/handler/exception.handler.ts): Catch exception & return status code
+[`ExceptionHandler`](https://github.com/DevinDon/rester-core/blob/master/src/main/handler/exception.handler.ts): Catch exception & return status code
 
-[`ParameterHandler`](https://github.com/DevinDon/rester/blob/master/src/main/handler/paramter.handler.ts): Inject parameter to mapping
+[`ParameterHandler`](https://github.com/DevinDon/rester-core/blob/master/src/main/handler/paramter.handler.ts): Inject parameter to mapping
 
-[`RouterHandler`](https://github.com/DevinDon/rester/blob/master/src/main/handler/router.handler.ts): Handle & route
+[`RouterHandler`](https://github.com/DevinDon/rester-core/blob/master/src/main/handler/router.handler.ts): Handle & route
 
-[`SchemaHandler`](https://github.com/DevinDon/rester/blob/master/src/main/handler/schema.handler.ts): JSON schema, validation & stringify
+[`SchemaHandler`](https://github.com/DevinDon/rester-core/blob/master/src/main/handler/schema.handler.ts): JSON schema, validation & stringify
 
 # Author
 
@@ -371,6 +371,6 @@ IInfinity 夜寒苏, [Email](mailto:I.INF@Outlook.com), [Github](https://github.
 
 # License
 
-[THE MIT LICENSE](https://github.com/DevinDon/rester/blob/master/LICENSE) for code.
+[THE MIT LICENSE](https://github.com/DevinDon/rester-core/blob/master/LICENSE) for code.
 
-[THE CC-BY-NC-4.0 LICENSE](https://github.com/DevinDon/rester/blob/master/docs/LICENSE) for documents.
+[THE CC-BY-NC-4.0 LICENSE](https://github.com/DevinDon/rester-core/blob/master/docs/LICENSE) for documents.
