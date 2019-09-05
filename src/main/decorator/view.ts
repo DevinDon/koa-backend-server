@@ -26,7 +26,7 @@ export function View(prefix: string = ''): ClassDecorator {
         const handlersOnMethod: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target.prototype, name) || [];
         const handlers: HandlerType[] = handlersOnMethod.concat(handlersOnView);
         return mapping.map(v => {
-          v.path = prefix + v.path;
+          v.path = prefix + '/' + v.path;
           return { view: view, handlers, mapping: v, name, target };
         });
       }).flat();
