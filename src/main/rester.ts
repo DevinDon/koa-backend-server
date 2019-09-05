@@ -326,7 +326,7 @@ export class Rester {
         json = readFileSync('rester.dev.json');
       } else if (mode === 'PROD') {
         json = readFileSync('rester.json');
-      } else {
+      } else { // config file not exist
         return this;
       }
       const config = JSON.parse(json.toString());
