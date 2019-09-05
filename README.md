@@ -54,9 +54,9 @@ const server = new Rester()
 
 # Change Log
 
-## 0.10.0 => 0.10.2
+## 0.10.2 => 0.10.3
 
-- perf(handler/exception): add warn & error message when server exception
+- perf(main): add '/' before path
 
 ## 0.9.6 => 0.10.0
 
