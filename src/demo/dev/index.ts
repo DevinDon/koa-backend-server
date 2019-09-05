@@ -78,17 +78,17 @@ namespace SimpleDemo {
 
   }
 
-  @View('/prefix')
+  @View('prefix')
   @Handler(ModifyPrefixHandler) // View must be the decorator farthest from this class
   class PrefixView {
 
-    @GET('/')
+    @GET()
     index() {
       return 'Hello, prefix!';
     }
 
     @Handler(ModifyAgainHandler)
-    @GET('/again')
+    @GET('again')
     again() {
       return 'raw';
     }
