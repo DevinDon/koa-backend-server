@@ -43,11 +43,6 @@ export class BodyParser {
   }
 
   parse(body: Buffer) {
-    // body.forEach((v, i) => {
-    //   if (v === BodyParser.keymap.CR) {
-    //     console.log(`CR on: ${i}, string: ${body.toString('utf8', i - 10, i + 10)}`);
-    //   }
-    // });
     this.body = body;
     const type = this.contentType.match(/[^;]*/)![0];
     switch (type) {
@@ -72,8 +67,10 @@ export class BodyParser {
     return buffer;
   }
 
-  parseMultipartFormData(buffer: Buffer = Buffer.concat([Buffer.from([BodyParser.keymap.LF]), this.body]), contentType = this.contentType) {
-    const boundary = Buffer.from(contentType.match(/boundary=(.*)/)![1]);
+  parseMultipartFormData(
+    buffer: Buffer = this.body,
+    boundary = Buffer.from(this.contentType.match(/boundary=(.*)/)![1])
+  ) {
     const length = buffer.length;
     /** All parts of body. */
     const parts: Part[] = [];
@@ -83,19 +80,15 @@ export class BodyParser {
     let end = 0;
     // get each part
     for (let i = 0; i < length; i++) {
-      // if the begin of a new line, move pointer to the LF (the next position)
-      if (buffer[i] === BodyParser.keymap.CR) { i++; }
       // if not new line, continue
-      if (buffer[i] !== BodyParser.keymap.LF) { continue; }
-      // if it is the first LF, continue
-      if (i === 0) { continue; }
+      if (buffer[i] !== BodyParser.keymap.CR) { continue; }
       // if the new line is not boundary, continue
-      if (!this.isBoundary(buffer, i + 1, boundary)) { continue; }
+      if (!this.isBoundary(buffer, i + 2, boundary)) { continue; }
       // if it is new boundary line, do it
-      // set start, start += LF + double dash + boundary length + CRLF
-      start += 1 + 2 + boundary.length + 2;
-      // set end, end = current - LF
-      end = i - 1;
+      // set start, start += double dash + boundary length + CRLF
+      start += 2 + boundary.length + 2;
+      // set end, end = current, not inculde current CR
+      end = i;
       /** Part data. */
       const part: Part = {} as any;
       part.buffer = buffer.slice(start, end);
@@ -126,9 +119,10 @@ export class BodyParser {
       const contentTypeCharset = head.match(BodyParser.regmap.contentTypeCharset);
       part.contentTypeCharset = contentTypeCharset && contentTypeCharset[1] || undefined;
       parts.push(part);
-      i = end;
-      // if the new line is the end boundary, break
-      if (this.isLastBoundary(buffer, i + 2, boundary)) { break; }
+      // start = end + CRLF
+      start = end + 2;
+      // pointer = end + CRLF + boundary.length
+      i = end + 2 + boundary.length;
     }
     return parts;
   }
@@ -155,22 +149,6 @@ export class BodyParser {
       && buffer.length > start + 2 + boundary.length
       && buffer[start + 1] === BodyParser.keymap.DASH
       && boundary.equals(buffer.slice(start + 2, start + 2 + boundary.length));
-
-  }
-
-  /**
-   * It is the last boundary line or not.
-   *
-   * First char should not `\n`.
-   *
-   * @param buffer Source buffer.
-   * @param start Where to start.
-   */
-  isLastBoundary(buffer: Buffer, start: number, boundary: Buffer): boolean {
-
-    return this.isBoundary(buffer, start, boundary)
-      && buffer[start + 2 + boundary.length + 0] === BodyParser.keymap.DASH
-      && buffer[start + 2 + boundary.length + 1] === BodyParser.keymap.DASH;
 
   }
 
