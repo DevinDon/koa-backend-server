@@ -12,15 +12,16 @@ export interface Part {
   contentTransferEncoding?: string;
   contentType?: string;
   contentTypeCharset?: string;
+  head: Buffer;
   data: Buffer;
 }
 
 export class BodyParser {
 
   private static keymap = {
-    cr: 0x0d,
-    lf: 0x0a,
-    dash: 0x2d
+    CR: 0x0d,
+    LF: 0x0a,
+    DASH: 0x2d
   };
 
   private static regmap = {
@@ -42,8 +43,14 @@ export class BodyParser {
   }
 
   parse(body: Buffer) {
+    // body.forEach((v, i) => {
+    //   if (v === BodyParser.keymap.CR) {
+    //     console.log(`CR on: ${i}, string: ${body.toString('utf8', i - 10, i + 10)}`);
+    //   }
+    // });
     this.body = body;
-    switch (this.contentType.match(/[^;]*/)![1]) {
+    const type = this.contentType.match(/[^;]*/)![0];
+    switch (type) {
       case 'application/json':
         return this.parseApplicationJson();
       case 'application/octet-stream':
@@ -65,13 +72,65 @@ export class BodyParser {
     return buffer;
   }
 
-  parseMultipartFormData(buffer: Buffer = this.body, contentType = this.contentType) {
-    const boundary = contentType.match(/boundary=(.*)/)![1];
+  parseMultipartFormData(buffer: Buffer = Buffer.concat([Buffer.from([BodyParser.keymap.LF]), this.body]), contentType = this.contentType) {
+    const boundary = Buffer.from(contentType.match(/boundary=(.*)/)![1]);
     const length = buffer.length;
+    /** All parts of body. */
     const parts: Part[] = [];
+    /** Part start. */
     let start = 0;
+    /** Part end. */
     let end = 0;
-    return '';
+    // get each part
+    for (let i = 0; i < length; i++) {
+      // if the begin of a new line, move pointer to the LF (the next position)
+      if (buffer[i] === BodyParser.keymap.CR) { i++; }
+      // if not new line, continue
+      if (buffer[i] !== BodyParser.keymap.LF) { continue; }
+      // if it is the first LF, continue
+      if (i === 0) { continue; }
+      // if the new line is not boundary, continue
+      if (!this.isBoundary(buffer, i + 1, boundary)) { continue; }
+      // if it is new boundary line, do it
+      // set start, start += LF + double dash + boundary length + CRLF
+      start += 1 + 2 + boundary.length + 2;
+      // set end, end = current - LF
+      end = i - 1;
+      /** Part data. */
+      const part: Part = {} as any;
+      part.buffer = buffer.slice(start, end);
+      // split head & data
+      for (let j = 0; j < part.buffer.length; j++) {
+        // if not new line, continue
+        if (part.buffer[j] !== BodyParser.keymap.CR) { continue; }
+        // if it is data line (double CRLF), set part.data & break
+        if (this.isData(part.buffer, j)) {
+          // set part.head, skip double CRLF
+          // slice(a, b), the position b will not be included
+          part.head = part.buffer.slice(0, j);
+          // set part.data, skip double CRLF
+          part.data = part.buffer.slice(j + 4);
+          break;
+        }
+      }
+      // parse head
+      const head = part.head.toString();
+      part.contentDisposition = head.match(BodyParser.regmap.contentDisposition)![1];
+      const contentDispositionFilename = head.match(BodyParser.regmap.contentDispositionFilename);
+      part.contentDispositionFilename = contentDispositionFilename && contentDispositionFilename[1] || undefined;
+      part.contentDispositionName = head.match(BodyParser.regmap.contentDispositionName)![1];
+      const contentTransferEncoding = head.match(BodyParser.regmap.contentTransferEncoding);
+      part.contentTransferEncoding = contentTransferEncoding && contentTransferEncoding[1] || '';
+      const contentType = head.match(BodyParser.regmap.contentType);
+      part.contentType = contentType && contentType[1] || undefined;
+      const contentTypeCharset = head.match(BodyParser.regmap.contentTypeCharset);
+      part.contentTypeCharset = contentTypeCharset && contentTypeCharset[1] || undefined;
+      parts.push(part);
+      i = end;
+      // if the new line is the end boundary, break
+      if (this.isLastBoundary(buffer, i + 2, boundary)) { break; }
+    }
+    return parts;
   }
 
   parseTextPlain(buffer: Buffer = this.body): string {
@@ -80,6 +139,80 @@ export class BodyParser {
 
   parseDefault(buffer: Buffer = this.body): Buffer {
     return buffer;
+  }
+
+  /**
+   * It is boundary line or not.
+   *
+   * First char should not `\n`.
+   *
+   * @param buffer Source buffer.
+   * @param start Where to start.
+   */
+  isBoundary(buffer: Buffer, start: number, boundary: Buffer): boolean {
+
+    return buffer[start] === BodyParser.keymap.DASH
+      && buffer.length > start + 2 + boundary.length
+      && buffer[start + 1] === BodyParser.keymap.DASH
+      && boundary.equals(buffer.slice(start + 2, start + 2 + boundary.length));
+
+  }
+
+  /**
+   * It is the last boundary line or not.
+   *
+   * First char should not `\n`.
+   *
+   * @param buffer Source buffer.
+   * @param start Where to start.
+   */
+  isLastBoundary(buffer: Buffer, start: number, boundary: Buffer): boolean {
+
+    return this.isBoundary(buffer, start, boundary)
+      && buffer[start + 2 + boundary.length + 0] === BodyParser.keymap.DASH
+      && buffer[start + 2 + boundary.length + 1] === BodyParser.keymap.DASH;
+
+  }
+
+  /**
+   * It is data start or not.
+   *
+   * The first double CRLF.
+   *
+   * @param buffer Source buffer.
+   * @param start Where to start.
+   */
+  isData(buffer: Buffer, start: number): boolean {
+
+    return buffer[start] === BodyParser.keymap.CR
+      && buffer[start + 1] === BodyParser.keymap.LF
+      && buffer[start + 2] === BodyParser.keymap.CR
+      && buffer[start + 3] === BodyParser.keymap.LF;
+
+  }
+
+  /**
+   * Read a line from buffer.
+   *
+   * First char should not `CR` or `LF`, and last char is not `CR` or `LF` either.
+   *
+   * @param buffer Read from buffer.
+   * @param start Where to start.
+   */
+  readLine(buffer: Buffer, start: number): Buffer {
+
+    const length = buffer.length;
+
+    for (let i = start; i < length; i++) {
+      if (buffer[i] === BodyParser.keymap.CR || buffer[i] === BodyParser.keymap.LF) {
+        // return this line without CRLF
+        return buffer.slice(start, i - 1);
+      }
+    }
+
+    // return hole buffer
+    return buffer.slice(start, length);
+
   }
 
 }
