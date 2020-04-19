@@ -47,12 +47,8 @@ export class FormParser {
     // Get each part.
     for (let i = 0; i < length; i++) {
       if (buffer[i] === keymap.cr) { i++; }
-      if (buffer[i] !== keymap.lf) {
-        continue;
-      }
-      if (!this.isBoundary(buffer, i + 1)) {
-        continue;
-      }
+      if (buffer[i] !== keymap.lf) { continue; }
+      if (!this.isBoundary(buffer, i + 1)) { continue; }
       start += 1 + 2 + this.boundary.length + 1;
       end = i - 1;
       const part: Part = {} as any;
