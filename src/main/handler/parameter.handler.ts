@@ -50,10 +50,11 @@ export class ParameterHandler extends BaseHandler {
       // TODO: JSON schema & validate
       this.request.on('end', () => {
         let result;
+        console.log(this.request.headers['content-type']);
         switch (type || this.request.headers['content-type']) {
           case 'application/json': result = JSON.parse(data.toString()); break;
           case 'application/octet-stream': result = data; break;
-          // case 'multipart/form-data': break;
+          // case 'multipart/form-data': result = new parse; break;
           default: result = data.toString(); break;
         }
         resolve(result);

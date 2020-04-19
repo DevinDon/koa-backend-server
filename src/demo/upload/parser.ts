@@ -32,14 +32,14 @@ export class FormParser {
 
   constructor(
     contentType: string,
-    private body: string
+    private body: Buffer
   ) {
     this.boundary = contentType.match(/boundary=(.*)/)![1];
   }
 
-  parse(body: string = this.body): Part[] {
+  parse(body: Buffer = this.body): Part[] {
 
-    const buffer: Buffer = Buffer.from(body);
+    const buffer: Buffer = body;
     const length = buffer.length;
     let start = 0;
     let end = 0;
@@ -142,14 +142,3 @@ export class FormParser {
   }
 
 }
-
-const buf = Buffer.from(`aaa-aaa=aaa
-bbb
-ccc
-ddd
-eee`);
-const parser = new FormParser('abc;boundary=###', ``);
-
-const s1 = parser.readLine(buf, 0).toString();
-
-console.log(s1);

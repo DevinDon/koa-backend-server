@@ -1,5 +1,6 @@
 import { PUT, Rester, View, RequestBody, RequestHeader } from '../../main';
 import { FormParser } from './parser';
+import { writeFileSync } from 'fs';
 
 @View()
 class UploadView {
@@ -7,12 +8,22 @@ class UploadView {
   @PUT('/')
   index(
     @RequestHeader('Content-Type') contentType: string,
-    @RequestBody() body: string
+    @RequestBody() body: any
   ) {
     console.log(`Length: ${body.length}`);
     // 解析 FormData 请参考 [深入解析 multipart/form-data](https://www.jianshu.com/p/29e38bcc8a1d)
     const parts = new FormParser(contentType, body).parse();
-    return parts;
+    const results = parts.map(v => ({
+      raw: v.buffer.toString(),
+      data: v.data.toString(),
+      name: v.contentDispositionName,
+      file: v.contentDispositionFilename
+    }));
+    // parts.forEach(
+    //   v => v.contentDispositionFilename
+    //     && writeFileSync(v.contentDispositionFilename, v.data, 'binary')
+    // );
+    return results;
   }
 
 }
