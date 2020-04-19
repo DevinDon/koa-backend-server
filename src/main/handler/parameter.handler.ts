@@ -4,6 +4,86 @@ import { ParamInjection, ParamInjectionType } from '../decorator';
 import { HTTP400Exception, HTTP404Exception } from '../exception';
 import { BaseHandler } from './base.handler';
 
+export interface Part {
+  buffer: Buffer;
+  contentDisposition: string;
+  contentDispositionName: string;
+  contentDispositionFilename?: string;
+  contentTransferEncoding?: string;
+  contentType?: string;
+  contentTypeCharset?: string;
+  data: Buffer;
+}
+
+export class BodyParser {
+
+  private static keymap = {
+    cr: 0x0d,
+    lf: 0x0a,
+    dash: 0x2d
+  };
+
+  private static regmap = {
+    key: /([^\s]*): ([^\s]*)/,
+    contentDisposition: /Content-Disposition: ([^;]*)/,
+    contentDispositionName: /[^e]name="(.+?)"/,
+    contentDispositionFilename: /filename="(.+?)"/,
+    contentType: /Content-Type: ([^;]*)/,
+    contentTypeCharset: /charset=([^;]*)/,
+    contentTransferEncoding: /Content-Transfer-Encoding: ([^;]*)/
+  };
+
+  private contentType!: string;
+  private body!: Buffer;
+
+  setContentType(contentType: string) {
+    this.contentType = contentType;
+    return this;
+  }
+
+  parse(body: Buffer) {
+    this.body = body;
+    switch (this.contentType.match(/[^;]*/)![1]) {
+      case 'application/json':
+        return this.parseApplicationJson();
+      case 'application/octet-stream':
+        return this.parseApplicationOctetStream();
+      case 'multipart/form-data':
+        return this.parseMultipartFormData();
+      case 'text/plain':
+        return this.parseTextPlain();
+      default:
+        return this.parseDefault();
+    }
+  }
+
+  parseApplicationJson(buffer: Buffer = this.body): any {
+    return JSON.parse(buffer.toString());
+  }
+
+  parseApplicationOctetStream(buffer: Buffer = this.body): Buffer {
+    return buffer;
+  }
+
+  parseMultipartFormData(buffer: Buffer = this.body, contentType = this.contentType) {
+    const boundary = contentType.match(/boundary=(.*)/)![1];
+    const length = buffer.length;
+    const parts: Part[] = [];
+    let start = 0;
+    let end = 0;
+    return '';
+  }
+
+  parseTextPlain(buffer: Buffer = this.body): string {
+    return buffer.toString();
+  }
+
+  parseDefault(buffer: Buffer = this.body): Buffer {
+    return buffer;
+  }
+
+}
+
 /**
  * Parameter handler.
  *
@@ -12,6 +92,8 @@ import { BaseHandler } from './base.handler';
  * @extends BaseHandler
  */
 export class ParameterHandler extends BaseHandler {
+
+  private parser = new BodyParser();
 
   /** Parameter injectors, function. */
   private parameterInjectors: { [index in ParamInjectionType]: (name: string) => any } = {
@@ -48,17 +130,11 @@ export class ParameterHandler extends BaseHandler {
       let data: Buffer = Buffer.allocUnsafe(0);
       this.request.on('data', (chunk: Buffer) => data = Buffer.concat([data, chunk]));
       // TODO: JSON schema & validate
-      this.request.on('end', () => {
-        let result;
-        console.log(this.request.headers['content-type']);
-        switch (type || this.request.headers['content-type']) {
-          case 'application/json': result = JSON.parse(data.toString()); break;
-          case 'application/octet-stream': result = data; break;
-          // case 'multipart/form-data': result = new parse; break;
-          default: result = data.toString(); break;
-        }
-        resolve(result);
-      });
+      this.request.on('end', () => resolve(
+        this.parser
+          .setContentType(type || this.request.headers['content-type'] || '')
+          .parse(data)
+      ));
       this.request.on('error', error => reject(error));
     }),
     /**
