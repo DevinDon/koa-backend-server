@@ -82,13 +82,13 @@ MODE=PROD ts-node index.ts # listening on http://0.0.0.0:80
 
 Coding like Spring Boot!
 
-![MVC](assets/MVC.png)
+![MVC](asset/MVC.png)
 
 ### @View
 
 Use this decorator `@View('/path')` to mark the view.
 
-![View](assets/View.png)
+![View](asset/View.png)
 
 ```typescript
 @View()
