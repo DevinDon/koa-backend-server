@@ -1,5 +1,6 @@
-import { writeFileSync } from 'fs';
-import { CORSHandler, Handler, Part, PUT, RequestBody, Rester, View } from '../../main';
+import { createWriteStream, writeFileSync } from 'fs';
+import { IncomingMessage } from 'http';
+import { CORSHandler, Handler, HTTPRequest, Part, PUT, RequestBody, Rester, View } from '../../main';
 
 @View()
 @Handler(CORSHandler)
@@ -10,17 +11,29 @@ class UploadView {
     @RequestBody() body: Part[]
   ) {
     console.log(`Length: ${body.length}`);
-    console.log(body);
+    // console.log(body);
     body.forEach(v => v.contentDispositionFilename && writeFileSync('temp/' + v.contentDispositionFilename + '.txt', v.data));
     return body.map(v => ({ file: v.contentDispositionFilename, size: v.data.length }));
   }
 
   @PUT('/single')
-  single(@RequestBody() body: Buffer) {
-    console.log(`Length: ${body.length}`);
-    console.log(body);
-    writeFileSync('temp/' + Math.random(), body);
-    return body.length;
+  async single(
+    @HTTPRequest() request: IncomingMessage,
+    @RequestBody() body?: Buffer
+  ) {
+    if (body) {
+      console.log(`Length: ${body.length}`);
+      console.log(body);
+      writeFileSync('temp/' + Math.random(), body);
+      return body.length;
+    } else {
+      const result = await new Promise((resolve, reject) => {
+        const file = createWriteStream(`${Math.random()}`);
+        request.pipe(file);
+        request.on('end', () => resolve(file));
+      });
+      return result;
+    }
   }
 
 }

@@ -261,15 +261,19 @@ export class ParameterHandler extends BaseHandler {
      * @returns {Promise<any>} Request body promise object.
      */
     PARAM$REQUEST$BODY: (type?: string): Promise<any> => new Promise<any>((resolve, reject) => {
-      let data: Buffer = Buffer.allocUnsafe(0);
-      this.request.on('data', (chunk: Buffer) => data = Buffer.concat([data, chunk]));
-      // TODO: JSON schema & validate
-      this.request.on('end', () => resolve(
-        this.parser
-          .setContentType(type || this.request.headers['content-type'] || '')
-          .parse(data)
-      ));
-      this.request.on('error', error => reject(error));
+      if (+this.request.headers['content-length']! > 10 * 1024 * 1024) { // if size > 10m, should parse it yourself
+        resolve();
+      } else {
+        let data: Buffer = Buffer.allocUnsafe(0);
+        this.request.on('data', (chunk: Buffer) => data = Buffer.concat([data, chunk]));
+        // TODO: JSON schema & validate
+        this.request.on('end', () => resolve(
+          this.parser
+            .setContentType(type || this.request.headers['content-type'] || '')
+            .parse(data)
+        ));
+        this.request.on('error', error => reject(error));
+      }
     }),
     /**
      * Inject special request header.
