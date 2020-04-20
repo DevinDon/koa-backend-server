@@ -54,9 +54,21 @@ const server = new Rester()
 
 # Change Log
 
+## 0.10.5 => 0.10.6
+
+- feat(rester): load config & save to rester.zone
+
+## 0.10.3 => 0.10.5
+
+- feat(handler/parameter): add body parser
+
 ## 0.10.2 => 0.10.3
 
 - perf(main): add '/' before path
+
+## 0.10.0 => 0.10.2
+
+- perf(handler/exception): add warn & error message when server exception
 
 ## 0.9.6 => 0.10.0
 

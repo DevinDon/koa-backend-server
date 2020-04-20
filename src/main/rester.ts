@@ -332,6 +332,7 @@ export class Rester {
       const config = JSON.parse(json.toString());
       Object.assign(this.address, config.address);
       Object.assign(this.database, config.database);
+      this.zone.config = config;
     } catch (error) {
       this.logger.error(`Load config failed: ${error}.`);
     } finally {
