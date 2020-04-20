@@ -45,25 +45,40 @@ export class BodyParser {
   parse(body: Buffer) {
     this.body = body;
     const type = this.contentType.match(/[^;]*/)![0];
-    switch (type) {
-      case 'application/json':
-        return this.parseApplicationJson();
-      case 'application/octet-stream':
-        return this.parseApplicationOctetStream();
-      case 'multipart/form-data':
-        return this.parseMultipartFormData();
-      case 'text/plain':
-        return this.parseTextPlain();
+    const left = type.match(/(.*)\/(.*)/)![1];
+    const right = type.match(/(.*)\/(.*)/)![2];
+    switch (left) {
+      case 'application':
+        switch (right) {
+          case 'json':
+            return this.parseApplicationJSON();
+          default:
+            return this.parseApplication();
+        }
+      case 'multipart':
+        switch (right) {
+          case 'form-data':
+            return this.parseMultipartFormData();
+          default:
+            return this.parseMultipart();
+        }
+      case 'text':
+        switch (right) {
+          case 'plain':
+            return this.parseTextPlain();
+          default:
+            return this.parseText();
+        }
       default:
         return this.parseDefault();
     }
   }
 
-  parseApplicationJson(buffer: Buffer = this.body): any {
+  parseApplicationJSON(buffer: Buffer = this.body): any {
     return JSON.parse(buffer.toString());
   }
 
-  parseApplicationOctetStream(buffer: Buffer = this.body): Buffer {
+  parseApplication(buffer: Buffer = this.body): Buffer {
     return buffer;
   }
 
@@ -127,7 +142,15 @@ export class BodyParser {
     return parts;
   }
 
+  parseMultipart(buffer: Buffer = this.body): Buffer {
+    return buffer;
+  }
+
   parseTextPlain(buffer: Buffer = this.body): string {
+    return buffer.toString();
+  }
+
+  parseText(buffer: Buffer = this.body): string {
     return buffer.toString();
   }
 
