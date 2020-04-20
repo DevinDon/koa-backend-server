@@ -33,7 +33,9 @@ export class ExceptionHandler extends BaseHandler {
         }
         this.response.statusCode = exception.code;
         this.response.statusMessage = exception.message!;
-        return exception.content;
+        return typeof exception.content === 'string'
+          ? exception.content
+          : JSON.stringify(exception.content);
       });
   }
 

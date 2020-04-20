@@ -54,6 +54,10 @@ const server = new Rester()
 
 # Change Log
 
+## 0.10.7 => 0.10.8
+
+- fix(handler/exception): exception content should be stringify
+
 ## 0.10.6 => 0.10.7
 
 - fix(handler/schema): schema should not overwrite existing request headers
