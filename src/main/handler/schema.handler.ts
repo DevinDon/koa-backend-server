@@ -14,24 +14,32 @@ export class SchemaHandler extends BaseHandler {
           return '';
         } else if (typeof v === 'object') {
           if (v instanceof Buffer) {
-            // content-type should be application/json when v is an object & not instanceof Buffer
-            this.response.setHeader('content-type', 'application/octet-stream');
+            // Content-Type should be application/json when v is an object & not instanceof Buffer
+            if (!this.response.getHeader('Content-Type')) {
+              this.response.setHeader('Content-Type', 'application/octet-stream');
+            }
             // TODO: Buffer is binary, base64 or something else
             return v;
           } else {
-            // content-type should be application/json when v is an object & not instanceof Buffer
-            this.response.setHeader('content-type', 'application/json');
+            // Content-Type should be application/json when v is an object & not instanceof Buffer
+            if (!this.response.getHeader('Content-Type')) {
+              this.response.setHeader('Content-Type', 'application/json');
+            }
             // TODO: JSON schema
             return JSON.stringify(v);
           }
         } else if (typeof v === 'string') {
-          // content-type should be text/plain when v is an string
-          this.response.setHeader('content-type', 'text/plain');
+          // Content-Type should be text/plain when v is an string
+          if (!this.response.getHeader('Content-Type')) {
+            this.response.setHeader('Content-Type', 'text/plain');
+          }
           return v;
         } else {
-          // content-type should be text/plain when v is other type
+          // Content-Type should be text/plain when v is other type
           // like boolean, number, and so on
-          this.response.setHeader('content-type', 'text/plain');
+          if (!this.response.getHeader('Content-Type')) {
+            this.response.setHeader('Content-Type', 'text/plain');
+          }
           return String(v);
         }
       });

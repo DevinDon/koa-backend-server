@@ -54,6 +54,10 @@ const server = new Rester()
 
 # Change Log
 
+## 0.10.6 => 0.10.7
+
+- fix(handler/schema): schema should not overwrite existing request headers
+
 ## 0.10.5 => 0.10.6
 
 - feat(rester): load config & save to rester.zone
