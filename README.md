@@ -54,6 +54,10 @@ const server = new Rester()
 
 # Change Log
 
+## 0.10.9 => 0.10.10
+
+- chore(npm): remove optional deps
+
 ## 0.10.8 => 0.10.9
 
 - perf(handler/parameter): when content length > 10m, user should parse it by self
