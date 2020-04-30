@@ -5,8 +5,10 @@
  * @property {string | undefined} message Message to show.
  * @property {T} content Content.
  */
-export class HTTPException<T = any> {
-  constructor(public code: number, public message?: string, public content?: T) { }
+export class HTTPException<T = any> extends Error {
+  constructor(public code: number, public message: string = 'HTTP Exception', public content?: T) {
+    super(message);
+  }
 }
 
 /** HTTP 400 Exception: Bad Request. */
