@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.10.10 => 0.10.11
+
+- fix(handler/exception): exception should log detail, with stack and other information, ISSUE [28](https://github.com/DevinDon/rester-core/issues/28)
+
 ## 0.10.9 => 0.10.10
 
 - chore(npm): remove optional deps

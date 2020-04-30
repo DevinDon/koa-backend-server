@@ -4,13 +4,13 @@
 
 **In Node.js & TypeScript!**
 
-> :books: ​See the [full documents](https://github.com/DevinDon/rester-core/tree/master/docs) here.
+> 📚 ​See the [full documents](https://github.com/DevinDon/rester-core/tree/master/docs) here.
 
 # Attention
 
 <span style="color: red">**:warning: WARNING: This project is currently in an *UNSTABLE* phase.**</span>
 
-> :loudspeaker: Attention: The **STABLE** version will arrive at 1.0.0
+> 📢 Attention: The **STABLE** version will arrive at 1.0.0
 
 # Installation
 
@@ -20,7 +20,7 @@ This project has released on [NPMJS.COM, @rester/core](https://www.npmjs.com/pac
 npm i --save @rester/core
 ```
 
-> :dizzy: ​The **Command-Line Interface** will be coming soon. Watch [@rester/cli](https://www.npmjs.com/package/@rester/cli).
+> 💫 ​The **Command-Line Interface** will be coming soon. Watch [@rester/cli](https://www.npmjs.com/package/@rester/cli).
 
 # Usage
 
@@ -46,13 +46,19 @@ const server = new Rester()
   .listen();
 ```
 
-> :card_index_dividers: See more [demo](https://github.com/DevinDon/rester-core/blob/master/src/demo) here.
+> 🗂 See more [demo](https://github.com/DevinDon/rester-core/blob/master/src/demo) here.
 
 # Feature
 
-> :sparkles: See issue [#4](https://github.com/DevinDon/rester-core/issues/4) for detail.
+> ✨ See issue [#4](https://github.com/DevinDon/rester-core/issues/4) for detail.
 
 # Change Log
+
+> 📄 See [change log](https://github.com/DevinDon/rester-core/blob/master/docs/CHANGELOG.md) for detail.
+
+## 0.10.10 => 0.10.11
+
+- fix(handler/exception): exception should log detail, with stack and other information, ISSUE [28](https://github.com/DevinDon/rester-core/issues/28)
 
 ## 0.10.9 => 0.10.10
 
@@ -90,8 +96,6 @@ const server = new Rester()
 
 - refactor: refactor MVC Arch Mode, PR [#25](https://github.com/DevinDon/rester-core/pull/25)
 - fix(handler/exception): fix exception handler
-
-> :bookmark_tabs: See [change log](https://github.com/DevinDon/rester-core/blob/master/docs/CHANGELOG.md) for detail.
 
 # Author
 
