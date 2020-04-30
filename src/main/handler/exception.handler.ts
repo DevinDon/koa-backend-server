@@ -20,23 +20,34 @@ export class ExceptionHandler extends BaseHandler {
   }
 
   handle(next: () => Promise<any>): Promise<any> {
+
     return next()
       .catch((exception: HTTPException | Error) => {
+
+        let returns;
+
         if (exception instanceof HTTPException) {
-          this.rester.configLogger.get().error(`HTTP Exception: ${exception.code} ${exception.message}\n${JSON.stringify(exception.content)}`);
+          // if it is HTTP Exception, set code & return the content
+          this.rester.configLogger.get()
+            .error(`HTTP ${exception.code} Exception: ${exception.message}\n${JSON.stringify(exception.content)}\n${exception.stack}`);
+          this.response.statusCode = exception.code;
+          this.response.statusMessage = exception.message;
+          returns = exception.content;
         } else {
-          this.rester.configLogger.get().error(`Internal Exception: ${exception.name} ${exception.message}\n${exception.stack}`);
-          exception = new HTTP500Exception('Internal Server Error');
+          // else, just throw 500 with `zone.exception.response` or `{}`
+          this.rester.configLogger.get()
+            .error(`Internal Exception: ${exception.name} ${exception.message}\n${exception.stack}`);
+          this.response.statusCode = 500;
+          this.response.statusMessage = exception.message;
+          returns = this.rester.zone.exception?.response || {};
         }
-        if (!exception.content) { // response content default to {}
-          exception.content = this.rester.zone.exception.response;
-        }
-        this.response.statusCode = exception.code;
-        this.response.statusMessage = exception.message!;
-        return typeof exception.content === 'string'
-          ? exception.content
-          : JSON.stringify(exception.content);
+
+        return typeof returns === 'string'
+          ? returns
+          : JSON.stringify(returns);
+
       });
+
   }
 
 }
