@@ -26,7 +26,7 @@ export class HandlerPool {
    * @returns {T} A handler instance with special type.
    */
   take<T = BaseHandler>(handler: HandlerType): T {
-    const pool = this.pools.get(handler.name)! || this.pools.set(handler.name, []).get(handler.name)!;
+    const pool = this.pools.get(handler.name) || this.pools.set(handler.name, []).get(handler.name)!;
     return pool.pop() || new handler(this.rester) as any;
   }
 
@@ -37,7 +37,7 @@ export class HandlerPool {
    * @returns {number} Number of handlers in pool.
    */
   give(handler: BaseHandler): number {
-    const pool = this.pools.get(handler.constructor.name)! || this.pools.set(handler.constructor.name, []).get(handler.constructor.name)!;
+    const pool = this.pools.get(handler.constructor.name) || this.pools.set(handler.constructor.name, []).get(handler.constructor.name)!;
     return pool.length < this.max ? pool.push(handler.from()) : pool.length;
   }
 
@@ -63,18 +63,22 @@ export class HandlerPool {
    * @returns {() => Promise<any>} Composed function.
    */
   compose(current: BaseHandler, i: number, handlers: HandlerType[]): () => Promise<any> {
+    // 根据 handlers 的数量进行组合 compose
     if (i + 1 < handlers.length) {
+      //
       // that is very very very, complex
       // 利用非立即执行函数的特性, 在 current.handle 调用 next 时再进行数据继承绑定
       // 才能正确的获取所有的属性（包括参数和已处理过的其他属性）
       // by the way, it will also make compose faster than before
       return async () => current.handle(() => this.compose(this.take(handlers[++i]).inherit(current), i, handlers)())
         .finally(() => this.give(current));
-    } else if (handlers === this.rester.configHandlers.get() && current.route.handlers.length) { // global handlers has been composed, and handler.route.HandlerTypes should exist
+    } else if (handlers === this.rester.configHandlers.get() && current.route.handlers.length) {
+      // global handlers has been composed, and handler.route.HandlerTypes should exist
       handlers = current.route.handlers;
       return async () => current.handle(() => this.compose(this.take(handlers[0]).inherit(current), 0, handlers)())
         .finally(() => this.give(current));
-    } else { // the last handler
+    } else {
+      // the last handler
       return async () => current.handle(current.run.bind(current))
         .finally(() => this.give(current));
     }
