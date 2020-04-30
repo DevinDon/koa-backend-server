@@ -21,12 +21,12 @@ export class ExceptionHandler extends BaseHandler {
 
   handle(next: () => Promise<any>): Promise<any> {
     return next()
-      .catch((exception: HTTPException) => {
-        if (!(exception instanceof HTTPException)) { // default to 500
-          this.rester.configLogger.get().error(`Exception: ${JSON.stringify(exception)}`);
-          exception = new HTTP500Exception('Internal Server Error');
+      .catch((exception: HTTPException | Error) => {
+        if (exception instanceof HTTPException) {
+          this.rester.configLogger.get().error(`HTTP Exception: ${exception.code} ${exception.message}\n${JSON.stringify(exception.content)}`);
         } else {
-          this.rester.configLogger.get().warn(`Exception: ${exception.code} ${exception.message}.`);
+          this.rester.configLogger.get().error(`Internal Exception: ${exception.name} ${exception.message}\n${exception.stack}`);
+          exception = new HTTP500Exception('Internal Server Error');
         }
         if (!exception.content) { // response content default to {}
           exception.content = this.rester.zone.exception.response;
