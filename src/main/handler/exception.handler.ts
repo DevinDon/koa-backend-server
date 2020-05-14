@@ -1,5 +1,5 @@
 import { HandlerType } from '../decorator';
-import { HTTP500Exception, HTTPException } from '../exception';
+import { HTTPException } from '../exception';
 import { Rester } from '../rester';
 import { BaseHandler } from './base.handler';
 
