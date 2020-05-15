@@ -31,7 +31,7 @@ export interface ParamInjection {
  * - HTTPRequest
  * - HTTPResponse
  */
-function baseParam(type: ParamInjectionType) {
+export function baseParam(type: ParamInjectionType | any) {
   return (value: string = ''): ParameterDecorator => (target: any, name, index) => {
     // get existing params array
     const exist: ParamInjection[] = Reflect.getMetadata(MetadataKey.Parameter, target, name) || [];
