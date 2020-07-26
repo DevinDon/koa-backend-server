@@ -322,12 +322,11 @@ export class Rester {
   private loadConfig(mode: 'DEV' | 'PROD' | undefined = process.env.MODE as any): Rester {
     try {
       let json;
-      if (mode === 'DEV') {
-        json = readFileSync('rester.dev.json');
-      } else if (mode === 'PROD') {
+      if (mode === 'PROD') { // production mode
         json = readFileSync('rester.json');
-      } else { // config file not exist
-        return this;
+      } else { // development mode
+        this.logger.debug('Rester is in Development mode');
+        json = readFileSync('rester.dev.json');
       }
       const config = JSON.parse(json.toString());
       Object.assign(this.address, config.address);
