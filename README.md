@@ -56,50 +56,9 @@ const server = new Rester()
 
 > 📄 See [change log](https://github.com/DevinDon/rester-core/blob/master/docs/CHANGELOG.md) for detail.
 
-## 0.10.11 => 0.10.12
+## 0.10.12 => 0.10.13
 
-- feat(decorator): support custom parameter handler
-
-## 0.10.10 => 0.10.11
-
-- fix(handler/exception): exception should log detail, with stack and other information, ISSUE [28](https://github.com/DevinDon/rester-core/issues/28)
-
-## 0.10.9 => 0.10.10
-
-- chore(npm): remove optional deps
-
-## 0.10.8 => 0.10.9
-
-- perf(handler/parameter): when content length > 10m, user should parse it by self
-
-## 0.10.7 => 0.10.8
-
-- fix(handler/exception): exception content should be stringify
-
-## 0.10.6 => 0.10.7
-
-- fix(handler/schema): schema should not overwrite existing request headers
-
-## 0.10.5 => 0.10.6
-
-- feat(rester): load config & save to rester.zone
-
-## 0.10.3 => 0.10.5
-
-- feat(handler/parameter): add body parser
-
-## 0.10.2 => 0.10.3
-
-- perf(main): add '/' before path
-
-## 0.10.0 => 0.10.2
-
-- perf(handler/exception): add warn & error message when server exception
-
-## 0.9.6 => 0.10.0
-
-- refactor: refactor MVC Arch Mode, PR [#25](https://github.com/DevinDon/rester-core/pull/25)
-- fix(handler/exception): fix exception handler
+- feat(handler/exception): determine whether to display stack info through the debug flag
 
 # Author
 

@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.10.12 => 0.10.13
+
+- feat(handler/exception): determine whether to display stack info through the debug flag
+
 ## 0.10.11 => 0.10.12
 
 - feat(decorator): support custom parameter handler
