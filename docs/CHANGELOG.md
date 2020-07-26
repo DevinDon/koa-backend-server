@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.10.13 => 0.10.14
+
+- perf(handle/pool): handle compose exception
+- perf(handle/exception): optimize exception output
+- perf(rester): default in dev mode
+
 ## 0.10.12 => 0.10.13
 
 - feat(handler/exception): determine whether to display stack info through the debug flag
