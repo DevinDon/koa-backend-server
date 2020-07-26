@@ -1,10 +1,10 @@
-import { GET, PathVariable, Rester, View, baseParam, parameterInjectors, BaseHandler } from '../../main';
+import { baseParam, GET, parameterInjectors, Rester, View } from '../../main';
 
 const Test = baseParam('abc');
 
-parameterInjectors.abc = (handler) => {
+parameterInjectors.abc = (handler: any) => {
   return handler.request.headers;
-}
+};
 
 @View()
 class DemoView {
