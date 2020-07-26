@@ -50,7 +50,8 @@ export class HandlerPool {
   async process(request: any, response: any): Promise<void> {
     // take & compose these handlers
     this.compose(this.take(this.rester.configHandlers.get()[0]).from(request, response), 0, this.rester.configHandlers.get())()
-      .then(v => response.write(v))
+      .then(v => response.write(v || ''))
+      .catch(reason => this.rester.configLogger.get().warn(`Error while compose: ${reason}`))
       .finally(() => response.end());
   }
 
