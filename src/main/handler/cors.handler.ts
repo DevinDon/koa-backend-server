@@ -68,7 +68,7 @@ export class CORSHandler extends BaseHandler {
 
   handle(next: () => Promise<any>): Promise<any> {
     for (const header in this.rester.zone.cors) {
-      if (this.rester.zone.cors.hasOwnProperty(header)) {
+      if (Object.prototype.hasOwnProperty.call(this.rester.zone.cors, header)) {
         this.response.setHeader(header, this.rester.zone.cors[header]);
       }
     }

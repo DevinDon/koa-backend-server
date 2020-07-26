@@ -95,7 +95,7 @@ export class ParameterHandler extends BaseHandler {
         }
       } catch (exception) {
         // bad request cannot be parsed, throw 400
-        throw new HTTP400Exception(`Bad Request`);
+        throw new HTTP400Exception('Bad Request');
       }
       return next();
     }

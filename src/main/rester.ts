@@ -335,9 +335,8 @@ export class Rester {
       this.zone.config = config;
     } catch (error) {
       this.logger.error(`Load config failed: ${error}.`);
-    } finally {
-      return this;
     }
+    return this;
   }
 
   /**
@@ -348,15 +347,15 @@ export class Rester {
   async connectDatabase(retry: number = 0): Promise<void> {
     while (retry) {
       try {
-        this.logger.info(`Database connecting...`);
+        this.logger.info('Database connecting...');
         await createConnection(this.database);
-        this.logger.info(`Database connected.`);
+        this.logger.info('Database connected.');
         retry = 0;
       } catch (error) {
         if (--retry) {
           this.logger.warn(`Database connect failed: ${error}, retry in 10 seconds...`);
         } else {
-          this.logger.error(`Database connect failed, database offline.`);
+          this.logger.error('Database connect failed, database offline.');
         }
       } finally {
         await delay(10000);
@@ -395,7 +394,7 @@ export class Rester {
     if (this.database.type) {
       this.connectDatabase(10);
     } else {
-      this.logger.warn(`No database connection.`);
+      this.logger.warn('No database connection.');
     }
     // listen to address
     host = host || this.address.host || 'localhost';
