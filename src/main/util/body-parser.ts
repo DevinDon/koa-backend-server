@@ -39,9 +39,13 @@ export class BodyParser {
 
   parse(body: Buffer) {
     this.body = body;
-    const type = this.contentType.match(/[^;]*/)![0];
-    const left = type.match(/(.*)\/(.*)/)![1];
-    const right = type.match(/(.*)\/(.*)/)![2];
+    // if content type is none
+    if (this.contentType === '') {
+      return this.parseDefault();
+    }
+    const type = this.contentType.match(/[^;]*/)![0].match(/(.*)\/(.*)/);
+    const left = type ? type[1] : '';
+    const right = type ? type[2] : '';
     switch (left) {
       case 'application':
         switch (right) {
