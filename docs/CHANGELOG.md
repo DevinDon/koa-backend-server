@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.10.14 => 0.10.16
+
+- fix(util/body-parser): fix parse of content type
+
 ## 0.10.13 => 0.10.14
 
 - perf(handle/pool): handle compose exception
