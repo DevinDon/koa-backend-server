@@ -56,6 +56,11 @@ const server = new Rester()
 
 > 📄 See [change log](https://github.com/DevinDon/rester-core/blob/master/docs/CHANGELOG.md) for detail.
 
+## 0.10.17 => 0.10.18
+
+- feat(handler/parameter): add zone param injector
+- fix(handler/base): fix prop init
+
 ## 0.10.16 => 0.10.17
 
 - feat(handler/base): add zone for each request

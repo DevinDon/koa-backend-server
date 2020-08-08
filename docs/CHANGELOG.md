@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.10.17 => 0.10.18
+
+- feat(handler/parameter): add zone param injector
+- fix(handler/base): fix prop init
+
 ## 0.10.16 => 0.10.17
 
 - feat(handler/base): add zone for each request
