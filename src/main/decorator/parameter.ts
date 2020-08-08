@@ -9,7 +9,8 @@ export enum ParamInjectionType {
   RequestBody = 'PARAM$REQUEST$BODY',
   RequestHeader = 'PARAM$REQUEST$HEADER',
   HTTPRequest = 'PARAM$HTTP$REQUEST',
-  HTTPResponse = 'PARAM$HTTP$RESPONSE'
+  HTTPResponse = 'PARAM$HTTP$RESPONSE',
+  HandlerZone = 'PARAM$HANDLER$ZONE'
 }
 
 /**
@@ -30,6 +31,7 @@ export interface ParamInjection {
  * - RequestHeader
  * - HTTPRequest
  * - HTTPResponse
+ * - HTTPZone
  */
 export function baseParam(type: ParamInjectionType | any) {
   return (value: string = ''): ParameterDecorator => (target: any, name, index) => {
@@ -91,3 +93,10 @@ export const HTTPRequest = baseParam(ParamInjectionType.HTTPRequest);
  * Inject response instance.
  */
 export const HTTPResponse = baseParam(ParamInjectionType.HTTPResponse);
+
+/**
+ * Parameter decorator.
+ *
+ * Inject handler zone.
+ */
+export const HandlerZone = baseParam(ParamInjectionType.HandlerZone);

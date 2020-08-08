@@ -56,7 +56,13 @@ export const parameterInjectors: { [index in ParamInjectionType | string]: (hand
    *
    * @returns {string | string[] | undefined} Header value of special key, or undefined.
    */
-  PARAM$REQUEST$HEADER: (handler, key: string): string | string[] | undefined => handler.request.headers[key.toLowerCase()]
+  PARAM$REQUEST$HEADER: (handler, key: string): string | string[] | undefined => handler.request.headers[key.toLowerCase()],
+  /**
+   * Inject handler zone, allow to return zone[key].
+   *
+   * @returns {any} Data of handler zone.
+   */
+  PARAM$HANDLER$ZONE: (handler, key?: string): any => key ? handler.zone[key] : handler.zone
 };
 
 
@@ -100,7 +106,7 @@ export class ParameterHandler extends BaseHandler {
       return next();
     }
     // throw 404 not found exception
-    throw new HTTP404Exception(`Can't ${this.request.method} ${this.request.url!}`);
+    throw new HTTP404Exception(`Can't ${this.request.method} ${this.request.url}`);
   }
 
 }
