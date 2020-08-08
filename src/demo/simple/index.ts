@@ -1,10 +1,15 @@
-import { baseParam, GET, parameterInjectors, Rester, View } from '../../main';
+import { baseParam, GET, parameterInjectors, Rester, View, HandlerZone, BaseHandler, Handler, PathQuery, PathVariable, HTTPRequest, ExceptionHandler, RouterHandler, ParameterHandler, SchemaHandler } from '../../main';
+import { logger } from '@iinfinity/logger';
 
-const Test = baseParam('abc');
+class ZoneHandler extends BaseHandler {
 
-parameterInjectors.abc = (handler: any) => {
-  return handler.request.headers;
-};
+  async handle(next: () => Promise<any>): Promise<any> {
+    // this.zone.hello = 'world!!!!';
+    this.zone = { what: 'fuck' };
+    return next();
+  }
+
+}
 
 @View()
 class DemoView {
@@ -14,10 +19,14 @@ class DemoView {
     return { hello: 'world' };
   }
 
+  @Handler(ZoneHandler)
   @GET('{{name}}')
-  name(@Test() name: string) {
-    const a = name + 1;
-    return name;
+  name(
+    @PathVariable('name') name: string,
+    @HandlerZone() zone: any,
+    @HandlerZone('what') fuck: string
+  ) {
+    return zone;
   }
 
 }
@@ -25,4 +34,5 @@ class DemoView {
 const server = new Rester()
   .configAddress.setHost('0.0.0.0').end()
   .configViews.add(DemoView).end()
+  .configHandlers.set(ExceptionHandler, SchemaHandler, RouterHandler, ZoneHandler, ParameterHandler).end()
   .listen();
