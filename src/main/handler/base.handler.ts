@@ -64,11 +64,12 @@ export abstract class BaseHandler<ZoneType = any> {
    * @returns {this} This handler instance.
    */
   from(request?: IncomingMessage, response?: ServerResponse): this {
-    this.args = undefined as any;
+    this.args = [];
     this.mapping = undefined as any;
     this.request = request!;
     this.response = response!;
     this.route = undefined as any;
+    this.zone = {} as any;
     return this;
   }
 
@@ -84,6 +85,7 @@ export abstract class BaseHandler<ZoneType = any> {
     this.request = handler.request;
     this.response = handler.response;
     this.route = handler.route;
+    this.zone = handler.zone;
     return this;
   }
 
