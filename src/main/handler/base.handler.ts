@@ -10,7 +10,7 @@ import { Rester } from '../rester';
  *
  * @abstract `handle` Must implement this abstruct method.
  */
-export abstract class BaseHandler {
+export abstract class BaseHandler<ZoneType = any> {
 
   /** Mapping method arguments of this view. */
   protected args!: any[];
@@ -22,6 +22,8 @@ export abstract class BaseHandler {
   protected response!: ServerResponse;
   /** Route get form rester.zone.router. */
   public route!: Route;
+  /** Data zone. */
+  public zone!: ZoneType;
 
   /**
    * Config handler on rester.

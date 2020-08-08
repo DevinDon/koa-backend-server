@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.10.16 => 0.10.17
+
+- feat(handler/base): add zone for each request
+
 ## 0.10.14 => 0.10.16
 
 - fix(util/body-parser): fix parse of content type
