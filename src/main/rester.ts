@@ -4,7 +4,7 @@ import { readFileSync } from 'fs';
 import * as HTTP from 'http';
 import * as HTTP2 from 'http2';
 import * as HTTPS from 'https';
-import { ConnectionOptions, createConnection } from 'typeorm';
+import { Connection, ConnectionOptions, createConnection } from 'typeorm';
 import { MetadataKey, Route } from './@types';
 import { HandlerType } from './decorator';
 import { HandlerPool, ParameterHandler } from './handler';
@@ -161,6 +161,8 @@ export class Rester {
   private address: AddressOption;
   /** Views in this rester instance. */
   private views: Function[];
+  /** Typeorm connection. */
+  private connection?: Connection;
   /** Database option. */
   private database: ConnectionOptions;
   /** Handler types. */
@@ -347,7 +349,7 @@ export class Rester {
     while (retry) {
       try {
         this.logger.info('Database connecting...');
-        await createConnection(this.database);
+        this.connection = await createConnection(this.database);
         this.logger.info('Database connected.');
         retry = 0;
       } catch (error) {
@@ -356,6 +358,7 @@ export class Rester {
         } else {
           this.logger.error('Database connect failed, database offline.');
         }
+        await this.connection?.close();
       } finally {
         await delay(10000);
       }
