@@ -394,7 +394,7 @@ export class Rester {
     }
     // connect database
     if (this.database.type) {
-      this.connectDatabase(10);
+      setInterval(() => this.connection?.isConnected || this.connectDatabase(1), 5000);
     } else {
       this.logger.warn('No database connection.');
     }
