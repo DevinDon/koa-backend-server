@@ -56,6 +56,10 @@ const server = new Rester()
 
 > 📄 See [change log](https://github.com/DevinDon/rester-core/blob/master/docs/CHANGELOG.md) for detail.
 
+## 0.10.18 => 0.10.19
+
+- feat(rester): add connection field
+
 ## 0.10.17 => 0.10.18
 
 - feat(handler/parameter): add zone param injector

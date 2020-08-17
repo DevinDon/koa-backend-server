@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.10.18 => 0.10.19
+
+- feat(rester): add connection field
+
 ## 0.10.17 => 0.10.18
 
 - feat(handler/parameter): add zone param injector
