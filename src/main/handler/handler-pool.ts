@@ -73,7 +73,7 @@ export class HandlerPool {
       // by the way, it will also make compose faster than before
       return async () => current.handle(() => this.compose(this.take(handlers[++i]).inherit(current), i, handlers)())
         .finally(() => this.give(current));
-    } else if (handlers === this.rester.configHandlers.get() && current.route.handlers.length) {
+    } else if (handlers === this.rester.configHandlers.get() && current.route?.handlers.length) {
       // global handlers has been composed, and handler.route.HandlerTypes should exist
       handlers = current.route.handlers;
       return async () => current.handle(() => this.compose(this.take(handlers[0]).inherit(current), 0, handlers)())

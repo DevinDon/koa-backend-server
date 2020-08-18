@@ -182,7 +182,7 @@ export class RouterHandler extends BaseHandler {
   handle(next: () => Promise<any>): Promise<any> {
     this.route = this.get({ method: this.request.method as Method, path: this.request.url! })!;
     if (this.route) { return next(); }
-    throw new HTTP404Exception(`Can't ${this.request.method} ${this.request.url}`);
+    return next().then(() => { throw new HTTP404Exception(`Can't ${this.request.method} ${this.request.url}`); });
   }
 
 }
