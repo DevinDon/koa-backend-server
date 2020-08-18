@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.10.19 => 0.10.20
+
+- feat(util): export all from util, use `import {} from '@rester/core/util`
+- fix(handler): all global handler will run thought exception
+
 ## 0.10.18 => 0.10.19
 
 - feat(rester): add connection field
