@@ -1,6 +1,8 @@
+import { logger } from '@iinfinity/logger';
 import { createWriteStream, writeFileSync } from 'fs';
 import { IncomingMessage } from 'http';
-import { CORSHandler, Handler, HTTPRequest, Part, PUT, RequestBody, Rester, View } from '../../main';
+import { CORSHandler, Handler, HTTPRequest, PUT, RequestBody, Rester, View } from '../../main';
+import { Part } from '../../main/util';
 
 @View()
 @Handler(CORSHandler)
@@ -10,7 +12,7 @@ class UploadView {
   index(
     @RequestBody() body: Part[]
   ) {
-    console.log(`Length: ${body.length}`);
+    logger.log(`Length: ${body.length}`);
     // console.log(body);
     body.forEach(v => v.contentDispositionFilename && writeFileSync('temp/' + v.contentDispositionFilename + '.txt', v.data));
     return body.map(v => ({ file: v.contentDispositionFilename, size: v.data.length }));
@@ -22,8 +24,8 @@ class UploadView {
     @RequestBody() body?: Buffer
   ) {
     if (body) {
-      console.log(`Length: ${body.length}`);
-      console.log(body);
+      logger.log(`Length: ${body.length}`);
+      logger.log(body);
       writeFileSync('temp/' + Math.random(), body);
       return body.length;
     } else {
