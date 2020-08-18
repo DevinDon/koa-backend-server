@@ -1,11 +1,11 @@
-import { baseParam, GET, parameterInjectors, Rester, View, HandlerZone, BaseHandler, Handler, PathQuery, PathVariable, HTTPRequest, ExceptionHandler, RouterHandler, ParameterHandler, SchemaHandler } from '../../main';
 import { logger } from '@iinfinity/logger';
+import { BaseHandler, ExceptionHandler, GET, Handler, HandlerZone, ParameterHandler, PathVariable, Rester, RouterHandler, SchemaHandler, View } from '../../main';
 
 class ZoneHandler extends BaseHandler {
 
   async handle(next: () => Promise<any>): Promise<any> {
-    // this.zone.hello = 'world!!!!';
-    this.zone = { what: 'fuck' };
+    this.zone = { hello: 'world' };
+    logger.debug('handler works');
     return next();
   }
 
@@ -23,10 +23,10 @@ class DemoView {
   @GET('{{name}}')
   name(
     @PathVariable('name') name: string,
-    @HandlerZone() zone: any,
-    @HandlerZone('what') fuck: string
+    @HandlerZone() zone: { hello: 'world' },
+    @HandlerZone('what') what: string
   ) {
-    return zone;
+    return { ...zone, name, what };
   }
 
 }
