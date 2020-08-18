@@ -343,9 +343,9 @@ export class Rester {
   /**
    * Connect database.
    *
-   * @param {number} retry Retry times, default to 0.
+   * @param {number} retry Retry times, default to 1.
    */
-  async connectDatabase(retry: number = 0): Promise<void> {
+  async connectDatabase(retry: number = 1): Promise<void> {
     while (retry) {
       try {
         this.logger.info('Database connecting...');
@@ -354,7 +354,7 @@ export class Rester {
         retry = 0;
       } catch (error) {
         if (--retry) {
-          this.logger.warn(`Database connect failed: ${error}, retry in 10 seconds...`);
+          this.logger.warn(`Database connect failed: ${error}, retry ${retry} in 10 seconds...`);
         } else {
           this.logger.error('Database connect failed, database offline.');
         }
@@ -394,7 +394,7 @@ export class Rester {
     }
     // connect database
     if (this.database.type) {
-      setInterval(() => this.connection?.isConnected || this.connectDatabase(1), 5000);
+      this.connectDatabase(10);
     } else {
       this.logger.warn('No database connection.');
     }
