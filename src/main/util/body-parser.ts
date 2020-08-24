@@ -1,3 +1,5 @@
+import { URLSearchParams } from 'url';
+
 export interface Part {
   buffer: Buffer;
   contentDisposition: string;
@@ -50,6 +52,8 @@ export class BodyParser {
         switch (right) {
           case 'json':
             return this.parseApplicationJSON();
+          case 'x-www-form-urlencoded':
+            return this.parseAllicationXWWWFormURLEncoded();
           default:
             return this.parseApplication();
         }
@@ -74,6 +78,12 @@ export class BodyParser {
 
   parseApplicationJSON(buffer: Buffer = this.body): any {
     return JSON.parse(buffer.toString());
+  }
+
+  parseAllicationXWWWFormURLEncoded(buffer: Buffer = this.body): any {
+    return Object.fromEntries(
+      new URLSearchParams(buffer.toString()).entries()
+    );
   }
 
   parseApplication(buffer: Buffer = this.body): Buffer {
