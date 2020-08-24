@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.10.21 => 0.10.22
+
+- feat(util/body-parser): able to parse x-www-form-urlencoded
+
 ## 0.10.19 => 0.10.21
 
 - feat(util): export all from util, use `import {} from '@rester/core/util`
