@@ -21,19 +21,20 @@ export class ExceptionHandler extends BaseHandler {
 
   private logger = this.rester.configLogger.get();
 
-  handle(next: () => Promise<any>): Promise<any> {
+  async handle(next: () => Promise<any>): Promise<any> {
 
     return next()
       .catch((exception: HTTPException | Error) => {
 
         let returns;
+        const debug = this.rester.zone.config?.debug;
 
         if (exception instanceof HTTPException) {
           // if it is HTTP Exception, set code & return the content
           this.logger
-            .error(`HTTP ${exception.code} Exception: ${exception.message}\t${exception.content ? JSON.stringify(exception.content) : ''}`);
+            .error(`HTTP ${exception.code} Exception from '${this.request.method} ${this.request.url}': ${exception.message}\t${exception.content ? JSON.stringify(exception.content) : ''}`);
           // if debug is true, output stack info
-          if (this.rester.zone.config?.debug) {
+          if (debug) {
             this.logger.error(`Detail: ${exception.stack}`);
           }
           this.response.statusCode = exception.code;
@@ -42,9 +43,9 @@ export class ExceptionHandler extends BaseHandler {
         } else {
           // else, just throw 500 with `zone.exception.response` or `{}`
           this.logger
-            .error(`HTTP 500 Internal Exception: ${exception.name} ${exception.message}`);
+            .error(`HTTP 500 Internal Exception from '${this.request.method} ${this.request.url}': ${exception.name} ${exception.message}`);
           // if debug is true, output stack info
-          if (this.rester.zone.config?.debug) {
+          if (debug) {
             this.logger.error(`Detail: ${exception.stack}`);
           }
           this.response.statusCode = 500;
