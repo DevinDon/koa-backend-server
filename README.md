@@ -56,6 +56,10 @@ const server = new Rester()
 
 > 📄 See [change log](https://github.com/DevinDon/rester-core/blob/master/docs/CHANGELOG.md) for detail.
 
+## 0.10.22 => 0.10.23
+
+- perf(handler/exception): display router path for exception
+
 ## 0.10.21 => 0.10.22
 
 - feat(util/body-parser): able to parse x-www-form-urlencoded
