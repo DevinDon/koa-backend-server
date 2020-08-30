@@ -1,6 +1,5 @@
 import { GET, Rester, View } from '../../main';
 
-
 @View()
 class DemoView {
 
