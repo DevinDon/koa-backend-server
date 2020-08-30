@@ -1,5 +1,5 @@
 import { createServer } from 'http';
-import { GET, Rester, View } from '../../main';
+import { GET, Rester, View, RouterHandler } from '../../main';
 
 const serverRaw = createServer((request, response) => response.end('ok')).listen(8080);
 
@@ -16,5 +16,5 @@ class DemoView {
 const serverRester = new Rester()
   .configAddress.setHost('0.0.0.0').setPort(8081).end()
   .configViews.add(DemoView).end()
-  .configHandlers.set().end()
+  .configHandlers.set(RouterHandler).end()
   .listen();
