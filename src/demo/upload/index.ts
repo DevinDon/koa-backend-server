@@ -1,8 +1,7 @@
 import { logger } from '@iinfinity/logger';
 import { createWriteStream, writeFileSync } from 'fs';
 import { IncomingMessage } from 'http';
-import { CORSHandler, Handler, HTTPRequest, PUT, RequestBody, Rester, View } from '../../main';
-import { Part } from '../../main/util';
+import { CORSHandler, Handler, HTTPRequest, Part, PUT, RequestBody, Rester, View, partsToObject } from '../../main';
 
 @View()
 @Handler(CORSHandler)
@@ -36,6 +35,13 @@ class UploadView {
       });
       return result;
     }
+  }
+
+  @PUT('/object')
+  async object(
+    @RequestBody() parts: Part[]
+  ) {
+    return partsToObject(parts);
   }
 
 }
