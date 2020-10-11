@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.11.0 => 0.11.1
+
+- perf(@util/validator): null check function only need an object param
+
 ## 0.10.24 => 0.11.0
 
 - perf(database): support multi connections

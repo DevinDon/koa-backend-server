@@ -56,6 +56,10 @@ const server = new Rester()
 
 > 📄 See [change log](https://github.com/DevinDon/rester-core/blob/master/docs/CHANGELOG.md) for detail.
 
+## 0.11.0 => 0.11.1
+
+- perf(@util/validator): null check function only need an object param
+
 ## 0.10.24 => 0.11.0
 
 - perf(database): support multi connections
