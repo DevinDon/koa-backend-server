@@ -1,5 +1,5 @@
 import { URLSearchParams } from 'url';
-import { Part } from '../@types';
+import { Part } from '../@type';
 
 export class BodyParser {
 

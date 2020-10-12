@@ -1,4 +1,4 @@
-import { MetadataKey } from '../@types';
+import { MetadataKey } from '../@type';
 import { BaseHandler } from '../handler';
 
 /** Handler class type. */

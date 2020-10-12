@@ -1,5 +1,5 @@
 import { logger } from '@iinfinity/logger';
-import { Mapping, MetadataKey, Method, Route } from '../@types';
+import { Mapping, MetadataKey, Method, Route } from '../@type';
 import { HTTP404Exception } from '../exception';
 import { Rester } from '../rester';
 import { BaseHandler } from './base.handler';

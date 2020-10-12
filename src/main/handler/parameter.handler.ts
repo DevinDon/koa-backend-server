@@ -1,8 +1,8 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { MetadataKey } from '../@types';
+import { MetadataKey } from '../@type';
 import { ParamInjection, ParamInjectionType } from '../decorator';
 import { HTTP400Exception, HTTP404Exception } from '../exception';
-import { BodyParser } from '../util/body-parser';
+import { BodyParser } from '../@util/body-parser';
 import { BaseHandler } from './base.handler';
 
 /** Parameter injectors, function. */

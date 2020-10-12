@@ -5,7 +5,7 @@ import * as HTTP from 'http';
 import * as HTTP2 from 'http2';
 import * as HTTPS from 'https';
 import { Connection, ConnectionOptions, createConnections } from 'typeorm';
-import { MetadataKey, Route } from './@types';
+import { MetadataKey, Route } from './@type';
 import { HandlerType } from './decorator';
 import { HandlerPool, ParameterHandler } from './handler';
 import { ExceptionHandler } from './handler/exception.handler';

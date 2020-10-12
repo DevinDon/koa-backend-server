@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { Mapping, Route } from '../@types';
+import { Mapping, Route } from '../@type';
 import { HandlerType } from '../decorator';
 import { Rester } from '../rester';
 

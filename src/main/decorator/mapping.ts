@@ -1,4 +1,4 @@
-import { Mapping, MetadataKey, Method } from '../@types';
+import { Mapping, MetadataKey, Method } from '../@type';
 
 /**
  * Generate a mapping decorator.
