@@ -59,6 +59,7 @@ const server = new Rester()
 ## 0.10.24 => 0.11.0
 
 - perf(database): support multi connections
+- feat(@util): add new utils, such params check
 
 # Author
 
