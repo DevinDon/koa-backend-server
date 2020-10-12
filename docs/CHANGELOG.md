@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.10.24 => 0.11.0
+
+- perf(database): support multi connections
+
 ## 0.10.23 => 0.10.24
 
 - feat(util/body-parser): parts to object

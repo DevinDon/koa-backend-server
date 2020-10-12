@@ -4,7 +4,7 @@ import { readFileSync } from 'fs';
 import * as HTTP from 'http';
 import * as HTTP2 from 'http2';
 import * as HTTPS from 'https';
-import { Connection, ConnectionOptions, createConnection } from 'typeorm';
+import { Connection, ConnectionOptions, createConnections } from 'typeorm';
 import { MetadataKey, Route } from './@types';
 import { HandlerType } from './decorator';
 import { HandlerPool, ParameterHandler } from './handler';
@@ -76,31 +76,15 @@ interface ConfigViews {
  * Config database.
  *
  * - `set`:
- * - `setType`:
- * - `setHost`:
- * - `setPort`:
- * - `setUsername`:
- * - `setPassword`:
- * - `setDatabase`:
- * - `setEntities`:
- * - `setLogger`:
- * - `setLogging`:
- * - `setStnchronize`:
+ * - `reset`:
  * - `end`: end database config & return this rester instance
  */
 interface ConfigDatabase {
   unconfigured: boolean;
-  set: (option: ConnectionOptions) => ConfigDatabase;
-  setType: (type: ConnectionOptions['type']) => ConfigDatabase;
-  setHost: (host: string) => ConfigDatabase;
-  setPort: (port: number) => ConfigDatabase;
-  setUsername: (username: string) => ConfigDatabase;
-  setPassword: (password: string) => ConfigDatabase;
-  setDatabase: (database: ConnectionOptions['database']) => ConfigDatabase;
-  setEntities: (entities: ConnectionOptions['entities']) => ConfigDatabase;
-  setLogger: (logger: ConnectionOptions['logger']) => ConfigDatabase;
-  setLogging: (logging: ConnectionOptions['logging']) => ConfigDatabase;
-  setSynchronize: (synchronize: boolean) => ConfigDatabase;
+  set: (options: ConnectionOptions[]) => ConfigDatabase;
+  reset: () => ConfigDatabase;
+  add: (option: ConnectionOptions) => ConfigDatabase;
+  setEntities: (entities: ConnectionOptions['entities'], name?: string) => ConfigDatabase;
   end: () => Rester;
 }
 
@@ -162,9 +146,9 @@ export class Rester {
   /** Views in this rester instance. */
   private views: Function[];
   /** Typeorm connection. */
-  private connection?: Connection;
+  private connections?: Connection[];
   /** Database option. */
-  private database: ConnectionOptions;
+  private databases: ConnectionOptions[];
   /** Handler types. */
   private handlers: HandlerType[];
   /** Logger instance, use `getLogger` to get or `setLogger` to set. */
@@ -190,8 +174,8 @@ export class Rester {
     };
     // config empty views
     this.views = [];
-    // config empty database
-    this.database = {} as any;
+    // config empty databases
+    this.databases = [];
     // config default global handlers
     this.handlers = [ExceptionHandler, SchemaHandler, RouterHandler, ParameterHandler];
     // config logger to new
@@ -256,20 +240,33 @@ export class Rester {
    * - `setStnchronize`:
    * - `end`: end database config & return this rester instance
    */
-  configDatabase: ConfigDatabase = {
+  configDatabases: ConfigDatabase = {
     unconfigured: true,
-    set: option => { this.database = option; return this.configDatabase; },
-    setType: type => { (this.database as any).type = type; return this.configDatabase; },
-    setHost: host => { (this.database as any).host = host; return this.configDatabase; },
-    setPort: port => { (this.database as any).port = port; return this.configDatabase; },
-    setUsername: username => { (this.database as any).username = username; return this.configDatabase; },
-    setPassword: password => { (this.database as any).password = password; return this.configDatabase; },
-    setDatabase: database => { (this.database as any).database = database; return this.configDatabase; },
-    setEntities: entities => { (this.database as any).entities = entities; return this.configDatabase; },
-    setLogger: logger => { (this.database as any).logger = logger; return this.configDatabase; },
-    setLogging: logging => { (this.database as any).logging = logging; return this.configDatabase; },
-    setSynchronize: synchronize => { (this.database as any).synchronize = synchronize; return this.configDatabase; },
-    end: () => { this.configDatabase.unconfigured = false; return this; }
+    set: options => { this.databases = options; return this.configDatabases; },
+    reset: () => { this.databases = []; return this.configDatabases; },
+    add: option => {
+      const index = this.databases.findIndex(database => database.name === option.name);
+      if (index === -1) {
+        // add new database
+        this.databases.push(option);
+      } else {
+        // update new database
+        Object.assign(this.databases[index], option);
+      }
+      return this.configDatabases;
+    },
+    setEntities: (entities, name = 'default') => {
+      const index = this.databases.findIndex(database => database.name === name);
+      if (index === -1) {
+        // insert
+        this.databases.push({ name, entities } as any);
+      } else {
+        // update
+        (this.databases[index] as any).entities = entities;
+      }
+      return this.configDatabases;
+    },
+    end: () => { this.configDatabases.unconfigured = false; return this; }
   };
 
   /**
@@ -316,7 +313,7 @@ export class Rester {
 
 
   /**
-   * Load config file.
+   * Load config file, config will override code.
    *
    * @param {'DEV' | 'PROD'} mode Depoly mode, 'DEV' or 'PROD'.
    * @returns {Rester} Rester instance.
@@ -324,15 +321,18 @@ export class Rester {
   private loadConfig(mode: 'DEV' | 'PROD' | undefined = process.env.MODE as any): Rester {
     try {
       let json;
-      if (mode === 'PROD') { // production mode
+      if (mode === 'PROD') {
+        // production mode
+        this.logger.info('Rester is in Production mode.');
         json = readFileSync('rester.json');
-      } else { // development mode
+      } else {
+        // development mode
         this.logger.debug('Rester is in Development mode');
         json = readFileSync('rester.dev.json');
       }
       const config = JSON.parse(json.toString());
       Object.assign(this.address, config.address);
-      Object.assign(this.database, config.database);
+      config.databases.forEach((database: any) => this.configDatabases.add(database));
       this.zone.config = config;
     } catch (error) {
       this.logger.error(`Load config failed: ${error}.`);
@@ -349,7 +349,7 @@ export class Rester {
     while (retry) {
       try {
         this.logger.info('Database connecting...');
-        this.connection = await createConnection(this.database);
+        this.connections = await createConnections(this.databases);
         this.logger.info('Database connected.');
         retry = 0;
       } catch (error) {
@@ -358,7 +358,7 @@ export class Rester {
         } else {
           this.logger.error('Database connect failed, database offline.');
         }
-        await this.connection?.close();
+        this.connections?.map(connection => connection.close());
       } finally {
         await delay(10000);
       }
@@ -377,7 +377,7 @@ export class Rester {
     this.loadConfig();
     if (this.configAddress.unconfigured) { this.configAddress.end(); }
     if (this.configViews.unconfigured) { this.configViews.end(); }
-    if (this.configDatabase.unconfigured) { this.configDatabase.end(); }
+    if (this.configDatabases.unconfigured) { this.configDatabases.end(); }
     if (this.configHandlers.unconfigured) { this.configHandlers.end(); }
     if (this.configLogger.unconfigured) { this.configLogger.end(); }
     // create server
@@ -393,7 +393,7 @@ export class Rester {
         break;
     }
     // connect database
-    if (this.database.type) {
+    if (this.databases.length) {
       this.connectDatabase(10);
     } else {
       this.logger.warn('No database connection.');

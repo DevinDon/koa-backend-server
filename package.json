@@ -47,6 +47,7 @@
   "dependencies": {
     "@iinfinity/delay": "0.1.1",
     "@iinfinity/logger": "0.3.4",
+    "mongodb": "^3.6.2",
     "reflect-metadata": "0.1.13",
     "typeorm": "0.2.28"
   },

@@ -56,49 +56,9 @@ const server = new Rester()
 
 > 📄 See [change log](https://github.com/DevinDon/rester-core/blob/master/docs/CHANGELOG.md) for detail.
 
-## 0.10.23 => 0.10.24
+## 0.10.24 => 0.11.0
 
-- feat(util/body-parser): parts to object
-
-## 0.10.22 => 0.10.23
-
-- perf(handler/exception): display router path for exception
-
-## 0.10.21 => 0.10.22
-
-- feat(util/body-parser): able to parse x-www-form-urlencoded
-
-## 0.10.19 => 0.10.21
-
-- feat(util): export all from util, use `import {} from '@rester/core/util`
-- fix(handler): all global handler will run thought exception
-
-## 0.10.18 => 0.10.19
-
-- feat(rester): add connection field
-
-## 0.10.17 => 0.10.18
-
-- feat(handler/parameter): add zone param injector
-- fix(handler/base): fix prop init
-
-## 0.10.16 => 0.10.17
-
-- feat(handler/base): add zone for each request
-
-## 0.10.14 => 0.10.16
-
-- fix(util/body-parser): fix parse of content type
-
-## 0.10.13 => 0.10.14
-
-- perf(handle/pool): handle compose exception
-- perf(handle/exception): optimize exception output
-- perf(rester): default in dev mode
-
-## 0.10.12 => 0.10.13
-
-- feat(handler/exception): determine whether to display stack info through the debug flag
+- perf(database): support multi connections
 
 # Author
 
