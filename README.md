@@ -56,6 +56,11 @@ const server = new Rester()
 
 > 📄 See [change log](https://github.com/DevinDon/rester-core/blob/master/docs/CHANGELOG.md) for detail.
 
+## 0.11.1 => 0.12.0
+
+- fix(decorator/mapping): fix POST mapping decorator description
+- perf(handler/router): use ':variable' instead of '{{variable}}
+
 ## 0.11.0 => 0.11.1
 
 - perf(@util/validator): null check function only need an object param
