@@ -32,6 +32,7 @@
     "demo:full": "node -r ts-node/register src/demo/full",
     "demo:simple": "node -r ts-node/register src/demo/simple",
     "prepublishOnly": "npm run clean && npm run build:dist",
+    "publish": "curl https://npm.taobao.org/sync/@rester/core",
     "test": "node node_modules/jasmine/bin/jasmine.js --config=src/test/jasmine.json --reporter=jasmine-console-reporter --require=ts-node/register"
   },
   "repository": {
