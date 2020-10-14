@@ -9,7 +9,7 @@ export class SignView {
   @Inject()
   private controller!: SignController;
 
-  @GET('/check/{{email}}')
+  @GET('/check/:email')
   async signCheck(@PathVariable('email') email: string): Promise<BaseResponse> {
     const result = await this.controller.signCheck(email);
     if (result) {
@@ -45,7 +45,7 @@ export class SignView {
   }
 
   @GET('/test')
-  @GET('/test/{{id}}')
+  @GET('/test/:id')
   test() {
     return { OK: 'Test' };
   }

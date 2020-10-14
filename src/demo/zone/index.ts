@@ -20,7 +20,7 @@ class DemoView {
   }
 
   @Handler(ZoneHandler)
-  @GET('{{name}}')
+  @GET(':name')
   name(
     @PathVariable('name') name: string,
     @HandlerZone() zone: { hello: 'world' },

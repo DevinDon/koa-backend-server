@@ -51,7 +51,7 @@ namespace SimpleDemo {
       throw new HTTP401Exception('401 status code test.', 'Status code is 401, and this is response.');
     }
 
-    @GET('/show/{{name}}')
+    @GET('/show/:name')
     show(@PathVariable('name') name: string): string {
       return name;
     }
