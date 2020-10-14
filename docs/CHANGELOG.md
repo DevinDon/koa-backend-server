@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.12.1 => 0.12.2
+
+- fix(handler/exception): stringify exception content
+
 ## 0.12.0 => 0.12.1
 
 - feat(@util/validator): check required params in fields

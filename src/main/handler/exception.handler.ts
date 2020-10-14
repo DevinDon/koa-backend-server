@@ -39,7 +39,7 @@ export class ExceptionHandler extends BaseHandler {
           }
           this.response.statusCode = exception.code;
           this.response.statusMessage = exception.message;
-          returns = exception.content;
+          returns = JSON.stringify(exception.content);
         } else {
           // else, just throw 500 with `zone.exception.response` or `{}`
           this.logger
