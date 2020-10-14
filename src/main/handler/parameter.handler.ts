@@ -30,7 +30,7 @@ export const parameterInjectors: { [index in ParamInjectionType | string]: (hand
    *
    * @returns {string} Path variable.
    */
-  PARAM$PATH$VARIABLE: (handler, key: string): string => handler.mapping.pathArray![handler.route.mapping.pathArray!.indexOf(`{{${key}}}`)],
+  PARAM$PATH$VARIABLE: (handler, key: string): string => handler.mapping.pathArray![handler.route.mapping.pathArray!.indexOf(`:${key}`)],
   /**
    * Inject request body object, should await it to get result.
    *

@@ -7,7 +7,7 @@ import { BaseHandler } from './base.handler';
 export class RouterHandler extends BaseHandler {
 
   /** Special path in router. `Map.get(''); Map.set('%');` */
-  public static readonly SpecialPath = { regexp: /{{(.+)}}/, route: '', variable: '%' };
+  public static readonly SpecialPath = { regexp: /:(.+?)(\/|$)/, route: '', variable: '%' };
 
   /**
    * Format mapping, it will **not** modify raw mapping.
