@@ -56,6 +56,10 @@ const server = new Rester()
 
 > 📄 See [change log](https://github.com/DevinDon/rester-core/blob/master/docs/CHANGELOG.md) for detail.
 
+## 0.12.2 => 0.12.3
+
+- fix(handler/exception): add response header with type json
+
 ## 0.12.1 => 0.12.2
 
 - fix(handler/exception): stringify exception content

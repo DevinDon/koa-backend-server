@@ -39,7 +39,7 @@ export class ExceptionHandler extends BaseHandler {
           }
           this.response.statusCode = exception.code;
           this.response.statusMessage = exception.message;
-          returns = JSON.stringify(exception.content);
+          returns = exception.content;
         } else {
           // else, just throw 500 with `zone.exception.response` or `{}`
           this.logger
@@ -51,6 +51,10 @@ export class ExceptionHandler extends BaseHandler {
           this.response.statusCode = 500;
           this.response.statusMessage = exception.message;
           returns = this.rester.zone.exception?.response || {};
+        }
+
+        if (!this.response.getHeader('Content-Type')) {
+          this.response.setHeader('Content-Type', 'application/json');
         }
 
         return typeof returns === 'string'
