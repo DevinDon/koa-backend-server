@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.12.0 => 0.12.1
+
+- feat(@util/validator): check required params in fields
+
 ## 0.11.1 => 0.12.0
 
 - fix(decorator/mapping): fix POST mapping decorator description
