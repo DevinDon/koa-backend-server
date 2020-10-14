@@ -56,7 +56,7 @@ export const OPTIONS = baseMapping(Method.OPTIONS);
 export const PATCH = baseMapping(Method.PATCH);
 
 /**
- * **DELETE** Method decorator.
+ * **POST** Method decorator.
  *
  * @param {string} path Path to mapping.
  */
