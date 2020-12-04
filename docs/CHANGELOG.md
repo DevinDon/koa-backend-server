@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.12.7 => 0.12.8
+
+- fix(injector): fix view decorator
+
 ## 0.12.6 => 0.12.7
 
 - perf(hook): add init hook for controller
