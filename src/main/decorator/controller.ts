@@ -5,4 +5,4 @@ import { Injectable } from './injector';
  *
  * Alias of `Injectable`, decorate a controller.
  */
-export const Controller = () => Injectable({ type: 'controller' });
+export const Controller = Injectable;

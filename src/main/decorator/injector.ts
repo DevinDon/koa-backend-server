@@ -42,14 +42,9 @@ export class Injector {
  *
  * Generate instance & save to storage.
  */
-export function Injectable({ type }: { type: 'controller' | 'service' }): ClassDecorator {
+export function Injectable(): ClassDecorator {
   return target => {
-    const instance = Injector.instance(target);
-    try {
-      typeof instance.init === 'function' && instance.init();
-    } catch (error) {
-      logger.warn(`Instance init method call failed: ${target.name}`);
-    }
+    Injector.instance(target);
   };
 }
 
