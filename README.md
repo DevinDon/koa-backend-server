@@ -56,6 +56,10 @@ const server = new Rester()
 
 > 📄 See [change log](https://github.com/DevinDon/rester-core/blob/master/docs/CHANGELOG.md) for detail.
 
+## 0.12.5 => 0.12.6
+
+- perf(decorator): add try catch block
+
 ## 0.12.4 => 0.12.5
 
 - perf(decorator): add init hook after controller init
