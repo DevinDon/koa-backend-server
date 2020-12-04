@@ -1,6 +1,6 @@
 import { Mapping, MetadataKey, Route } from '../interfaces';
 import { HandlerType } from './handler';
-import { Injector } from './injector';
+import { InjectedType, Injector } from './injector';
 
 /**
  * Class Decorator.
@@ -13,7 +13,7 @@ export function View(prefix: string = ''): ClassDecorator {
   prefix = '/' + prefix + '/';
   return target => {
     /** View instance. */
-    const view = Injector.instance(target);
+    const view = Injector.instance({ target, type: InjectedType.VIEW });
     /** Handler types on view. */
     const handlersOnView: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target) || [];
     /** Routes on methods of this view. */

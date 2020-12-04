@@ -5,12 +5,12 @@ import * as HTTP from 'http';
 import * as HTTP2 from 'http2';
 import * as HTTPS from 'https';
 import { Connection, ConnectionOptions, createConnections } from 'typeorm';
-import { MetadataKey, Route } from './interfaces';
-import { HandlerType } from './decorator';
+import { HandlerType, InjectedType, Injector } from './decorator';
 import { HandlerPool, ParameterHandler } from './handler';
 import { ExceptionHandler } from './handler/exception.handler';
 import { RouterHandler } from './handler/router.handler';
 import { SchemaHandler } from './handler/schema.handler';
+import { MetadataKey, Route } from './interfaces';
 
 /**
  * Address option.
@@ -398,6 +398,18 @@ export class Rester {
     } else {
       this.logger.warn('No database connection.');
     }
+    Injector
+      .list()
+      .forEach(injected => {
+        try {
+          injected.type === InjectedType.CONTROLLER
+            && typeof injected.instance.init === 'function'
+            && injected.instance.init();
+        } catch (error) {
+          this.logger.warn(`Instance init method call failed: ${injected.instance.name}`);
+        }
+      }
+      );
     // listen to address
     host = host || this.address.host || 'localhost';
     port = port || this.address.port || 8080;
