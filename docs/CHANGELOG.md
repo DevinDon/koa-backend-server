@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.12.6 => 0.12.7
+
+- perf(hook): add init hook for controller
+
 ## 0.12.5 => 0.12.6
 
 - perf(decorator): add try catch block
