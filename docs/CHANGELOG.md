@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.12.3 => 0.12.4
+
+- perf(util/validator): add type declare to params
+- fix(util/body-parser): catch JSON parse error
+- perf(rester): await database connection before listen
+
 ## 0.12.2 => 0.12.3
 
 - fix(handler/exception): add response header with type json
