@@ -1,4 +1,4 @@
-import { Mapping, MetadataKey, Route } from '../@type';
+import { Mapping, MetadataKey, Route } from '../interfaces';
 import { HandlerType } from './handler';
 import { Injector } from './injector';
 

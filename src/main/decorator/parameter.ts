@@ -1,4 +1,4 @@
-import { MetadataKey } from '../@type';
+import { MetadataKey } from '../interfaces';
 
 /**
  * Param injection type.

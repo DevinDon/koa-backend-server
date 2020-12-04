@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { MetadataKey } from '../@type';
+import { MetadataKey } from '../interfaces';
 import { ParamInjection, ParamInjectionType } from '../decorator';
 import { HTTP400Exception, HTTP404Exception } from '../exception';
 import { BodyParser } from '../utils/body-parser';

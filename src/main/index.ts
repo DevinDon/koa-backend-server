@@ -1,4 +1,4 @@
-export * from './@type';
+export * from './interfaces';
 export * from './decorator';
 export * from './exception';
 export * from './handler';

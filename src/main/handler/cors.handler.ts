@@ -1,4 +1,4 @@
-import { MetadataKey, Method, Route } from '../@type';
+import { MetadataKey, Method, Route } from '../interfaces';
 import { HandlerType } from '../decorator';
 import { Rester } from '../rester';
 import { BaseHandler } from './base.handler';
