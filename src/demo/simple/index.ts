@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, ObjectIdColumn } from 'typeorm';
-import { GET, PathVariable, Rester, View } from '../../main';
+import { Controller, GET, Inject, PathVariable, Rester, View } from '../../main';
 
 @Entity('test')
 class TestEntity extends BaseEntity {
@@ -12,8 +12,24 @@ class TestEntity extends BaseEntity {
 
 }
 
+@Controller()
+class DemoController {
+
+  init() {
+    // eslint-disable-next-line no-console
+    console.log('I\'m OK!');
+  }
+
+  echo(text: string) {
+    return text;
+  }
+
+}
+
 @View()
 class DemoView {
+
+  @Inject() private controller!: DemoController;
 
   @GET()
   index() {
@@ -25,6 +41,13 @@ class DemoView {
     @PathVariable('name') name: string
   ) {
     return { name };
+  }
+
+  @GET('echo/:text')
+  echo(
+    @PathVariable('text') text: string = ''
+  ) {
+    return this.controller.echo(text);
   }
 
 }
