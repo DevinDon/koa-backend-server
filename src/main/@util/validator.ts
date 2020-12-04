@@ -8,7 +8,7 @@ export function requiredParams<T = any>(params: T): any {
   }
 }
 
-export function requiredParamsInFields<T = any>(params: T, fields: string[]): any {
+export function requiredParamsInFields<T = any>(params: T, fields: (keyof T)[]): any {
   for (const field of fields) {
     if (params[field] === undefined || params[field] === null) {
       throw new HTTP400Exception(`params '${fields.join(', ')}' are required`);
