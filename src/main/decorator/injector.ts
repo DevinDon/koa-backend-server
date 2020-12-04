@@ -1,3 +1,5 @@
+import { logger } from '@iinfinity/logger';
+
 /**
  * Dependency Injection, DI.
  *
@@ -43,7 +45,11 @@ export class Injector {
 export function Injectable({ type }: { type: 'controller' | 'service' }): ClassDecorator {
   return target => {
     const instance = Injector.instance(target);
-    typeof instance.init === 'function' && instance.init();
+    try {
+      typeof instance.init === 'function' && instance.init();
+    } catch (error) {
+      logger.warn(`Instance init method call failed: ${target.name}`);
+    }
   };
 }
 
