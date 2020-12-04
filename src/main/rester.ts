@@ -373,7 +373,7 @@ export class Rester {
    * @param {string} host Listening host.
    * @returns {this} This instance.
    */
-  listen(callback?: Function, port?: number, host?: string): this {
+  async listen(callback?: Function, port?: number, host?: string): Promise<this> {
     this.loadConfig();
     if (this.configAddress.unconfigured) { this.configAddress.end(); }
     if (this.configViews.unconfigured) { this.configViews.end(); }
@@ -394,7 +394,7 @@ export class Rester {
     }
     // connect database
     if (this.databases.length) {
-      this.connectDatabase(10);
+      await this.connectDatabase(10);
     } else {
       this.logger.warn('No database connection.');
     }
