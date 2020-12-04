@@ -72,9 +72,8 @@ export function Injectable({ type }: { type: InjectedType }): ClassDecorator {
  */
 export function Inject(): PropertyDecorator {
   return (target, name) => {
-    const instance = Injector.instance({ target: target.constructor });
-    instance && (
-      instance[name] = Injector.instance({ target: Reflect.getMetadata('design:type', target, name) })
-    );
+    const instance = Injector.instance({ target: target.constructor })?.instance;
+    const inner = Injector.instance({ target: Reflect.getMetadata('design:type', target, name) })?.instance;
+    instance && (instance[name] = inner);
   };
 }

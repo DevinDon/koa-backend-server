@@ -13,7 +13,7 @@ export function View(prefix: string = ''): ClassDecorator {
   prefix = '/' + prefix + '/';
   return target => {
     /** View instance. */
-    const view = Injector.instance({ target, type: InjectedType.VIEW });
+    const view = Injector.instance({ target, type: InjectedType.VIEW })?.instance;
     /** Handler types on view. */
     const handlersOnView: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target) || [];
     /** Routes on methods of this view. */
