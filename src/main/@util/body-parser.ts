@@ -1,3 +1,4 @@
+import { logger } from '@iinfinity/logger';
 import { URLSearchParams } from 'url';
 import { Part } from '../@type';
 
@@ -28,40 +29,44 @@ export class BodyParser {
   }
 
   parse(body: Buffer) {
-    this.body = body;
-    // if content type is none
-    if (this.contentType === '') {
-      return this.parseDefault();
-    }
-    const type = this.contentType.match(/[^;]*/)![0].match(/(.*)\/(.*)/);
-    const left = type ? type[1] : '';
-    const right = type ? type[2] : '';
-    switch (left) {
-      case 'application':
-        switch (right) {
-          case 'json':
-            return this.parseApplicationJSON();
-          case 'x-www-form-urlencoded':
-            return this.parseAllicationXWWWFormURLEncoded();
-          default:
-            return this.parseApplication();
-        }
-      case 'multipart':
-        switch (right) {
-          case 'form-data':
-            return this.parseMultipartFormData();
-          default:
-            return this.parseMultipart();
-        }
-      case 'text':
-        switch (right) {
-          case 'plain':
-            return this.parseTextPlain();
-          default:
-            return this.parseText();
-        }
-      default:
+    try {
+      this.body = body;
+      // if content type is none
+      if (this.contentType === '') {
         return this.parseDefault();
+      }
+      const type = this.contentType.match(/[^;]*/)![0].match(/(.*)\/(.*)/);
+      const left = type ? type[1] : '';
+      const right = type ? type[2] : '';
+      switch (left) {
+        case 'application':
+          switch (right) {
+            case 'json':
+              return this.parseApplicationJSON();
+            case 'x-www-form-urlencoded':
+              return this.parseAllicationXWWWFormURLEncoded();
+            default:
+              return this.parseApplication();
+          }
+        case 'multipart':
+          switch (right) {
+            case 'form-data':
+              return this.parseMultipartFormData();
+            default:
+              return this.parseMultipart();
+          }
+        case 'text':
+          switch (right) {
+            case 'plain':
+              return this.parseTextPlain();
+            default:
+              return this.parseText();
+          }
+        default:
+          return this.parseDefault();
+      }
+    } catch (error) {
+      logger.error(`Error while parse response body: ${body.length}`);
     }
   }
 
