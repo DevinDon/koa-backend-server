@@ -12,6 +12,8 @@ import { Rester } from '../rester';
  */
 export abstract class BaseHandler<ZoneType = any> {
 
+  /** Handler config. */
+  protected static configuration: any;
   /** Mapping method arguments of this view. */
   protected args!: any[];
   /** Mapping of this request. */
@@ -26,13 +28,13 @@ export abstract class BaseHandler<ZoneType = any> {
   public zone!: ZoneType;
 
   /**
-   * Config handler on rester.
+   * Config handler.
    *
-   * @param rester Rester instance.
    * @param config Handler config.
    * @returns {HandlerType} Handler class.
    */
-  static config(rester: Rester, config?: any): HandlerType {
+  static config(config?: any): HandlerType {
+    BaseHandler.configuration = config;
     return this;
   }
 
@@ -40,10 +42,9 @@ export abstract class BaseHandler<ZoneType = any> {
    * Config & init handler.
    *
    * @param {Rester} rester Rester instance.
-   * @param {any} config Config.
    * @returns {HandlerType} Handler class.
    */
-  static init(rester: Rester, config?: any): HandlerType {
+  static init(rester: Rester): HandlerType {
     return this;
   }
 

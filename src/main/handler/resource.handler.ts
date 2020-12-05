@@ -1,0 +1,28 @@
+import { HandlerType } from '../decorator';
+import { Rester } from '../rester';
+import { BaseHandler } from './base.handler';
+
+export enum ContentType {
+
+  HTML = 'text/html',
+  CSS = 'text/css',
+  JavaScript = 'application/x-javascript',
+  TEXT = 'text/plain',
+  GIF = 'text/gif',
+  JPG = 'text/jpeg',
+  PNG = 'text/png',
+  XML = 'application/xml',
+  JSON = 'application/json',
+  PDF = 'application/pdf',
+  STREAM = 'application/octet-stream'
+
+}
+
+export class ResourceHandler extends BaseHandler {
+
+  async handle(next: () => Promise<any>): Promise<any> {
+    this.response.setHeader('Content-Type', ResourceHandler.configuration.ContentType);
+    return next();
+  }
+
+}
