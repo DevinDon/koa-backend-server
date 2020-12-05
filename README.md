@@ -56,6 +56,10 @@ const server = new Rester()
 
 > 📄 See [change log](https://github.com/DevinDon/rester-core/blob/master/docs/CHANGELOG.md) for detail.
 
+## 0.12.8 => 0.12.10
+
+- feat(handler): support handler config & add logger & resource handler
+
 ## 0.12.7 => 0.12.8
 
 - fix(injector): fix view decorator
