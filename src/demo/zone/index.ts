@@ -24,7 +24,7 @@ class DemoView {
   name(
     @PathVariable('name') name: string,
     @HandlerZone() zone: { hello: 'world' },
-    @HandlerZone('what') what: string
+    @HandlerZone('what') what: string,
   ) {
     return { ...zone, name, what };
   }

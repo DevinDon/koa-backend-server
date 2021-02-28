@@ -35,7 +35,7 @@ export class UserEntity extends BaseEntity implements User {
   email!: string;
 
   @Column({
-    nullable: true
+    nullable: true,
   })
   nickname?: string;
 
@@ -43,7 +43,7 @@ export class UserEntity extends BaseEntity implements User {
   password!: string;
 
   @Column({
-    nullable: true
+    nullable: true,
   })
   motto?: string;
 

@@ -10,7 +10,7 @@ namespace SubMappingDemo {
     OPTIONS: new Map(),
     PATCH: new Map(),
     POST: new Map(),
-    PUT: new Map()
+    PUT: new Map(),
   };
 
   const method = 'POST';

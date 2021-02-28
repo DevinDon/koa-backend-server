@@ -46,7 +46,7 @@ export const parameterInjectors: { [index in ParamInjectionType | string]: (hand
       handler.request.on('end', () => resolve(
         handler.parser
           .setContentType(type || handler.request.headers['content-type'] || '')
-          .parse(data)
+          .parse(data),
       ));
       handler.request.on('error', (error: any) => reject(error));
     }
@@ -62,7 +62,7 @@ export const parameterInjectors: { [index in ParamInjectionType | string]: (hand
    *
    * @returns {any} Data of handler zone.
    */
-  PARAM$HANDLER$ZONE: (handler, key?: string): any => key ? handler.zone[key] : handler.zone
+  PARAM$HANDLER$ZONE: (handler, key?: string): any => key ? handler.zone[key] : handler.zone,
 };
 
 

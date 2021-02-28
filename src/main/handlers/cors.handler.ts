@@ -24,7 +24,7 @@ export class CORSHandler extends BaseHandler {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': '*',
       'Access-Control-Allow-Headers': '*',
-      'Access-Control-Max-Age': 86400
+      'Access-Control-Max-Age': 86400,
     };
     return CORSHandler;
   }
@@ -56,10 +56,10 @@ export class CORSHandler extends BaseHandler {
             handlers: route.handlers,
             mapping: {
               method: Method.OPTIONS,
-              path: route.mapping.path
+              path: route.mapping.path,
             },
             name: undefined as any,
-            target: undefined as any
+            target: undefined as any,
           }))
           .forEach(route => RouterHandler.set(route, rester.zone.router));
       });

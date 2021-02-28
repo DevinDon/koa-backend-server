@@ -20,16 +20,16 @@ module.exports = {
   // devtool: 'inline-source-map',
   output: {
     path: path.resolve('dist'),
-    filename: 'index.js'
+    filename: 'index.js',
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
-        exclude: /node_modules/
-      }
-    ]
+        exclude: /node_modules/,
+      },
+    ],
   },
   resolve: {
     extensions: ['.ts', '.js'],
@@ -41,7 +41,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: 'src/main/resources', to: 'resources', noErrorOnMissing: true },
-      ]
-    })
-  ]
+      ],
+    }),
+  ],
 };

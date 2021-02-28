@@ -5,7 +5,7 @@ import { createWriteStream } from 'fs';
 const keymap = {
   CR: 0x0d,
   LF: 0x0a,
-  DASH: 0x2d
+  DASH: 0x2d,
 };
 
 const server = createServer(handler);

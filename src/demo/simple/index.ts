@@ -27,7 +27,7 @@ class SimpleView {
 
   @GET('echo/:text')
   echo(
-    @PathVariable('text') text: string = ''
+    @PathVariable('text') text: string = '',
   ) {
     return this.controller.echo(text);
   }

@@ -25,17 +25,17 @@ Content-Transfer-Encoding: binary
 const buffer = Buffer.from(s1);
 const keys = {
   br: 0x0a,
-  dash: 0x2d
+  dash: 0x2d,
 };
 
 const parts: any[] = [];
 const part = {
   start: 0,
-  end: 0
+  end: 0,
 };
 const line = {
   start: 0,
-  end: 0
+  end: 0,
 };
 
 for (let i = 0; i < buffer.length; i++) {

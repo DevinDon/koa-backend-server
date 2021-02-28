@@ -7,7 +7,7 @@ export class BodyParser {
   private static keymap = {
     CR: 0x0d,
     LF: 0x0a,
-    DASH: 0x2d
+    DASH: 0x2d,
   };
 
   private static regmap = {
@@ -17,7 +17,7 @@ export class BodyParser {
     contentDispositionFilename: /filename="(.+?)"/,
     contentType: /Content-Type: ([^;]*)/,
     contentTypeCharset: /charset=([^;]*)/,
-    contentTransferEncoding: /Content-Transfer-Encoding: ([^;]*)/
+    contentTransferEncoding: /Content-Transfer-Encoding: ([^;]*)/,
   };
 
   private contentType!: string;
@@ -76,7 +76,7 @@ export class BodyParser {
 
   parseAllicationXWWWFormURLEncoded(buffer: Buffer = this.body): any {
     return Object.fromEntries(
-      new URLSearchParams(buffer.toString()).entries()
+      new URLSearchParams(buffer.toString()).entries(),
     );
   }
 
@@ -86,7 +86,7 @@ export class BodyParser {
 
   parseMultipartFormData(
     buffer: Buffer = this.body,
-    boundary = Buffer.from(this.contentType.match(/boundary=(.*)/)![1])
+    boundary = Buffer.from(this.contentType.match(/boundary=(.*)/)![1]),
   ) {
     const length = buffer.length;
     /** All parts of body. */

@@ -9,7 +9,7 @@ class UploadView {
 
   @PUT('/')
   index(
-    @RequestBody() body: Part[]
+    @RequestBody() body: Part[],
   ) {
     logger.log(`Length: ${body.length}`);
     // console.log(body);
@@ -20,7 +20,7 @@ class UploadView {
   @PUT('/single')
   async single(
     @HTTPRequest() request: IncomingMessage,
-    @RequestBody() body?: Buffer
+    @RequestBody() body?: Buffer,
   ) {
     if (body) {
       logger.log(`Length: ${body.length}`);
@@ -39,7 +39,7 @@ class UploadView {
 
   @PUT('/object')
   async object(
-    @RequestBody() parts: Part[]
+    @RequestBody() parts: Part[],
   ) {
     return partsToObject(parts);
   }

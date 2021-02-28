@@ -171,7 +171,7 @@ export class Rester {
     this.address = {
       protocol: 'HTTP',
       host: 'localhost',
-      port: 8080
+      port: 8080,
     };
     // config empty views
     this.views = [];
@@ -204,7 +204,7 @@ export class Rester {
     setProxy: proxy => { this.address.proxy = proxy; return this.configAddress; },
     setProtocol: protocol => { this.address.protocol = protocol; return this.configAddress; },
     setSSL: ssl => { this.address.ssl = ssl; return this.configAddress; },
-    end: () => { this.configAddress.unconfigured = false; return this; }
+    end: () => { this.configAddress.unconfigured = false; return this; },
   };
 
   /**
@@ -222,7 +222,7 @@ export class Rester {
     get: () => this.views,
     set: (...views) => { this.views = views || []; return this.configViews; },
     reset: () => { this.views = []; return this.configViews; },
-    end: () => { this.configViews.unconfigured = false; return this; }
+    end: () => { this.configViews.unconfigured = false; return this; },
   };
 
   /**
@@ -267,7 +267,7 @@ export class Rester {
       }
       return this.configDatabases;
     },
-    end: () => { this.configDatabases.unconfigured = false; return this; }
+    end: () => { this.configDatabases.unconfigured = false; return this; },
   };
 
   /**
@@ -295,7 +295,7 @@ export class Rester {
       set.forEach(handler => handler.init(this));
       this.configHandlers.unconfigured = false;
       return this;
-    }
+    },
   };
 
   /**
@@ -309,7 +309,7 @@ export class Rester {
     unconfigured: true,
     get: () => this.logger,
     set: logger => { this.logger = logger; return this.configLogger; },
-    end: () => { this.configLogger.unconfigured = false; return this; }
+    end: () => { this.configLogger.unconfigured = false; return this; },
   };
 
 
@@ -409,7 +409,7 @@ export class Rester {
         } catch (error) {
           this.logger.warn(`Instance init method call failed: ${injected.instance.name}`);
         }
-      }
+      },
       );
     // listen to address
     host = host || this.address.host || 'localhost';

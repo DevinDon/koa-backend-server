@@ -29,7 +29,7 @@ export class Injector {
    * @returns {T} Instance.
    */
   static create<T = any>(
-    { target, type = InjectedType.ANY, save = true }: { target: any, type?: InjectedType, save?: boolean }
+    { target, type = InjectedType.ANY, save = true }: { target: any, type?: InjectedType, save?: boolean },
   ): Injected<T> | undefined {
     const providers = Reflect.getMetadata('design:paramtypes', target);
     if (this.storage.has(target)) { // if instance already exists

@@ -13,7 +13,7 @@ export interface Part {
 const keymap = {
   cr: 0x0d,
   lf: 0x0a,
-  dash: 0x2d
+  dash: 0x2d,
 };
 
 const regmap = {
@@ -23,7 +23,7 @@ const regmap = {
   contentDispositionFilename: /filename="(.+?)"/,
   contentType: /Content-Type: ([^;]*)/,
   contentTypeCharset: /charset=([^;]*)/,
-  contentTransferEncoding: /Content-Transfer-Encoding: ([^;]*)/
+  contentTransferEncoding: /Content-Transfer-Encoding: ([^;]*)/,
 };
 
 export class FormParser {
@@ -33,7 +33,7 @@ export class FormParser {
 
   constructor(
     contentType: string,
-    private body: Buffer
+    private body: Buffer,
   ) {
     this.boundary = contentType.match(/boundary=(.*)/)![1];
   }

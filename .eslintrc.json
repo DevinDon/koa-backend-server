@@ -3,6 +3,11 @@
     "es6": true,
     "node": true
   },
+  "ignorePatterns": [
+    "dist/**/*",
+    "out/**/*",
+    "temp/**/*"
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended"
@@ -13,7 +18,7 @@
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 2018,
+    "ecmaVersion": 2021,
     "sourceType": "module"
   },
   "plugins": [
@@ -30,6 +35,10 @@
         "before": false,
         "after": true
       }
+    ],
+    "comma-dangle": [
+      "error",
+      "always-multiline"
     ],
     "curly": [
       "warn",

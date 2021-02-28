@@ -20,7 +20,7 @@ export class UserEntity extends BaseEntity implements User {
   password!: string;
 
   @Column({
-    default: 0
+    default: 0,
   })
   total!: number;
 
