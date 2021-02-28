@@ -1,60 +1,69 @@
 import 'reflect-metadata';
-import { Injector, Injectable, Inject } from '../../main/decorator/injector';
+import { Inject, Injectable, Injector } from '../../main/decorators/injector';
 
 describe('injector', () => {
 
   it('should generate instance', done => {
     class ABC {
-      name: string = 'ABC';
+      username: string = 'Class ABC';
       hello() {
-        return `Hello, ${this.name}!`;
+        return `Hello, ${this.username}!`;
       }
     }
-    const instance = Injector.instance(ABC);
+    const injected = Injector.create<ABC>({ target: ABC });
+    expect(injected).toBeDefined();
+    const instance = injected!.instance;
     expect(instance).toBeDefined();
-    expect(instance.name).toEqual('ABC');
+    expect(instance.username).toEqual('Class ABC');
     expect(instance.hello).toBeDefined();
-    expect(instance.hello()).toEqual(`Hello, ${instance.name}!`);
+    expect(instance.hello()).toEqual(`Hello, ${instance.username}!`);
     done();
   });
 
   it('should auto generate instance with @Injectable()', done => {
     @Injectable()
-    class ABC {
-      name: string = 'ABC';
+    class DEF {
+      username: string = 'DEF';
       hello() {
-        return `Hello, ${this.name}!`;
+        return `Hello, ${this.username}!`;
       }
     }
-    const instance = Injector['storage'].get(ABC);
+    const injected = Injector.get<DEF>(DEF);
+    expect(injected).toBeDefined();
+    const instance = injected!.instance;
     expect(instance).toBeDefined();
-    expect(instance.name).toEqual('ABC');
+    expect(instance.username).toEqual('DEF');
     expect(instance.hello).toBeDefined();
-    expect(instance.hello()).toEqual(`Hello, ${instance.name}!`);
+    expect(instance.hello()).toEqual(`Hello, ${instance.username}!`);
     done();
   });
 
   it('should auto generate instance properties with @Inject()', done => {
     @Injectable()
-    class ABC {
-      name() {
-        return 'ABC';
+    class GHI {
+      get name() {
+        return 'GHI';
       }
     }
     @Injectable()
-    class DEF {
+    class JKL {
       @Inject()
-      abc!: ABC;
+      ghi!: GHI;
       hello() {
-        return `Hello, ${this.abc.name()}!`;
+        return `Hello, ${this.ghi.name}!`;
       }
     }
-    const instanceABC = Injector.instance(ABC);
-    expect(instanceABC).toBeDefined();
-    expect(instanceABC.name()).toEqual('ABC');
-    const instanceDEF = Injector.instance(DEF);
-    expect(instanceDEF.hello).toBeDefined();
-    expect(instanceDEF.hello()).toEqual(`Hello, ${instanceABC.name()}!`);
+    const injectedGHI = Injector.create<GHI>({ target: GHI });
+    expect(injectedGHI).toBeDefined();
+    const instanceGHI = injectedGHI!.instance;
+    expect(instanceGHI).toBeDefined();
+    expect(instanceGHI.name).toEqual('GHI');
+    const injectedJKL = Injector.create<JKL>({ target: JKL });
+    expect(injectedJKL).toBeDefined();
+    const instanceJKL = injectedJKL!.instance;
+    expect(instanceJKL).toBeDefined();
+    expect(instanceJKL.ghi).toEqual(instanceGHI);
+    expect(instanceJKL.hello()).toEqual(`Hello, ${instanceGHI.name}!`);
     done();
   });
 

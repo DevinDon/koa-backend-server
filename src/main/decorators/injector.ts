@@ -1,5 +1,3 @@
-import { logger } from '@iinfinity/logger';
-
 export enum InjectedType {
   CONTROLLER = 'CONTROLLER',
   VIEW = 'VIEW',
@@ -30,7 +28,7 @@ export class Injector {
    * @param {boolean} save Save to instances storage, default to true.
    * @returns {T} Instance.
    */
-  static instance<T = any>(
+  static create<T = any>(
     { target, type = InjectedType.ANY, save = true }: { target: any, type?: InjectedType, save?: boolean }
   ): Injected<T> | undefined {
     const providers = Reflect.getMetadata('design:paramtypes', target);
@@ -39,14 +37,18 @@ export class Injector {
     } else {
       // or generate it
       // recursive injection
-      const args = providers && providers.map((provider: any) => this.instance({ target: provider, type, save: false }));
-      const obj: Injected<T> = args ? { instance: new target(...args), type } : { instance: new target(), type };
+      const args = providers && providers.map((provider: any) => this.create({ target: provider, type, save: false }));
+      const obj: Injected<T> = args ? { instance: new (target as any)(...args), type } : { instance: new (target as any)(), type };
       if (save) {
         // save to instance storage
         this.storage.set(target, obj);
       }
       return obj;
     }
+  }
+
+  static get<T = any>(key: any): Injected<T> | undefined {
+    return Injector.storage.get(key);
   }
 
   static list() {
@@ -61,8 +63,8 @@ export class Injector {
  *
  * Generate instance & save to storage.
  */
-export function Injectable({ type }: { type: InjectedType }): ClassDecorator {
-  return target => { Injector.instance({ target, type }); };
+export function Injectable({ type }: { type: InjectedType } = { type: InjectedType.ANY }): ClassDecorator {
+  return target => { Injector.create({ target, type }); };
 }
 
 /**
@@ -72,8 +74,8 @@ export function Injectable({ type }: { type: InjectedType }): ClassDecorator {
  */
 export function Inject(): PropertyDecorator {
   return (target, name) => {
-    const instance = Injector.instance({ target: target.constructor })?.instance;
-    const inner = Injector.instance({ target: Reflect.getMetadata('design:type', target, name) })?.instance;
+    const instance = Injector.create({ target: target.constructor })?.instance;
+    const inner = Injector.create({ target: Reflect.getMetadata('design:type', target, name) })?.instance;
     instance && (instance[name] = inner);
   };
 }

@@ -3,6 +3,7 @@
 ## 0.12.10 => 0.13.0
 
 - refactor(app): refactor project structure
+- refactor(decorators/injector): refactor injector methods
 
 ## 0.12.8 => 0.12.10
 
