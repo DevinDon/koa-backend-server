@@ -1,4 +1,4 @@
-import { HandlerType } from '../decorator';
+import { HandlerType } from '../decorators';
 import { Rester } from '../rester';
 import { BaseHandler } from './base.handler';
 
@@ -66,7 +66,6 @@ export class HandlerPool {
   compose(current: BaseHandler, i: number, handlers: HandlerType[]): () => Promise<any> {
     // 根据 handlers 的数量进行组合 compose
     if (i + 1 < handlers.length) {
-      //
       // that is very very very, complex
       // 利用非立即执行函数的特性, 在 current.handle 调用 next 时再进行数据继承绑定
       // 才能正确的获取所有的属性（包括参数和已处理过的其他属性）

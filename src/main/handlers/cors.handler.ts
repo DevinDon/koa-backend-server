@@ -1,5 +1,5 @@
 import { MetadataKey, Method, Route } from '../interfaces';
-import { HandlerType } from '../decorator';
+import { HandlerType } from '../decorators';
 import { Rester } from '../rester';
 import { BaseHandler } from './base.handler';
 import { RouterHandler } from './router.handler';

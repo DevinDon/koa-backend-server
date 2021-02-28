@@ -1,2 +1,2 @@
 #!/bin/bash
-webpack --config script/webpack.prod.js
+webpack --config scripts/webpack.prod.js

@@ -5,25 +5,25 @@ import * as HTTP from 'http';
 import * as HTTP2 from 'http2';
 import * as HTTPS from 'https';
 import { Connection, ConnectionOptions, createConnections } from 'typeorm';
-import { HandlerType, InjectedType, Injector } from './decorator';
-import { HandlerPool, ParameterHandler } from './handler';
-import { ExceptionHandler } from './handler/exception.handler';
-import { RouterHandler } from './handler/router.handler';
-import { SchemaHandler } from './handler/schema.handler';
+import { HandlerType, InjectedType, Injector } from './decorators';
+import { HandlerPool, ParameterHandler } from './handlers';
+import { ExceptionHandler } from './handlers/exception.handler';
+import { RouterHandler } from './handlers/router.handler';
+import { SchemaHandler } from './handlers/schema.handler';
 import { MetadataKey, Route } from './interfaces';
 
 /**
  * Address option.
  *
- * - portocol: 'HTTP' | 'HTTPS' | 'HTTP2'
+ * - protocol: 'HTTP' | 'HTTPS' | 'HTTP2'
  * - host: string
  * - port: number
  * - ssl?: HTTPS.ServerOptions | HTTP2.SecureServerOptions
  * - proxy?: boolean
  */
 interface AddressOption {
-  /** Rester Server portocol. */
-  portocol: 'HTTP' | 'HTTPS' | 'HTTP2';
+  /** Rester Server protocol. */
+  protocol: 'HTTP' | 'HTTPS' | 'HTTP2';
   /** Rester Server host. */
   host: string;
   /** Rester Server port. */
@@ -40,8 +40,8 @@ interface AddressOption {
  * - `setHost`: set host
  * - `setPort`: set port
  * - `setProxy`: set if proxy mode
- * - `setPortocol`: set portocol, include `HTTP`, `HTTPS`, `HTTP2`
- * - `setSSL`: set ssl options, if portocol is `HTTPS` or `HTTP2`
+ * - `setProtocol`: set protocol, include `HTTP`, `HTTPS`, `HTTP2`
+ * - `setSSL`: set ssl options, if protocol is `HTTPS` or `HTTP2`
  * - `end`: end address config & return this rester instance
  */
 interface ConfigAddress {
@@ -49,7 +49,7 @@ interface ConfigAddress {
   setHost: (host: AddressOption['host']) => ConfigAddress;
   setPort: (port: AddressOption['port']) => ConfigAddress;
   setProxy: (proxy: AddressOption['proxy']) => ConfigAddress;
-  setPortocol: (portocol: AddressOption['portocol']) => ConfigAddress;
+  setProtocol: (protocol: AddressOption['protocol']) => ConfigAddress;
   setSSL: (ssl: AddressOption['ssl']) => ConfigAddress;
   end: () => Rester;
 }
@@ -168,7 +168,7 @@ export class Rester {
   constructor() {
     // config default address
     this.address = {
-      portocol: 'HTTP',
+      protocol: 'HTTP',
       host: 'localhost',
       port: 8080
     };
@@ -192,8 +192,8 @@ export class Rester {
    * - `setHost`: set host
    * - `setPort`: set port
    * - `setProxy`: set if proxy mode
-   * - `setPortocol`: set portocol, include `HTTP`, `HTTPS`, `HTTP2`
-   * - `setSSL`: set ssl options, if portocol is `HTTPS` or `HTTP2`
+   * - `setProtocol`: set protocol, include `HTTP`, `HTTPS`, `HTTP2`
+   * - `setSSL`: set ssl options, if protocol is `HTTPS` or `HTTP2`
    * - `end`: end address config & return this rester instance
    */
   configAddress: ConfigAddress = {
@@ -201,7 +201,7 @@ export class Rester {
     setHost: host => { this.address.host = host; return this.configAddress; },
     setPort: port => { this.address.port = port; return this.configAddress; },
     setProxy: proxy => { this.address.proxy = proxy; return this.configAddress; },
-    setPortocol: portocol => { this.address.portocol = portocol; return this.configAddress; },
+    setProtocol: protocol => { this.address.protocol = protocol; return this.configAddress; },
     setSSL: ssl => { this.address.ssl = ssl; return this.configAddress; },
     end: () => { this.configAddress.unconfigured = false; return this; }
   };
@@ -381,7 +381,7 @@ export class Rester {
     if (this.configHandlers.unconfigured) { this.configHandlers.end(); }
     if (this.configLogger.unconfigured) { this.configLogger.end(); }
     // create server
-    switch (this.address.portocol) {
+    switch (this.address.protocol) {
       // case 'HTTP2':
       //   this.server = HTTP2.createSecureServer(this.option.address.ssl || {}, this.pool.process.bind(this.pool));
       //   break;
@@ -417,7 +417,7 @@ export class Rester {
       if (typeof callback === 'function') {
         callback();
       }
-      this.logger.info(`Server online, listening on: ${host}:${port}.`);
+      this.logger.info(`Server online, listening on: ${this.address.protocol === 'HTTP' ? 'http' : 'https'}://${host}:${port}`);
     });
     return this;
   }

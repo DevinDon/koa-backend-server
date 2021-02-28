@@ -1,15 +1,4 @@
-/**
- * Base HTTPException class.
- *
- * @property {number} code HTTP status code.
- * @property {string | undefined} message Message to show.
- * @property {T} content Content.
- */
-export class HTTPException<T = any> extends Error {
-  constructor(public code: number, public message: string = 'HTTP Exception', public content?: T) {
-    super(message);
-  }
-}
+import { HTTPException } from './http.exception';
 
 /** HTTP 400 Exception: Bad Request. */
 export class HTTP400Exception<T> extends HTTPException<T> {
@@ -29,9 +18,4 @@ export class HTTP403Exception<T> extends HTTPException<T> {
 /** HTTP 404 Exception: Not Found. */
 export class HTTP404Exception<T> extends HTTPException<T> {
   constructor(message: string = 'Not Found', content?: T) { super(404, message, content); }
-}
-
-/** HTTP 500 Exception: Internal Server Error. */
-export class HTTP500Exception<T> extends HTTPException<T> {
-  constructor(message: string = 'Internal Server Error', content?: T) { super(500, message, content); }
 }

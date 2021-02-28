@@ -1,4 +1,4 @@
-import { HandlerType } from '../decorator';
+import { HandlerType } from '../decorators';
 
 /** Allowed HTTP methods. */
 export enum Method {

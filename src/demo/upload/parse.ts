@@ -1,4 +1,5 @@
-import { IncomingMessage } from "http";
+/* eslint-disable no-case-declarations */
+import { logger } from '@iinfinity/logger';
 
 const boundary = 'ZnGpDtePMx0KrHh_G0X99Yef9r8JZsRJSXC';
 const iboundary = '--' + boundary;
@@ -39,14 +40,14 @@ const line = {
 
 for (let i = 0; i < buffer.length; i++) {
   const c = buffer[i];
-  console.log(c.toString(16));
+  logger.log(c.toString(16));
   switch (c) {
     case keys.br:
       // check if boundary
       const allowDash = buffer.length > i + 3;
       const isDash = buffer[i + 1] === keys.dash && buffer[i + 2] === keys.dash;
       if (allowDash && isDash) {
-        console.log('start with dash');
+        logger.log('start with dash');
         const start = i + 3;
         const end = start + boundary.length;
         // check if out of buffer
@@ -65,8 +66,7 @@ for (let i = 0; i < buffer.length; i++) {
           }
         }
       } else {
-        console.log('start with data');
-        line.start
+        logger.log('start with data', line.start);
       }
       break;
     default:

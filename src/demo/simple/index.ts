@@ -1,23 +1,11 @@
-import { BaseEntity, Column, Entity, ObjectIdColumn } from 'typeorm';
+import { logger } from '@iinfinity/logger';
 import { Controller, GET, Inject, PathVariable, Rester, View } from '../../main';
 
-@Entity('test')
-class TestEntity extends BaseEntity {
-
-  @ObjectIdColumn()
-  _id!: string;
-
-  @Column()
-  content!: string;
-
-}
-
 @Controller()
-class DemoController {
+class SimpleController {
 
   init() {
-    // eslint-disable-next-line no-console
-    console.log('I\'m OK!');
+    logger.log('I\'m OK!');
   }
 
   echo(text: string) {
@@ -27,20 +15,14 @@ class DemoController {
 }
 
 @View()
-class DemoView {
+class SimpleView {
 
-  @Inject() private controller!: DemoController;
+  @Inject()
+  private controller!: SimpleController;
 
   @GET()
   index() {
-    return TestEntity.insert({ content: Date.now().toString() });
-  }
-
-  @GET(':name')
-  returnName(
-    @PathVariable('name') name: string
-  ) {
-    return { name };
+    return 'Hello, world!';
   }
 
   @GET('echo/:text')
@@ -53,7 +35,6 @@ class DemoView {
 }
 
 const server = new Rester()
-  // .configDatabases.setEntities([TestEntity]).setEntities([TestEntity], 'mongo').end()
   .configAddress.setHost('0.0.0.0').end()
-  .configViews.add(DemoView).end()
+  .configViews.add(SimpleView).end()
   .listen();

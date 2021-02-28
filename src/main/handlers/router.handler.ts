@@ -1,6 +1,6 @@
 import { logger } from '@iinfinity/logger';
+import { HTTP404Exception } from '../exceptions';
 import { Mapping, MetadataKey, Method, Route } from '../interfaces';
-import { HTTP404Exception } from '../exception';
 import { Rester } from '../rester';
 import { BaseHandler } from './base.handler';
 

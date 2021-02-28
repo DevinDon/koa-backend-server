@@ -1,3 +1,5 @@
+import { logger } from '@iinfinity/logger';
+
 namespace SubMappingDemo {
   const text = '/date/{{year}}/{{month}}/{{day}}';
 
@@ -27,5 +29,5 @@ namespace SubMappingDemo {
     }
   });
 
-  console.log(router);
+  logger.log(router);
 }

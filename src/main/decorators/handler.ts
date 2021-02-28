@@ -1,5 +1,5 @@
 import { MetadataKey } from '../interfaces';
-import { BaseHandler } from '../handler';
+import { BaseHandler } from '../handlers';
 
 /** Handler class type. */
 export type HandlerType = Function & typeof BaseHandler;

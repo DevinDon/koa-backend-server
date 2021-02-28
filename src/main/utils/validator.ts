@@ -1,4 +1,4 @@
-import { HTTP400Exception } from '../exception';
+import { HTTP400Exception } from '../exceptions';
 
 export function requiredParams<T = any>(params: T): any {
   for (const key in params) {

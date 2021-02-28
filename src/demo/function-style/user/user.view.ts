@@ -1,3 +1,4 @@
+import { logger } from '@iinfinity/logger';
 import { Inject, PATCH, View } from '../../../main';
 import { UserController } from './user.controller';
 
@@ -10,7 +11,7 @@ export class UserView {
   @PATCH('/')
   async increase() {
     const result = await this.controller.increase(1);
-    console.log(result);
+    logger.log(result);
     return result;
   }
 

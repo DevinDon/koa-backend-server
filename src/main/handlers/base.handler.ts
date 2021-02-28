@@ -1,6 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { Mapping, Route } from '../interfaces';
-import { HandlerType } from '../decorator';
+import { HandlerType } from '../decorators';
 import { Rester } from '../rester';
 
 /**
@@ -96,7 +96,7 @@ export abstract class BaseHandler<ZoneType = any> {
    * @param {() => Promise<any>} next Next handler, result should be returned.
    * @returns {Promise<any>} Handle result, normally it is response.
    */
-  async abstract handle(next: () => Promise<any>): Promise<any>;
+  abstract handle(next: () => Promise<any>): Promise<any>;
 
   /**
    * Run mapping method with args of this view.

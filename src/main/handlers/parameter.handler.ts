@@ -1,7 +1,7 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { MetadataKey } from '../interfaces';
-import { ParamInjection, ParamInjectionType } from '../decorator';
-import { HTTP400Exception, HTTP404Exception } from '../exception';
+import { ParamInjection, ParamInjectionType } from '../decorators';
+import { HTTP400Exception, HTTP404Exception } from '../exceptions';
 import { BodyParser } from '../utils/body-parser';
 import { BaseHandler } from './base.handler';
 
@@ -38,7 +38,7 @@ export const parameterInjectors: { [index in ParamInjectionType | string]: (hand
    */
   PARAM$REQUEST$BODY: (handler, type?: string): Promise<any> => new Promise<any>((resolve, reject) => {
     if (+handler.request.headers['content-length']! > 10 * 1024 * 1024) { // if size > 10m, should parse it yourself
-      resolve();
+      resolve(undefined);
     } else {
       let data: Buffer = Buffer.allocUnsafe(0);
       handler.request.on('data', (chunk: Buffer) => data = Buffer.concat([data, chunk]));
