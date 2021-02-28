@@ -11,6 +11,7 @@ import { ExceptionHandler } from './handlers/exception.handler';
 import { RouterHandler } from './handlers/router.handler';
 import { SchemaHandler } from './handlers/schema.handler';
 import { MetadataKey, Route } from './interfaces';
+import { load } from 'js-yaml';
 
 /**
  * Address option.
@@ -318,24 +319,24 @@ export class Rester {
    * @param {'DEV' | 'PROD'} mode Depoly mode, 'DEV' or 'PROD'.
    * @returns {Rester} Rester instance.
    */
-  private loadConfig(mode: 'DEV' | 'PROD' | undefined = process.env.MODE as any): Rester {
+  private loadConfig(mode: 'PROD' | 'DEV' = process.env.MODE as any): Rester {
     try {
-      let json;
+      let yaml;
       if (mode === 'PROD') {
         // production mode
         this.logger.info('Rester is in Production mode.');
-        json = readFileSync('rester.json');
+        yaml = readFileSync('rester.yaml');
       } else {
         // development mode
         this.logger.debug('Rester is in Development mode');
-        json = readFileSync('rester.dev.json');
+        yaml = readFileSync('rester.dev.yaml');
       }
-      const config = JSON.parse(json.toString());
+      const config: any = load(yaml.toString());
       Object.assign(this.address, config.address);
       config.databases.forEach((database: any) => this.configDatabases.add(database));
       this.zone.config = config;
     } catch (error) {
-      this.logger.error(`Load config failed: ${error}.`);
+      this.logger.error(`Load config failed: ${error}`);
     }
     return this;
   }
