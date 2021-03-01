@@ -7,6 +7,13 @@
 - perf(core/rester): use yaml instead of json config
 - chore(eslint): update lint config
 - refactor(core): refactor core components
+- perf(demo): remove useless demo & update new demo
+  - [x] perf(demo/simple): controller & view
+  - [ ] perf(demo/entity): entity & controller & view
+  - [ ] perf(demo/exception): more exceptions
+  - [ ] perf(demo/static): serve static files
+  - [ ] perf(demo/upload): parse upload data
+  - [ ] perf(demo/full): full project
 
 ## 0.12.8 => 0.12.10
 

@@ -34,7 +34,6 @@ class SimpleView {
 
 }
 
-const server = new Rester()
-  .configAddress.setHost('0.0.0.0').end()
-  .configViews.add(SimpleView).end()
-  .listen();
+const server = new Rester();
+
+server.bootstrap(`Rester startup at ${new Date().toISOString()}`);
