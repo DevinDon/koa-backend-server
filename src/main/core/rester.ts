@@ -47,14 +47,16 @@ export class Rester {
     // zone
     this.zone = this.config.zone;
     // logger
-    Logger.setLogger(new Logger({
-      name: 'rester',
-      level: this.config.logger.level,
-      stdout: process.stdout,
-      stderr: process.stderr,
-      fileout: this.config.logger.outputLog,
-      fileerr: this.config.logger.errorLog,
-    }));
+    Logger.setLogger(
+      new Logger({
+        name: 'rester',
+        level: this.config.logger.level,
+        stdout: process.stdout,
+        stderr: process.stderr,
+        fileout: this.config.logger.outputLog,
+        fileerr: this.config.logger.errorLog,
+      }),
+    );
     this.logger = Logger.getLogger('rester')!;
     // handler pool
     this.pool = new HandlerPool(this);
@@ -68,6 +70,7 @@ export class Rester {
   private async registerViews() {
     Injector.storage
       .forEach((value, key) => value.type === InjectedType.VIEW && this.views.push(key));
+    this.views.forEach(view => view.prototype.logger = Logger.getLogger('rester'));
   }
 
   /**
