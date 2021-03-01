@@ -34,6 +34,6 @@ class SimpleView {
 
 }
 
-const server = new Rester();
+const rester = new Rester();
 
-server.bootstrap(`Rester startup at ${new Date().toISOString()}`);
+rester.bootstrap(`Rester startup at ${new Date().toISOString()}`);

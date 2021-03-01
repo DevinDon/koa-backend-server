@@ -1,17 +1,19 @@
-import { logger } from '@iinfinity/logger';
+import { Logger } from '@iinfinity/logger';
 import { createWriteStream, writeFileSync } from 'fs';
 import { IncomingMessage } from 'http';
-import { CORSHandler, Handler, HTTPRequest, Part, PUT, RequestBody, Rester, View, partsToObject } from '../../main';
+import { CORSHandler, Handler, HTTPRequest, Part, partsToObject, PUT, RequestBody, Rester, View } from '../../main';
 
 @View()
 @Handler(CORSHandler)
 class UploadView {
 
+  private logger = Logger.getLogger('rester')!;
+
   @PUT('/')
   index(
     @RequestBody() body: Part[],
   ) {
-    logger.log(`Length: ${body.length}`);
+    this.logger.log(`Length: ${body.length}`);
     // console.log(body);
     body.forEach(v => v.contentDispositionFilename && writeFileSync('temp/' + v.contentDispositionFilename + '.txt', v.data));
     return body.map(v => ({ file: v.contentDispositionFilename, size: v.data.length }));
@@ -23,8 +25,8 @@ class UploadView {
     @RequestBody() body?: Buffer,
   ) {
     if (body) {
-      logger.log(`Length: ${body.length}`);
-      logger.log(body);
+      this.logger.log(`Length: ${body.length}`);
+      this.logger.log(body);
       writeFileSync('temp/' + Math.random(), body);
       return body.length;
     } else {
@@ -46,6 +48,6 @@ class UploadView {
 
 }
 
-const server = new Rester()
-  .configViews.add(UploadView).end()
-  .listen(() => { }, 8080, '0.0.0.0');
+const rester = new Rester();
+
+rester.bootstrap();
