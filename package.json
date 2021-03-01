@@ -30,6 +30,7 @@
     "lint": "eslint .",
     "pack": "npm run build",
     "push": "bash scripts/push.sh",
+    "postpublish": "curl https://npm.taobao.org/sync/@rester/core",
     "prepublishOnly": "npm run clean && tsc",
     "start": "npm run start:dev",
     "start:debug": "node --inspect-brk -r ts-node/register src/main/index.ts",
