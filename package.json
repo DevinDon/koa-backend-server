@@ -25,7 +25,7 @@
   "scripts": {
     "build": "bash scripts/build.sh",
     "clean": "bash scripts/clean.sh",
-    "demo:simple": "node -r ts-node/register src/demo/simple/main.ts",
+    "demo": "node -r ts-node/register src/demo/${DEMO}/main.ts",
     "lint": "eslint .",
     "pack": "npm run build",
     "push": "bash scripts/push.sh",
