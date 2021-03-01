@@ -19,7 +19,7 @@ export class Injector {
   /**
    * Instances storage, signal instance.
    */
-  private static storage: Map<any, Injected> = new Map();
+  public static readonly storage: Map<any, Injected> = new Map();
 
   /**
    * Generate instance or get exist instance from storage.
@@ -29,26 +29,34 @@ export class Injector {
    * @returns {T} Instance.
    */
   static create<T = any>(
-    { target, type = InjectedType.ANY, save = true }: { target: any, type?: InjectedType, save?: boolean },
+    { target, type, save = true }: { target: any, type?: InjectedType, save?: boolean },
   ): Injected<T> | undefined {
     const providers = Reflect.getMetadata('design:paramtypes', target);
     if (this.storage.has(target)) { // if instance already exists
-      return this.storage.get(target);
-    } else {
-      // or generate it
+      const injected = this.storage.get(target)!;
+      // fix: view create after controller will be 'ANY' type
+      injected.type = type ?? injected.type;
+      return injected;
+    } else { // or generate it
+      // fix type
+      type = type ?? InjectedType.ANY;
       // recursive injection
       const args = providers && providers.map((provider: any) => this.create({ target: provider, type, save: false }));
-      const obj: Injected<T> = args ? { instance: new (target as any)(...args), type } : { instance: new (target as any)(), type };
+      const injected: Injected<T> = args ? { instance: new (target as any)(...args), type } : { instance: new (target as any)(), type };
       if (save) {
         // save to instance storage
-        this.storage.set(target, obj);
+        this.storage.set(target, injected);
       }
-      return obj;
+      return injected;
     }
   }
 
   static get<T = any>(key: any): Injected<T> | undefined {
     return Injector.storage.get(key);
+  }
+
+  static keys() {
+    return Array.from(this.storage.keys());
   }
 
   static list() {

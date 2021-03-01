@@ -1,7 +1,7 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { Mapping, Route } from '../interfaces';
+import { Rester } from '../core/rester';
 import { HandlerType } from '../decorators';
-import { Rester } from '../rester';
+import { Mapping, Route } from '../interfaces';
 
 /**
  * Abstract class BaseHandler.
@@ -10,7 +10,7 @@ import { Rester } from '../rester';
  *
  * @abstract `handle` Must implement this abstruct method.
  */
-export abstract class BaseHandler<ZoneType = any> {
+export class BaseHandler<ZoneType = any> {
 
   /** Handler config. */
   protected static configuration: any;
@@ -96,7 +96,9 @@ export abstract class BaseHandler<ZoneType = any> {
    * @param {() => Promise<any>} next Next handler, result should be returned.
    * @returns {Promise<any>} Handle result, normally it is response.
    */
-  abstract handle(next: () => Promise<any>): Promise<any>;
+  handle(next: () => Promise<any>): Promise<any> {
+    throw new Error('not implement');
+  }
 
   /**
    * Run mapping method with args of this view.

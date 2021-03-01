@@ -1,6 +1,6 @@
+import { Rester } from '../core/rester';
 import { HandlerType } from '../decorators';
 import { HTTPException } from '../exceptions';
-import { Rester } from '../rester';
 import { BaseHandler } from './base.handler';
 
 export interface ExceptionConfig {
@@ -19,7 +19,7 @@ export class ExceptionHandler extends BaseHandler {
     return ExceptionHandler;
   }
 
-  private logger = this.rester.configLogger.get();
+  private logger = this.rester.logger;
 
   async handle(next: () => Promise<any>): Promise<any> {
 

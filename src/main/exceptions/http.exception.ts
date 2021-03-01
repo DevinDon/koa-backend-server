@@ -6,7 +6,13 @@
  * @property {T} content Content.
  */
 export class HTTPException<T = any> extends Error {
-  constructor(public code: number, public message: string = 'HTTP Exception', public content?: T) {
+
+  constructor(
+    public code: number,
+    public message: string = 'HTTP Exception',
+    public content?: T,
+  ) {
     super(message);
   }
+
 }

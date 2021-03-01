@@ -1,7 +1,7 @@
 import { logger } from '@iinfinity/logger';
 import { HTTP404Exception } from '../exceptions';
 import { Mapping, MetadataKey, Method, Route } from '../interfaces';
-import { Rester } from '../rester';
+import { Rester } from '../core/rester';
 import { BaseHandler } from './base.handler';
 
 export class RouterHandler extends BaseHandler {
@@ -140,7 +140,7 @@ export class RouterHandler extends BaseHandler {
    */
   static init(rester: Rester): typeof RouterHandler {
     rester.zone.router = new Map();
-    for (const view of rester.configViews.get()) {
+    for (const view of rester.views) {
       const routes: Route[] = Reflect.getMetadata(MetadataKey.View, view) || [];
       routes.forEach(route => RouterHandler.set(route, rester.zone.router));
     }

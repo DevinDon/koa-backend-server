@@ -6,6 +6,7 @@
 - refactor(decorators/injector): refactor injector methods
 - perf(core/rester): use yaml instead of json config
 - chore(eslint): update lint config
+- refactor(core): refactor core components
 
 ## 0.12.8 => 0.12.10
 

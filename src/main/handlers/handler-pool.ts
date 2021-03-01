@@ -1,5 +1,5 @@
+import { Rester } from '../core/rester';
 import { HandlerType } from '../decorators';
-import { Rester } from '../rester';
 import { BaseHandler } from './base.handler';
 
 /**
@@ -49,9 +49,9 @@ export class HandlerPool {
    */
   async process(request: any, response: any): Promise<void> {
     // take & compose these handlers
-    this.compose(this.take(this.rester.configHandlers.get()[0]).from(request, response), 0, this.rester.configHandlers.get())()
+    this.compose(this.take(this.rester.handlers[0]).from(request, response), 0, this.rester.handlers)()
       .then(v => response.write(v || ''))
-      .catch(reason => this.rester.configLogger.get().warn(`Error while compose: ${reason}`))
+      .catch(reason => this.rester.logger.warn(`Error while compose: ${reason}`))
       .finally(() => response.end());
   }
 
@@ -72,7 +72,7 @@ export class HandlerPool {
       // by the way, it will also make compose faster than before
       return async () => current.handle(() => this.compose(this.take(handlers[++i]).inherit(current), i, handlers)())
         .finally(() => this.give(current));
-    } else if (handlers === this.rester.configHandlers.get() && current.route?.handlers.length) {
+    } else if (handlers === this.rester.handlers && current.route?.handlers.length) {
       // global handlers has been composed, and handler.route.HandlerTypes should exist
       handlers = current.route.handlers;
       return async () => current.handle(() => this.compose(this.take(handlers[0]).inherit(current), 0, handlers)())

@@ -1,5 +1,3 @@
-import { HandlerType } from '../decorators';
-import { Rester } from '../rester';
 import { BaseHandler } from './base.handler';
 
 export enum ContentType {
