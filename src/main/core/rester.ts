@@ -42,8 +42,6 @@ export class Rester {
     // config
     this.config = loadResterConfig(inputConfig);
     // views
-    Injector.storage
-      .forEach((value, key) => value.type === InjectedType.VIEW && this.views.push(key));
     // connections
     // handlers
     // zone
@@ -64,6 +62,14 @@ export class Rester {
   }
 
   /**
+   * Register all views.
+   */
+  private async registerViews() {
+    Injector.storage
+      .forEach((value, key) => value.type === InjectedType.VIEW && this.views.push(key));
+  }
+
+  /**
    * Register all handlers & init each handler.
    */
   private async registerHandlers() {
@@ -80,6 +86,25 @@ export class Rester {
     ].forEach(handler => handler.init(this));
   }
 
+  /**
+   * Register all databases or exception, before controller init.
+   *
+   * @throws {ServerException} throw a server exception
+   */
+  private async registerDatabases() {
+    try {
+      this.logger.info('Database connecting...');
+      this.connections = await createDatabaseConnections(this.config.databases);
+      this.logger.info('Database connected.');
+    } catch (error) {
+      this.logger.error('Database connect failed, reason:', error);
+      throw new ServerException(error);
+    }
+  }
+
+  /**
+   * Register all controller, after database connected.
+   */
   private async registerControllers() {
     Injector
       .list()
@@ -92,21 +117,6 @@ export class Rester {
           this.logger.warn(`Instance init method call failed: ${instance.name}`);
         }
       });
-  }
-
-  /**
-   * Register all databases or exception.
-   * @throws {ServerException} throw a server exception
-   */
-  private async registerDatabases() {
-    try {
-      this.logger.info('Database connecting...');
-      this.connections = await createDatabaseConnections(this.config.databases);
-      this.logger.info('Database connected.');
-    } catch (error) {
-      this.logger.error('Database connect failed, reason:', error);
-      throw new ServerException(error);
-    }
   }
 
   /**
@@ -156,9 +166,10 @@ export class Rester {
    * @param callback callback after server started up
    */
   async bootstrap(callback?: (() => void | Promise<void>) | string): Promise<Rester> {
+    await this.registerViews();
     await this.registerHandlers();
-    await this.registerControllers();
     await this.registerDatabases();
+    await this.registerControllers();
     await this.registerServers();
     typeof callback === 'function' && await callback();
     typeof callback === 'string' && this.logger.info(callback);
