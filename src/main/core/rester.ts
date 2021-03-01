@@ -47,14 +47,15 @@ export class Rester {
     // zone
     this.zone = this.config.zone;
     // logger
-    this.logger = new Logger({
+    Logger.setLogger(new Logger({
       name: 'rester',
       level: this.config.logger.level,
       stdout: process.stdout,
       stderr: process.stderr,
       fileout: this.config.logger.outputLog,
       fileerr: this.config.logger.errorLog,
-    });
+    }));
+    this.logger = Logger.getLogger('rester')!;
     // handler pool
     this.pool = new HandlerPool(this);
     // server
