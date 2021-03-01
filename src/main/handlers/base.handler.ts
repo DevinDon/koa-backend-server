@@ -22,7 +22,7 @@ export class BaseHandler<ZoneType = any> {
   protected request!: IncomingMessage;
   /** Response instance. */
   protected response!: ServerResponse;
-  /** Route get form rester.zone.router. */
+  /** Route get form RouterHandler.configuration.route. */
   public route!: Route;
   /** Data zone. */
   public zone!: ZoneType;

@@ -15,7 +15,7 @@ export type HandlerType = Function & typeof BaseHandler;
  * @param {HandlerType} handler Handler class type.
  */
 export function Handler<THandler extends typeof BaseHandler>(handler: THandler, config?: any): ClassDecorator | MethodDecorator | any {
-  handler.config(config);
+  config && handler.config(config);
   return (target: Function | Object, name: string | symbol, descriptor: PropertyDecorator) => {
     if (target instanceof Function) {
       // if on class

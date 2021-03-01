@@ -139,10 +139,10 @@ export class RouterHandler extends BaseHandler {
    * @param rester Rester instance.
    */
   static init(rester: Rester): typeof RouterHandler {
-    rester.zone.router = new Map();
+    RouterHandler.configuration.route = new Map();
     for (const view of rester.views) {
       const routes: Route[] = Reflect.getMetadata(MetadataKey.View, view) || [];
-      routes.forEach(route => RouterHandler.set(route, rester.zone.router));
+      routes.forEach(route => RouterHandler.set(route, RouterHandler.configuration.route));
     }
     return RouterHandler;
   }
@@ -153,7 +153,7 @@ export class RouterHandler extends BaseHandler {
    * @param {Mapping} mapping Mapping information.
    * @returns Route. If not found, return undefined.
    */
-  private get(mapping: Mapping, router: Map<string, any> = this.rester.zone.router): Route | undefined {
+  private get(mapping: Mapping, router: Map<string, any> = RouterHandler.configuration.route): Route | undefined {
     /** Special route, maybe undefined(not found). */
     let route: Route | undefined;
     // format & parse mapping

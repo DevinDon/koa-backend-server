@@ -14,29 +14,26 @@ export interface CORSConfig {
   'Access-Control-Max-Age': number;
 }
 
+const DEFAULT_CORS_CONFIG = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': '*',
+  'Access-Control-Allow-Headers': '*',
+  'Access-Control-Max-Age': 86400,
+};
+
 /**
  * CORS handler, require RouterHandler.
  */
 export class CORSHandler extends BaseHandler {
-
-  static config(rester: Rester, config?: CORSConfig): HandlerType {
-    rester.zone.cors = config || {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': '*',
-      'Access-Control-Allow-Headers': '*',
-      'Access-Control-Max-Age': 86400,
-    };
-    return CORSHandler;
-  }
 
   /**
    * Config & init CORS handler of rester instance.
    *
    * @param rester Rester instance.
    */
-  static init(rester: Rester, config?: CORSConfig): HandlerType {
+  static init(rester: Rester): HandlerType {
     // CORS config
-    CORSHandler.config(rester, config);
+    CORSHandler.config(CORSHandler.configuration || DEFAULT_CORS_CONFIG);
     /** If CORS handler on global. */
     const allCORS = rester.handlers.includes(CORSHandler);
     // map all views
@@ -61,15 +58,15 @@ export class CORSHandler extends BaseHandler {
             name: undefined as any,
             target: undefined as any,
           }))
-          .forEach(route => RouterHandler.set(route, rester.zone.router));
+          .forEach(route => RouterHandler.set(route, RouterHandler.configuration.route));
       });
     return CORSHandler;
   }
 
   handle(next: () => Promise<any>): Promise<any> {
-    for (const header in this.rester.zone.cors) {
-      if (Object.prototype.hasOwnProperty.call(this.rester.zone.cors, header)) {
-        this.response.setHeader(header, this.rester.zone.cors[header]);
+    for (const header in CORSHandler.configuration.cors) {
+      if (Object.prototype.hasOwnProperty.call(CORSHandler.configuration.cors, header)) {
+        this.response.setHeader(header, CORSHandler.configuration.cors[header]);
       }
     }
     return next();
