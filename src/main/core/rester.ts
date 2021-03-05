@@ -25,6 +25,8 @@ export class Rester {
 
   /** Views in this rester instance. */
   public readonly views: Function[] = [];
+  /** Controllers in this rester instance. */
+  public readonly controllers: Function[] = [];
   /** Typeorm connection. */
   private connections?: DatabaseConnection[] = [];
   /** Handler types. */
@@ -68,9 +70,25 @@ export class Rester {
    * Register all views.
    */
   private async registerViews() {
+    // inject logger & rester
     Injector.storage
       .forEach((value, key) => value.type === InjectedType.VIEW && this.views.push(key));
-    this.views.forEach(view => view.prototype.logger = Logger.getLogger('rester'));
+    this.views.forEach(view => {
+      view.prototype.logger = Logger.getLogger('rester');
+      view.prototype.rester = this;
+    });
+    // call init
+    Injector
+      .list()
+      .filter(({ type }) => type === InjectedType.VIEW)
+      .map(({ instance }) => instance)
+      .forEach(instance => {
+        try {
+          typeof instance.init === 'function' && instance.init();
+        } catch (error) {
+          this.logger.warn(`View instance init method call failed: ${instance.name}`);
+        }
+      });
   }
 
   /**
@@ -110,6 +128,14 @@ export class Rester {
    * Register all controller, after database connected.
    */
   private async registerControllers() {
+    // inject logger & rester
+    Injector.storage
+      .forEach((value, key) => value.type === InjectedType.CONTROLLER && this.controllers.push(key));
+    this.controllers.forEach(controller => {
+      controller.prototype.logger = Logger.getLogger('rester');
+      controller.prototype.rester = this;
+    });
+    // call init
     Injector
       .list()
       .filter(({ type }) => type === InjectedType.CONTROLLER)
@@ -118,7 +144,7 @@ export class Rester {
         try {
           typeof instance.init === 'function' && instance.init();
         } catch (error) {
-          this.logger.warn(`Instance init method call failed: ${instance.name}`);
+          this.logger.warn(`Controller instance init method call failed: ${instance.name}`);
         }
       });
   }
