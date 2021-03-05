@@ -39,7 +39,7 @@ export class Rester {
   /** Handler pool. */
   private pool: HandlerPool;
   /** Node.js server. */
-  private server: HTTPServer | HTTP2Server | HTTPSServer;
+  private servers: (HTTPServer | HTTP2Server | HTTPSServer)[] = [];
 
   constructor(inputConfig: Partial<ResterConfig> = {}) {
     // config
@@ -64,7 +64,6 @@ export class Rester {
     // handler pool
     this.pool = new HandlerPool(this);
     // server
-    this.server = createHTTPServer(this.pool.process.bind(this.pool));
   }
 
   /**
@@ -157,9 +156,11 @@ export class Rester {
    */
   private async registerServers() {
     for (const address of this.config.addresses) {
+      const server = createHTTPServer(this.pool.process.bind(this.pool));
+      this.servers.push(server);
       const { port, host } = address;
       const protocol = address.protocol === 'HTTP' ? 'http' : 'https';
-      this.server.listen(port, host, async () => this.logger.info(`Server online, listening on: ${protocol}://${host}:${port}`));
+      server.listen(port, host, () => this.logger.info(`Server online, listening on: ${protocol}://${host}:${port}`));
     }
   }
 
@@ -181,7 +182,7 @@ export class Rester {
    * @param entities database entity
    * @returns {Rester} rester instance
    */
-  addEntities<E extends typeof BaseEntity>(...entities: (E | string)[]): Rester {
+  addEntities<E extends typeof BaseEntity>(...entities: E[] | string[] | (E | string)[]): Rester {
     const connection = typeof entities[0] === 'string' ? entities[0] : 'default';
     typeof entities[0] === 'string' && entities.splice(0, 1);
     const config = this.config.databases
