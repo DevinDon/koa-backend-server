@@ -8,8 +8,10 @@
 - chore(eslint): update lint config
 - refactor(core): refactor core components
 - perf(demo): remove useless demo & update new demo
+- perf(handlers): optimize config & scheam handler
+- perf(core): inject logger & rester instance in views & controllers
   - [x] perf(demo/simple): view
-  - [ ] perf(demo/entity): entity & view
+  - [x] perf(demo/entity): entity & view
   - [x] perf(demo/exception): more exceptions
   - [x] perf(demo/static): serve static files
   - [x] perf(demo/upload): parse upload data

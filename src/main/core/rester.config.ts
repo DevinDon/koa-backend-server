@@ -77,6 +77,8 @@ export const DEFAULT_DEV_CONFIG: ResterConfig = {
     type: 'sqlite',
     name: 'default',
     database: 'dev.db',
+    synchronize: true,
+    logger: 'debug',
   }],
   handlerPool: {
     max: 128,

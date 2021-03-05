@@ -25,7 +25,9 @@ const parameterInjectors: { [index in ParamInjectionType | string]: (handler: an
    *
    * @returns {string | undefined} Query value of special key, maybe undefined.
    */
-  PARAM$PATH$QUERY: (handler, key: string): string | undefined => handler.mapping.queryObject && handler.mapping.queryObject[key],
+  PARAM$PATH$QUERY: (handler, key: string): string | undefined => handler.mapping.queryObject && (
+    key ? handler.mapping.queryObject[key] : handler.mapping.queryObject
+  ),
   /**
    * Inject path variable.
    *

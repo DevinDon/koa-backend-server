@@ -180,7 +180,7 @@ export class Rester {
    * @param entities database entity
    * @returns {Rester} rester instance
    */
-  addEntities(connectionName: string, ...entities: any[]): Rester {
+  addEntities({ connectionName = 'default', entities }: { connectionName?: string, entities: any[] }): Rester {
     const config = this.config.databases
       .find(({ name }) => name === connectionName);
     if (!config) {
