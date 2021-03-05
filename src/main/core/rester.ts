@@ -2,7 +2,7 @@ import { Logger } from '@iinfinity/logger';
 import { loadResterConfig, ResterConfig, ZoneConfig } from '../core/rester.config';
 import { HandlerType, InjectedType, Injector } from '../decorators';
 import { ServerException } from '../exceptions';
-import { ExceptionHandler, HandlerPool, ParameterHandler, RouterHandler, SchemaHandler } from '../handlers';
+import { ExceptionHandler, HandlerPool, LoggerHandler, ParameterHandler, RouterHandler, SchemaHandler } from '../handlers';
 import { createDatabaseConnections, createHTTPServer, DatabaseConnection, HTTP2Server, HTTPServer, HTTPSServer, MetadataKey, Route } from '../interfaces';
 
 /**
@@ -28,7 +28,7 @@ export class Rester {
   /** Typeorm connection. */
   private connections?: DatabaseConnection[] = [];
   /** Handler types. */
-  public handlers: HandlerType[] = [ExceptionHandler, SchemaHandler, RouterHandler, ParameterHandler];
+  public handlers: HandlerType[] = [ExceptionHandler, SchemaHandler, RouterHandler, ParameterHandler, LoggerHandler];
   /** Zone to storage something about this instance. */
   public zone: ZoneConfig;
   /** Logger instance. */
