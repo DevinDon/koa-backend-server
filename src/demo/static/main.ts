@@ -1,5 +1,4 @@
-import { createReadStream } from 'fs';
-import { GET, PathVariable, Rester, View } from '../../main';
+import { GET, PathVariable, ResourceResponse, Rester, View } from '../../main';
 
 @View()
 class StaticView {
@@ -7,7 +6,7 @@ class StaticView {
   @GET()
   @GET(':path')
   async static(@PathVariable('path') path: string) {
-    return createReadStream(path ?? 'README.md');
+    return new ResourceResponse({ data: path });
   }
 
 }

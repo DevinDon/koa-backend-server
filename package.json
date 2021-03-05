@@ -52,12 +52,14 @@
   "dependencies": {
     "@iinfinity/delay": "0.1.1",
     "@iinfinity/logger": "0.3.4",
+    "mime-types": "^2.1.29",
     "reflect-metadata": "0.1.13",
     "typeorm": "0.2.31"
   },
   "devDependencies": {
     "@types/jasmine": "3.6.4",
     "@types/js-yaml": "^4.0.0",
+    "@types/mime-types": "^2.1.0",
     "@types/node": "^14.14.31",
     "@typescript-eslint/eslint-plugin": "^4.15.2",
     "@typescript-eslint/parser": "^4.15.2",

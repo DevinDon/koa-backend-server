@@ -11,7 +11,7 @@
   - [x] perf(demo/simple): controller & view
   - [ ] perf(demo/entity): entity & controller & view
   - [ ] perf(demo/exception): more exceptions
-  - [ ] perf(demo/static): serve static files
+  - [x] perf(demo/static): serve static files
   - [x] perf(demo/upload): parse upload data
   - [ ] perf(demo/full): full project
 
