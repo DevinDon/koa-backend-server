@@ -1,3 +1,7 @@
+import { Stream } from 'stream';
+import { ContentType, CONTENT_TYPE } from '../constants';
+import { BaseResponse } from '../responses/base.response';
+import { BufferStream } from '../utils';
 import { BaseHandler } from './base.handler';
 
 /**
@@ -9,40 +13,62 @@ export class SchemaHandler extends BaseHandler {
 
   async handle(next: () => Promise<any>): Promise<any> {
     return next()
-      .then(v => {
-        if (typeof v === 'undefined') {
-          return '';
-        } else if (typeof v === 'object') {
-          if (v instanceof Buffer) {
-            // Content-Type should be application/json when v is an object & not instanceof Buffer
-            if (!this.response.getHeader('Content-Type')) {
-              this.response.setHeader('Content-Type', 'application/octet-stream');
+      .then(
+        value => {
+
+          // alreay has content type
+          if (this.response.getHeader(CONTENT_TYPE)) {
+            return value;
+          }
+
+          // value is undefined, return empty string
+          if (typeof value === 'undefined') {
+            return '';
+          }
+
+          // value is string, return string
+          if (typeof value === 'string') {
+            this.response.setHeader(CONTENT_TYPE, ContentType.TEXT);
+            return value;
+          }
+
+          // value is object, should be stringify or boldify
+          if (typeof value === 'object') {
+
+            // value is a rester response
+            if (value instanceof BaseResponse) {
+              for (const key in value.headers) {
+                if (Object.prototype.hasOwnProperty.call(value.headers, key)) {
+                  this.response.setHeader(key, value.headers[key]);
+                }
+              }
+              this.response.statusCode = value.statusCode;
+              this.response.statusMessage = value.statusMessage;
+              value = value.data;
+              // not return, keep going
             }
-            // TODO: Buffer is binary, base64 or something else
-            return v;
-          } else {
-            // Content-Type should be application/json when v is an object & not instanceof Buffer
-            if (!this.response.getHeader('Content-Type')) {
-              this.response.setHeader('Content-Type', 'application/json');
+
+            // value is buffer
+            if (value instanceof Buffer) {
+              this.response.hasHeader(CONTENT_TYPE) || this.response.setHeader(CONTENT_TYPE, ContentType.STREAM);
+              // TODO: Buffer is binary, base64 or something else
+              return new BufferStream(value);
             }
+
+            // value is stream
+            if (value instanceof Stream) {
+              return value;
+            }
+
+            // else json.stringify
+            this.response.hasHeader(CONTENT_TYPE) || this.response.setHeader(CONTENT_TYPE, ContentType.JSON);
             // TODO: JSON schema
-            return JSON.stringify(v);
+            return JSON.stringify(value);
+
           }
-        } else if (typeof v === 'string') {
-          // Content-Type should be text/plain when v is an string
-          if (!this.response.getHeader('Content-Type')) {
-            this.response.setHeader('Content-Type', 'text/plain');
-          }
-          return v;
-        } else {
-          // Content-Type should be text/plain when v is other type
-          // like boolean, number, and so on
-          if (!this.response.getHeader('Content-Type')) {
-            this.response.setHeader('Content-Type', 'text/plain');
-          }
-          return String(v);
-        }
-      });
+
+        },
+      );
   }
 
 }
