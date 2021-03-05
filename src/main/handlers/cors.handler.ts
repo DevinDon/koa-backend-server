@@ -63,7 +63,7 @@ export class CORSHandler extends BaseHandler {
     return CORSHandler;
   }
 
-  handle(next: () => Promise<any>): Promise<any> {
+  async handle(next: () => Promise<any>): Promise<any> {
     for (const header in CORSHandler.configuration.cors) {
       if (Object.prototype.hasOwnProperty.call(CORSHandler.configuration.cors, header)) {
         this.response.setHeader(header, CORSHandler.configuration.cors[header]);

@@ -179,7 +179,7 @@ export class RouterHandler extends BaseHandler {
    * @returns {Promise<T>} Result for this handler.
    * @throws {HTTP404Exception} Not found exception.
    */
-  handle(next: () => Promise<any>): Promise<any> {
+  async handle(next: () => Promise<any>): Promise<any> {
     this.route = this.get({ method: this.request.method as Method, path: this.request.url! })!;
     if (this.route) { return next(); }
     return next().then(() => { throw new HTTP404Exception(`Can't ${this.request.method} ${this.request.url}`); });

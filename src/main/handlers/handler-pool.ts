@@ -1,5 +1,8 @@
+import { IncomingMessage, ServerResponse } from 'http';
+import { pipeline, Readable } from 'stream';
 import { Rester } from '../core/rester';
 import { HandlerType } from '../decorators';
+import { pipelines, writes } from '../utils';
 import { BaseHandler } from './base.handler';
 
 /**
@@ -47,10 +50,26 @@ export class HandlerPool {
    * @param {IncomingMessage} request Request.
    * @param {ServerResponse} response Response.
    */
-  async process(request: any, response: any): Promise<void> {
+  async process(request: IncomingMessage, response: ServerResponse): Promise<void> {
     // take & compose these handlers
     this.compose(this.take(this.rester.handlers[0]).from(request, response), 0, this.rester.handlers)()
-      .then(v => response.write(v || ''))
+      // .then(async value => {
+      //   if (!value) {
+      //     return;
+      //   }
+      //   if (value instanceof Readable) {
+      //     await pipelines(value, response);
+      //   } else {
+      //     response.write(value);
+      //   }
+      // })
+      .then(
+        async value => value && await (
+          value instanceof Readable
+            ? pipelines(value, response)
+            : writes(value, response)
+        ),
+      )
       .catch(reason => this.rester.logger.warn(`Error while compose: ${reason}`))
       .finally(() => response.end());
   }

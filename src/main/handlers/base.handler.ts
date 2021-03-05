@@ -96,7 +96,7 @@ export class BaseHandler<ZoneType = any> {
    * @param {() => Promise<any>} next Next handler, result should be returned.
    * @returns {Promise<any>} Handle result, normally it is response.
    */
-  handle(next: () => Promise<any>): Promise<any> {
+  async handle(next: () => Promise<any>): Promise<any> {
     throw new Error('not implement');
   }
 

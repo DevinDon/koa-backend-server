@@ -1,12 +1,13 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { MetadataKey } from '../interfaces';
+import { CONTENT_TYPE } from '../constants';
 import { ParamInjection, ParamInjectionType } from '../decorators';
 import { HTTP400Exception, HTTP404Exception } from '../exceptions';
+import { MetadataKey } from '../interfaces';
 import { BodyParser } from '../utils/body-parser';
 import { BaseHandler } from './base.handler';
 
 /** Parameter injectors, function. */
-export const parameterInjectors: { [index in ParamInjectionType | string]: (handler: any, name: string) => any } = {
+const parameterInjectors: { [index in ParamInjectionType | string]: (handler: any, name: string) => any } = {
   /**
    * Inject HTTP request instance.
    *
@@ -45,7 +46,7 @@ export const parameterInjectors: { [index in ParamInjectionType | string]: (hand
       // TODO: JSON schema & validate
       handler.request.on('end', () => resolve(
         handler.parser
-          .setContentType(type || handler.request.headers['content-type'] || '')
+          .setContentType(type || handler.request.headers[CONTENT_TYPE] || '')
           .parse(data),
       ));
       handler.request.on('error', (error: any) => reject(error));

@@ -1,3 +1,4 @@
+import { ContentType, CONTENT_TYPE } from '../constants';
 import { Rester } from '../core/rester';
 import { HandlerType } from '../decorators';
 import { HTTPException } from '../exceptions';
@@ -53,8 +54,8 @@ export class ExceptionHandler extends BaseHandler {
         }
 
         // default to `application/json` header
-        if (!this.response.getHeader('Content-Type')) {
-          this.response.setHeader('Content-Type', 'application/json');
+        if (!this.response.getHeader(CONTENT_TYPE)) {
+          this.response.setHeader(CONTENT_TYPE, ContentType.JSON);
         }
 
         // stringify without schema
