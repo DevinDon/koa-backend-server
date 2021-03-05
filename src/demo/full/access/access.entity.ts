@@ -1,5 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '../../main/declares/typeorm';
-import { IsDate, IsIP, Length } from '../../main/declares/validator';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '../../../main/declares/typeorm';
+import { IsDate, IsIP, Length } from '../../../main/declares/validator';
 
 @Entity('access')
 export class AccessEntity extends BaseEntity {

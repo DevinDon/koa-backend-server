@@ -15,7 +15,7 @@
   - [x] perf(demo/exception): more exceptions
   - [x] perf(demo/static): serve static files
   - [x] perf(demo/upload): parse upload data
-  - [ ] perf(demo/full): full project
+  - [x] perf(demo/full): full project
 
 ## 0.12.8 => 0.12.10
 
