@@ -1,4 +1,5 @@
 import { Logger } from '@iinfinity/logger';
+import { BaseEntity } from 'typeorm';
 import { loadResterConfig, ResterConfig, ZoneConfig } from '../core/rester.config';
 import { HandlerType, InjectedType, Injector } from '../decorators';
 import { ServerException } from '../exceptions';
@@ -180,11 +181,13 @@ export class Rester {
    * @param entities database entity
    * @returns {Rester} rester instance
    */
-  addEntities({ connectionName = 'default', entities }: { connectionName?: string, entities: any[] }): Rester {
+  addEntities<E extends typeof BaseEntity>(...entities: (E | string)[]): Rester {
+    const connection = typeof entities[0] === 'string' ? entities[0] : 'default';
+    typeof entities[0] === 'string' && entities.splice(0, 1);
     const config = this.config.databases
-      .find(({ name }) => name === connectionName);
+      .find(({ name }) => name === connection);
     if (!config) {
-      throw new ServerException(`No such connection named ${connectionName}`);
+      throw new ServerException(`No such connection named ${connection}`);
     }
     (config as any)['entities'] = [...new Set([...(config.entities || []), ...entities])];
     return this;

@@ -4,6 +4,6 @@ import './access.view';
 
 const rester = new Rester();
 
-rester.addEntities({ entities: [AccessEntity] });
+rester.addEntities(AccessEntity);
 
 rester.bootstrap();
