@@ -39,3 +39,13 @@ export class HTTP404Exception<T> extends HTTPException<T> {
     super(404, message, content);
   }
 }
+
+/** HTTP 418 Exception: I am Teapot. */
+export class HTTP418Exception<T> extends HTTPException<T> {
+  constructor(
+    message: string = 'I am Teapot',
+    content?: T,
+  ) {
+    super(418, message, content);
+  }
+}

@@ -9,8 +9,8 @@
 - refactor(core): refactor core components
 - perf(demo): remove useless demo & update new demo
   - [x] perf(demo/simple): controller & view
-  - [ ] perf(demo/entity): entity & controller & view
-  - [ ] perf(demo/exception): more exceptions
+  - [ ] perf(demo/entity): entity & view
+  - [x] perf(demo/exception): more exceptions
   - [x] perf(demo/static): serve static files
   - [x] perf(demo/upload): parse upload data
   - [ ] perf(demo/full): full project

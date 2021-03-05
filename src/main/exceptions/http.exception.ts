@@ -13,6 +13,7 @@ export class HTTPException<T = any> extends Error {
     public content?: T,
   ) {
     super(message);
+    this.code = isNaN(+code) ? 500 : +code;
   }
 
 }
