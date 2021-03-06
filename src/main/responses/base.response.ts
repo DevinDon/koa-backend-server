@@ -36,9 +36,9 @@ export class BaseResponse<T = any> implements Response<T> {
   data: T;
 
   constructor({ statusCode, statusMessage, headers, data }: Response) {
-    this.statusCode = statusCode ?? this.statusCode;
-    this.statusMessage = statusMessage ?? this.statusMessage;
-    this.headers = headers ?? this.headers;
+    statusCode && (this.statusCode = statusCode);
+    statusMessage && (this.statusMessage = statusMessage);
+    headers && (this.headers = headers);
     this.data = data;
   }
 

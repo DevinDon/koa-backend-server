@@ -6,7 +6,7 @@ class StaticView {
   @GET()
   @GET(':path')
   async static(@PathVariable('path') path: string) {
-    return new ResourceResponse({ data: path });
+    return new ResourceResponse({ file: path });
   }
 
 }

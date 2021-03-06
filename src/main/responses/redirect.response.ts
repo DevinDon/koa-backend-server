@@ -1,19 +1,17 @@
-import { BaseResponse } from './base.response';
+import { BaseResponse, Response } from './base.response';
 
-export interface RedirectResponseConfig {
+export type RedirectResponseConfig = Partial<Response> & {
   url: string;
-  temporarily: boolean;
+  temporarily?: boolean;
 }
 
 export class RedirectResponse extends BaseResponse<string> {
 
-  constructor({ url, temporarily }: RedirectResponseConfig) {
-    super({
-      data: undefined as any,
-      headers: { location: url },
-      statusCode: temporarily ? 302 : 301,
-      statusMessage: temporarily ? 'Moved Temporarily' : 'Move Permanently',
-    });
+  constructor({ url, temporarily, ...rest }: RedirectResponseConfig) {
+    super(rest as any);
+    this.headers.location = url;
+    this.statusCode = temporarily ? 302 : 301;
+    this.statusMessage = temporarily ? 'Moved Temporarily' : 'Move Permanently';
   }
 
 }
