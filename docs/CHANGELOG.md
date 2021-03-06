@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.13.0 => 0.13.1
+
+- chore(npm): update deps
+
 ## 0.12.10 => 0.13.0
 
 - refactor(app): refactor project structure
