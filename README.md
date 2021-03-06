@@ -27,23 +27,24 @@ npm i --save @rester/core
 Use **Rester** just like **Spring Boot**, and easier!
 
 ```typescript
-import { View, GET, Rester } from '@rester/core';
+import { GET, Rester, View } from '@rester/core';
 
+/** View / */
 @View()
-class DemoView {
+class SimpleView {
 
-  /** GET http://localhost:8080 */
-  @GET('/')
+  /** GET / */
+  @GET()
   index() {
-    return { hello: 'world' };
+    return 'Hello, world!';
   }
 
 }
 
-/** Create a rester server listening on http://localhost:8080. */
-const server = new Rester()
-  .configViews.add(DemoView).end()
-  .listen();
+/** Create a rester server. */
+const rester = new Rester();
+/** Bootstrap and listening on http://localhost:8080 */
+rester.bootstrap();
 ```
 
 > 🗂 See more [demo](https://github.com/DevinDon/rester-core/blob/master/src/demo) here.
@@ -56,57 +57,27 @@ const server = new Rester()
 
 > 📄 See [change log](https://github.com/DevinDon/rester-core/blob/master/docs/CHANGELOG.md) for detail.
 
-## 0.12.8 => 0.12.10
+## 0.13.0 => 0.13.1
 
-- feat(handler): support handler config & add logger & resource handler
+- chore(npm): update deps
+- docs(readme): update readme & usage
 
-## 0.12.7 => 0.12.8
+## 0.12.10 => 0.13.0
 
-- fix(injector): fix view decorator
-
-## 0.12.6 => 0.12.7
-
-- perf(hook): add init hook for controller
-
-## 0.12.5 => 0.12.6
-
-- perf(decorator): add try catch block
-
-## 0.12.4 => 0.12.5
-
-- perf(decorator): add init hook after controller init
-
-## 0.12.3 => 0.12.4
-
-- perf(util/validator): add type declare to params
-- fix(util/body-parser): catch JSON parse error
-- perf(rester): await database connection before listen
-
-## 0.12.2 => 0.12.3
-
-- fix(handler/exception): add response header with type json
-
-## 0.12.1 => 0.12.2
-
-- fix(handler/exception): stringify exception content
-
-## 0.12.0 => 0.12.1
-
-- feat(@util/validator): check required params in fields
-
-## 0.11.1 => 0.12.0
-
-- fix(decorator/mapping): fix POST mapping decorator description
-- perf(handler/router): use ':variable' instead of '{{variable}}
-
-## 0.11.0 => 0.11.1
-
-- perf(@util/validator): null check function only need an object param
-
-## 0.10.24 => 0.11.0
-
-- perf(database): support multi connections
-- feat(@util): add new utils, such params check
+- refactor(app): refactor project structure
+- refactor(decorators/injector): refactor injector methods
+- perf(core/rester): use yaml instead of json config
+- chore(eslint): update lint config
+- refactor(core): refactor core components
+- perf(demo): remove useless demo & update new demo
+- perf(handlers): optimize config & scheam handler
+- perf(core): inject logger & rester instance in views & controllers
+  - [x] perf(demo/simple): view
+  - [x] perf(demo/entity): entity & view
+  - [x] perf(demo/exception): more exceptions
+  - [x] perf(demo/static): serve static files
+  - [x] perf(demo/upload): parse upload data
+  - [x] perf(demo/full): full project
 
 # Author
 

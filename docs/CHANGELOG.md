@@ -3,6 +3,7 @@
 ## 0.13.0 => 0.13.1
 
 - chore(npm): update deps
+- docs(readme): update readme & usage
 
 ## 0.12.10 => 0.13.0
 
