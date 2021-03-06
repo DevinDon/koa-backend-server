@@ -57,10 +57,9 @@ rester.bootstrap();
 
 > 📄 See [change log](https://github.com/DevinDon/rester-core/blob/master/docs/CHANGELOG.md) for detail.
 
-## 0.13.0 => 0.13.1
+## 0.13.1 => 0.13.2
 
-- chore(npm): update deps
-- docs(readme): update readme & usage
+- feat(response): add redirect response
 
 ## 0.12.10 => 0.13.0
 
