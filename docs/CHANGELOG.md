@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.13.3 => 0.13.4
+
+- fix(handlers/cors): fix cors headers
+
 ## 0.13.1 => 0.13.2
 
 - feat(response): add redirect response

@@ -33,7 +33,8 @@ export class CORSHandler extends BaseHandler {
    */
   static init(rester: Rester): HandlerType {
     // CORS config
-    CORSHandler.config(CORSHandler.configuration || DEFAULT_CORS_CONFIG);
+    CORSHandler.config(CORSHandler.configuration);
+    CORSHandler.configuration.cors || (CORSHandler.configuration.cors = DEFAULT_CORS_CONFIG);
     /** If CORS handler on global. */
     const allCORS = rester.handlers.includes(CORSHandler);
     // map all views
