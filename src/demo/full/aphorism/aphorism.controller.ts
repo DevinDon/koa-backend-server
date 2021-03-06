@@ -44,11 +44,8 @@ export class AphorismController {
 
   async selectManyByRandom(length: number) {
     return this.document
-      .find({
-        where: {
-          $sample: { size: length },
-        },
-      });
+      .aggregateEntity([{ $sample: { size: length } }])
+      .toArray();
   }
 
 }
