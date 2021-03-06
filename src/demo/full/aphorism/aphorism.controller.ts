@@ -17,24 +17,24 @@ export class AphorismController {
   }
 
   async insertOne(aphorism: AphorismParamInsert) {
-    const id = await this.document
+    const key = await this.document
       .insert({ id: Date.now(), ...aphorism })
       .then(result => result.identifiers[0]);
-    return this.document.findOne(id);
+    return this.document.findOne(key);
   }
 
   async deleteOneByID(id: AphorismID) {
-    await this.document.delete(id);
+    await this.document.delete({ id });
     return [id];
   }
 
   async updateOne(id: AphorismID, aphorism: AphorismParamUpdate) {
     await this.document.update(id, aphorism);
-    return this.document.findOne(id);
+    return this.document.findOne({ id });
   }
 
   async selectOneByID(id: AphorismID) {
-    return this.document.findOne(id);
+    return this.document.findOne({ id });
   }
 
   async selectMany({ skip, take }: Pagination) {
