@@ -1,5 +1,5 @@
+import { getRepository } from 'typeorm';
 import { GET, PathQuery, View } from '../../../main';
-import { getRepository } from '../../../main/declares/typeorm';
 import { AccessEntity } from './access.entity';
 
 @View('accesses')

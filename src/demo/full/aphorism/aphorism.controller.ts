@@ -1,5 +1,5 @@
+import { getMongoRepository, MongoRepository } from 'typeorm';
 import { Controller } from '../../../main';
-import { getMongoRepository, MongoRepository } from '../../../main/declares/typeorm';
 import { Pagination } from '../common/interfaces';
 import { AphorismEntity } from './aphorism.entity';
 import { AphorismID, AphorismParamInsert, AphorismParamUpdate } from './aphorism.model';

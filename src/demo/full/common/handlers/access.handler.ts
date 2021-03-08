@@ -1,5 +1,5 @@
+import { getRepository } from 'typeorm';
 import { BaseHandler } from '../../../../main';
-import { getRepository } from '../../../../main/declares/typeorm';
 import { AccessEntity } from '../../access';
 
 export class AccessHandler extends BaseHandler {

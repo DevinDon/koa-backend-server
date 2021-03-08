@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.13.4 => 0.13.5
+
+- perf(declares): remove declares
+
 ## 0.13.3 => 0.13.4
 
 - fix(handlers/cors): fix cors headers
