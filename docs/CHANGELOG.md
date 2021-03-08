@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.13.5 => 0.13.6
+
+- feat(rester): add reset methods
+
 ## 0.13.4 => 0.13.5
 
 - perf(declares): remove declares

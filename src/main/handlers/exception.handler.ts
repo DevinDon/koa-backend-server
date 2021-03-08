@@ -27,8 +27,6 @@ export class ExceptionHandler extends BaseHandler {
 
         const trace = ExceptionHandler.configuration.trace;
 
-        let returns;
-
         if (exception instanceof HTTPException) {
           // if it is HTTP Exception, set code & return the content
           this.logger
@@ -39,19 +37,22 @@ export class ExceptionHandler extends BaseHandler {
           }
           this.response.statusCode = exception.code;
           this.response.statusMessage = exception.message;
-          returns = exception.content;
-        } else {
-          // else, just throw 500 with `ExceptionHandler.configuration.response`
-          this.logger
-            .error(`HTTP 500 Internal Exception from '${this.request.method} ${this.request.url}': ${exception.name} ${exception.message}`);
-          // if trace is true, output stack info
-          if (trace) {
-            this.logger.error(`Detail: ${exception.stack}`);
-          }
-          this.response.statusCode = 500;
-          this.response.statusMessage = exception.message;
-          returns = ExceptionHandler.configuration.response;
+          return exception.content;
         }
+
+        // else, just throw 500 with `ExceptionHandler.configuration.response`
+        this.logger
+          .error(`HTTP 500 Internal Exception from '${this.request.method} ${this.request.url}': ${exception.name} ${exception.message}`);
+        // if trace is true, output stack info
+        if (trace) {
+          this.logger.error(`Detail: ${exception.stack}`);
+        }
+        this.response.statusCode = 500;
+        this.response.statusMessage = exception.message;
+        return ExceptionHandler.configuration.response;
+
+      })
+      .then(returns => {
 
         // default to `application/json` header
         if (!this.response.getHeader(CONTENT_TYPE)) {

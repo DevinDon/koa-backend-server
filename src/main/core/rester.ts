@@ -165,6 +165,16 @@ export class Rester {
   }
 
   /**
+   * Reset all handlers.
+   *
+   * @returns this rester instance for chain call
+   */
+  resetHandlers(): Rester {
+    this.handlers = [];
+    return this;
+  }
+
+  /**
    * Add global handlers.
    *
    * @param handlers global handlers
@@ -172,6 +182,18 @@ export class Rester {
    */
   addHandlers(...handlers: HandlerType[]): Rester {
     this.handlers = [...this.handlers, ...handlers];
+    return this;
+  }
+
+  /**
+   * Reset all entities.
+   *
+   * @returns this rester instance for chain call
+   */
+  resetEntities(): Rester {
+    for (const database of this.config.databases) {
+      (database as any).entities = [];
+    }
     return this;
   }
 
