@@ -53,16 +53,6 @@ export class HandlerPool {
   async process(request: IncomingMessage, response: ServerResponse): Promise<void> {
     // take & compose these handlers
     this.compose(this.take(this.rester.handlers[0]).from(request, response), 0, this.rester.handlers)()
-      // .then(async value => {
-      //   if (!value) {
-      //     return;
-      //   }
-      //   if (value instanceof Readable) {
-      //     await pipelines(value, response);
-      //   } else {
-      //     response.write(value);
-      //   }
-      // })
       .then(
         async value => value && await (
           value instanceof Readable
@@ -70,7 +60,7 @@ export class HandlerPool {
             : writes(value, response)
         ),
       )
-      .catch(reason => this.rester.logger.warn(`Error while compose: ${reason}`))
+      .catch(reason => this.rester.logger.trace('Error while compose:', reason))
       .finally(() => response.end());
   }
 

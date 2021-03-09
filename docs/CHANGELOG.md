@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.13.6 => 0.13.7
+
+- perf(handlers/pool): add pool compose trace
+
 ## 0.13.5 => 0.13.6
 
 - feat(rester): add reset methods
