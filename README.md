@@ -47,7 +47,7 @@ const rester = new Rester();
 rester.bootstrap();
 ```
 
-> 🗂 See more [demo](https://github.com/DevinDon/rester-core/blob/master/src/demo) here.
+> 🗂 See [more demo here](https://github.com/DevinDon/rester-core/blob/master/src/demo), and [full demo project here](https://github.com/Devindon/template/tree/rester).
 
 # Feature
 
@@ -56,10 +56,6 @@ rester.bootstrap();
 # Change Log
 
 > 📄 See [change log](https://github.com/DevinDon/rester-core/blob/master/docs/CHANGELOG.md) for detail.
-
-## 0.13.1 => 0.13.2
-
-- feat(response): add redirect response
 
 ## 0.12.10 => 0.13.0
 

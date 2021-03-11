@@ -1,8 +1,8 @@
 import { Logger } from '@iinfinity/logger';
 import { createWriteStream, existsSync, mkdirSync, writeFileSync } from 'fs';
 import { IncomingMessage } from 'http';
-import { CORSHandler, Handler, HTTPRequest, Part, partsToObject, PUT, RequestBody, RequestHeader, Rester, View } from '../../main';
-import { ContentType, CONTENT_TYPE } from '../../main/constants';
+import { CORSHandler, Handler, HTTPRequest, Part, partsToObject, PUT, RequestBody, Rester, View } from '../../main';
+import { CONTENT_TYPE } from '../../main/constants';
 import { BaseResponse } from '../../main/responses/base.response';
 
 @View()

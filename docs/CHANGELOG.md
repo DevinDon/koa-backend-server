@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.13.8 => 0.13.9
+
+- feat(interfaces): add pagination
+
 ## 0.13.7 => 0.13.8
 
 - fix(handlers/pool): fix pool max config
