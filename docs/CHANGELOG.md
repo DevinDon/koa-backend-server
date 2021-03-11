@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.13.7 => 0.13.8
+
+- fix(handlers/pool): fix pool max config
+
 ## 0.13.6 => 0.13.7
 
 - perf(handlers/pool): add pool compose trace

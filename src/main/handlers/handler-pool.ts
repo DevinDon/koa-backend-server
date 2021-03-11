@@ -11,7 +11,7 @@ import { BaseHandler } from './base.handler';
 export class HandlerPool {
 
   /** Maximum number of handlers per category, default to 1024. */
-  private max = 1024;
+  private max: number;
   /** Pools. */
   private pools: Map<string, BaseHandler[]> = new Map();
 
@@ -20,7 +20,9 @@ export class HandlerPool {
    *
    * @param rester The rester instance to which this handler belongs.
    */
-  constructor(private rester: Rester) { }
+  constructor(private rester: Rester) {
+    this.max = rester.config.handlerPool.max ?? 1024;
+  }
 
   /**
    * Take one hander instance with special type.
