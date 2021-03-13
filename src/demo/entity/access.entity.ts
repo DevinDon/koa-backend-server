@@ -1,11 +1,11 @@
 import { IsDate, IsIP, Length } from 'class-validator';
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 
 @Entity('access')
 export class AccessEntity extends BaseEntity {
 
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @ObjectIdColumn()
+  _id!: ObjectID;
 
   @Length(3, 10)
   @Column()
