@@ -67,6 +67,22 @@ export class Rester {
   }
 
   /**
+   * Register all databases or exception, before controller init.
+   *
+   * @throws {ServerException} throw a server exception
+   */
+  private async registerDatabases() {
+    try {
+      this.logger.info('Database connecting...');
+      this.connections = await createDatabaseConnections(this.config.databases);
+      this.logger.info('Database connected.');
+    } catch (error) {
+      this.logger.error('Database connect failed, reason:', error);
+      throw new ServerException(error);
+    }
+  }
+
+  /**
    * Register all views.
    */
   private async registerViews() {
@@ -106,22 +122,6 @@ export class Rester {
         ).flat(),
       ),
     ].forEach(handler => handler.init(this));
-  }
-
-  /**
-   * Register all databases or exception, before controller init.
-   *
-   * @throws {ServerException} throw a server exception
-   */
-  private async registerDatabases() {
-    try {
-      this.logger.info('Database connecting...');
-      this.connections = await createDatabaseConnections(this.config.databases);
-      this.logger.info('Database connected.');
-    } catch (error) {
-      this.logger.error('Database connect failed, reason:', error);
-      throw new ServerException(error);
-    }
   }
 
   /**
@@ -222,9 +222,9 @@ export class Rester {
    * @param callback callback after server started up
    */
   async bootstrap(callback?: (() => void | Promise<void>) | string): Promise<Rester> {
+    await this.registerDatabases();
     await this.registerViews();
     await this.registerHandlers();
-    await this.registerDatabases();
     await this.registerControllers();
     await this.registerServers();
     typeof callback === 'function' && await callback();
