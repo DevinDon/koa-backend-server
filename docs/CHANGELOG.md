@@ -3,6 +3,7 @@
 ## 0.13.8 => 0.13.9
 
 - fix(core/rester): database connect first
+- perf(core/base): add base view & controller
 - feat(interfaces): add pagination
 
 ## 0.13.7 => 0.13.8
