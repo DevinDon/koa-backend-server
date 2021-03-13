@@ -5,6 +5,7 @@
 - fix(core/rester): database connect first
 - perf(core/base): add base view & controller
 - feat(interfaces): add pagination
+- feat(decorators/parameter): support param data format conversion
 
 ## 0.13.7 => 0.13.8
 

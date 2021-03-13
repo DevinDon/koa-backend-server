@@ -19,6 +19,7 @@ export enum ParamInjectionType {
 export interface ParamInjection {
   type: ParamInjectionType;
   value: string;
+  declaration: 'Number' | 'String' | 'Boolean' | 'Object' | 'undefined' | 'Array' | 'Function';
 }
 
 /**
@@ -35,10 +36,12 @@ export interface ParamInjection {
  */
 export function baseParam(type: ParamInjectionType | any) {
   return (value: string = ''): ParameterDecorator => (target: any, name, index) => {
+    // get param declaration type
+    const { name: declaration } = Reflect.getMetadata('design:paramtypes', target, name)[index];
     // get existing params array
     const exist: ParamInjection[] = Reflect.getMetadata(MetadataKey.Parameter, target, name) || [];
     // put this param with special index
-    exist[index] = { type, value };
+    exist[index] = { type, value, declaration };
     // and then, set it
     Reflect.defineMetadata(MetadataKey.Parameter, exist, target, name);
   };

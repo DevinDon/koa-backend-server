@@ -7,7 +7,7 @@ import { BodyParser } from '../utils/body-parser';
 import { BaseHandler } from './base.handler';
 
 /** Parameter injectors, function. */
-const parameterInjectors: { [index in ParamInjectionType | string]: (handler: any, name: string) => any } = {
+const parameterInjectors: { [index in ParamInjectionType | string]: (handler: any, name: string, declaration: ParamInjection['declaration']) => any } = {
   /**
    * Inject HTTP request instance.
    *
@@ -25,15 +25,38 @@ const parameterInjectors: { [index in ParamInjectionType | string]: (handler: an
    *
    * @returns {string | undefined} Query value of special key, maybe undefined.
    */
-  PARAM$PATH$QUERY: (handler, key: string): string | undefined => handler.mapping.queryObject && (
-    key ? handler.mapping.queryObject[key] : handler.mapping.queryObject
-  ),
+  PARAM$PATH$QUERY: (handler, key: string, declaration: ParamInjection['declaration']): any | undefined => {
+    const value = handler.mapping.queryObject && (
+      key ? handler.mapping.queryObject[key] : handler.mapping.queryObject
+    );
+    if (typeof value === 'undefined') {
+      return undefined;
+    }
+    switch (declaration) {
+      case 'Number':
+        return +value;
+      case 'Boolean':
+        return !!value;
+      default:
+        return value;
+    }
+  },
   /**
    * Inject path variable.
    *
    * @returns {string} Path variable.
    */
-  PARAM$PATH$VARIABLE: (handler, key: string): string => handler.mapping.pathArray![handler.route.mapping.pathArray!.indexOf(`:${key}`)],
+  PARAM$PATH$VARIABLE: (handler, key: string, declaration: ParamInjection['declaration']): any => {
+    const value = handler.mapping.pathArray![handler.route.mapping.pathArray!.indexOf(`:${key}`)];
+    switch (declaration) {
+      case 'Number':
+        return +value;
+      case 'Boolean':
+        return !!value;
+      default:
+        return value;
+    }
+  },
   /**
    * Inject request body object, should await it to get result.
    *
@@ -94,7 +117,7 @@ export class ParameterHandler extends BaseHandler {
       /** Parameter injection array. */
       const parameterInjections: ParamInjection[] | undefined = this.route.target && Reflect.getMetadata(MetadataKey.Parameter, this.route.target.prototype, this.route.name);
       /** Arguments, or undefined. */
-      this.args = parameterInjections ? parameterInjections.map(v => parameterInjectors[v.type](this, v.value)) : [];
+      this.args = parameterInjections ? parameterInjections.map(v => parameterInjectors[v.type](this, v.value, v.declaration)) : [];
       try {
         // await promise args, such as `body`
         for (let i = 0, length = this.args.length; i < length; i++) {
