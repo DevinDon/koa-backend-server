@@ -53,17 +53,15 @@
     "@types/jasmine": "3.6.4",
     "@types/js-yaml": "^4.0.0",
     "@types/mime-types": "^2.1.0",
+    "@types/mongodb": "^3.6.9",
     "@types/node": "^14.14.31",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
     "eslint": "^7.21.0",
     "jasmine": "3.6.4",
     "jasmine-console-reporter": "3.1.0",
+    "mongodb": "^3.6.4",
     "ts-node": "9.1.1",
     "typescript": "4.2.3"
-  },
-  "optionalDependencies": {
-    "mongodb": "^3.6.4",
-    "sqlite3": "^5.0.2"
   }
 }
