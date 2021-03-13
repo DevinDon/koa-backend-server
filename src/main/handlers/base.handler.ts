@@ -63,7 +63,7 @@ export class BaseHandler<ZoneType = any> {
    * @returns {this} This handler instance.
    */
   from(request?: IncomingMessage, response?: ServerResponse): this {
-    this.args = [];
+    this.args = undefined as any;
     this.mapping = undefined as any;
     this.request = request!;
     this.response = response!;
