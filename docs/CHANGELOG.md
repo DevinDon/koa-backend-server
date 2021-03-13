@@ -2,6 +2,10 @@
 
 ## 0.13.8 => 0.13.9
 
+- feat(declarations): add typeorm, validator & mongodb declarations
+
+## 0.13.8 => 0.13.9
+
 - fix(core/rester): database connect first
 - perf(core/base): add base view & controller
 - feat(interfaces): add pagination utils & interfaces
