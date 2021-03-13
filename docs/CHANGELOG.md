@@ -2,6 +2,10 @@
 
 ## 0.13.10 => 0.13.11
 
+- fix(handlers/parameter): fix parameter boolean
+
+## 0.13.10 => 0.13.11
+
 - chore(npm): update deps
 
 ## 0.13.9 => 0.13.10

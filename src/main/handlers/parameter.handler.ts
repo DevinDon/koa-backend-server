@@ -7,7 +7,7 @@ import { BodyParser } from '../utils/body-parser';
 import { BaseHandler } from './base.handler';
 
 /** Parameter injectors, function. */
-const parameterInjectors: { [index in ParamInjectionType | string]: (handler: any, name: string, declaration: ParamInjection['declaration']) => any } = {
+const parameterInjectors: { [index in ParamInjectionType]: (handler: any, name: string, declaration: ParamInjection['declaration']) => any } = {
   /**
    * Inject HTTP request instance.
    *
@@ -36,7 +36,7 @@ const parameterInjectors: { [index in ParamInjectionType | string]: (handler: an
       case 'Number':
         return +value;
       case 'Boolean':
-        return value === true;
+        return value.toLowerCase() === 'true';
       default:
         return value;
     }
@@ -52,7 +52,7 @@ const parameterInjectors: { [index in ParamInjectionType | string]: (handler: an
       case 'Number':
         return +value;
       case 'Boolean':
-        return value === true;
+        return value.toLowerCase() === 'true';
       default:
         return value;
     }
@@ -84,11 +84,11 @@ const parameterInjectors: { [index in ParamInjectionType | string]: (handler: an
    */
   PARAM$REQUEST$HEADER: (handler, key: string): string | string[] | undefined => handler.request.headers[key.toLowerCase()],
   /**
-   * Inject handler zone, allow to return zone[key].
+   * Inject handler configuration, allow to return configuration[key].
    *
-   * @returns {any} Data of handler zone.
+   * @returns {any} Data of handler configuration.
    */
-  PARAM$HANDLER$ZONE: (handler, key?: string): any => key ? handler.zone[key] : handler.zone,
+  PARAM$HANDLER$CONFIGURATION: (handler, key?: string): any => key ? handler.configuration[key] : handler.configuration,
 };
 
 
