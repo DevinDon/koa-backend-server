@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.13.13 => 0.13.14
+
+- perf(core/rester): remove default handlers
+
 ## 0.13.10 => 0.13.13
 
 - fix(handlers/parameter): fix parameter boolean

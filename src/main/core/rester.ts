@@ -31,7 +31,7 @@ export class Rester {
   /** Typeorm connection. */
   private connections?: DatabaseConnection[] = [];
   /** Handler types. */
-  public handlers: HandlerType[] = [ExceptionHandler, SchemaHandler, RouterHandler, ParameterHandler, LoggerHandler];
+  public handlers: HandlerType[] = [];
   /** Logger instance. */
   public readonly logger: Logger;
   /** Handler pool. */
