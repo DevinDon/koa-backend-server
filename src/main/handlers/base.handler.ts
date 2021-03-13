@@ -24,8 +24,6 @@ export class BaseHandler<ZoneType = any> {
   protected response!: ServerResponse;
   /** Route get form RouterHandler.configuration.route. */
   public route!: Route;
-  /** Data zone. */
-  public zone!: ZoneType;
 
   /**
    * Config handler.
@@ -56,9 +54,9 @@ export class BaseHandler<ZoneType = any> {
   constructor(protected rester: Rester) { }
 
   /**
-   * Init handler with request & response.
+   * Init handler from request & response.
    *
-   * If call init() without arguments, it mean set request, response & route to undefined.
+   * If call from() without arguments, it mean set request, response & route to undefined.
    *
    * @param {IncomingMessage} request Incoming message.
    * @param {ServerResponse} response Server response.
@@ -70,7 +68,6 @@ export class BaseHandler<ZoneType = any> {
     this.request = request!;
     this.response = response!;
     this.route = undefined as any;
-    this.zone = {} as any;
     return this;
   }
 
@@ -86,7 +83,6 @@ export class BaseHandler<ZoneType = any> {
     this.request = handler.request;
     this.response = handler.response;
     this.route = handler.route;
-    this.zone = handler.zone;
     return this;
   }
 

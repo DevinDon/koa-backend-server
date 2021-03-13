@@ -32,8 +32,6 @@ export class Rester {
   private connections?: DatabaseConnection[] = [];
   /** Handler types. */
   public handlers: HandlerType[] = [ExceptionHandler, SchemaHandler, RouterHandler, ParameterHandler, LoggerHandler];
-  /** Zone to storage something about this instance. */
-  public zone: ZoneConfig;
   /** Logger instance. */
   public readonly logger: Logger;
   /** Handler pool. */
@@ -47,8 +45,6 @@ export class Rester {
     // views
     // connections
     // handlers
-    // zone
-    this.zone = this.config.zone;
     // logger
     Logger.setLogger(
       new Logger({

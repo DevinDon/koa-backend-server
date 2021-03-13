@@ -60,7 +60,6 @@ export interface ResterConfig {
   databases: DatabaseConfig[];
   handlerPool: HandlerPoolConfig;
   logger: LoggerConfig;
-  zone: ZoneConfig;
 
 }
 
@@ -87,7 +86,6 @@ export const DEFAULT_DEV_CONFIG: ResterConfig = {
     level: Level.ALL,
     trace: true,
   },
-  zone: {},
 };
 
 export const DEFAULT_PROD_CONFIG: ResterConfig = {
@@ -109,7 +107,6 @@ export const DEFAULT_PROD_CONFIG: ResterConfig = {
     level: Level.ALL,
     trace: true,
   },
-  zone: {},
 };
 
 /**

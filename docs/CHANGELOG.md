@@ -3,6 +3,7 @@
 ## 0.13.10 => 0.13.11
 
 - fix(handlers/parameter): fix parameter boolean
+- perf(handlers): remove zone
 
 ## 0.13.10 => 0.13.11
 

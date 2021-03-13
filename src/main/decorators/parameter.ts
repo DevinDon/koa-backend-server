@@ -10,7 +10,7 @@ export enum ParamInjectionType {
   RequestHeader = 'PARAM$REQUEST$HEADER',
   HTTPRequest = 'PARAM$HTTP$REQUEST',
   HTTPResponse = 'PARAM$HTTP$RESPONSE',
-  HandlerZone = 'PARAM$HANDLER$ZONE'
+  HandlerConfiguration = 'PARAM$HANDLER$CONFIGURATION'
 }
 
 /**
@@ -100,6 +100,6 @@ export const HTTPResponse = baseParam(ParamInjectionType.HTTPResponse);
 /**
  * Parameter decorator.
  *
- * Inject handler zone.
+ * Inject handler configuration.
  */
-export const HandlerZone = baseParam(ParamInjectionType.HandlerZone);
+export const HandlerConfiguration = baseParam(ParamInjectionType.HandlerConfiguration);
