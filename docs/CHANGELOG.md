@@ -1,6 +1,6 @@
 # Change Log
 
-## 0.13.8 => 0.13.9
+## 0.13.9 => 0.13.10
 
 - feat(declarations): add typeorm, validator & mongodb declarations
 
