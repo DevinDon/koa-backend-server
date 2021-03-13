@@ -36,7 +36,7 @@ const parameterInjectors: { [index in ParamInjectionType | string]: (handler: an
       case 'Number':
         return +value;
       case 'Boolean':
-        return !!value;
+        return value === true;
       default:
         return value;
     }
@@ -52,7 +52,7 @@ const parameterInjectors: { [index in ParamInjectionType | string]: (handler: an
       case 'Number':
         return +value;
       case 'Boolean':
-        return !!value;
+        return value === true;
       default:
         return value;
     }
