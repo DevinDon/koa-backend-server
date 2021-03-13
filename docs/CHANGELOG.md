@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.13.10 => 0.13.11
+
+- chore(npm): update deps
+
 ## 0.13.9 => 0.13.10
 
 - feat(declarations): add typeorm, validator & mongodb declarations
