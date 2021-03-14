@@ -56,11 +56,9 @@ export class HandlerPool {
     // take & compose these handlers
     this.compose(this.take(this.rester.handlers[0]).from(request, response), 0, this.rester.handlers)()
       .then(
-        async value => value && await (
-          value instanceof Readable
-            ? pipelines(value, response)
-            : writes(value, response)
-        ),
+        value => value && value instanceof Readable
+          ? pipelines(value, response)
+          : writes(value, response),
       )
       .catch(reason => this.rester.logger.trace('Error while compose:', reason))
       .finally(() => response.end());

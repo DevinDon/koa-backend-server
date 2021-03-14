@@ -49,10 +49,10 @@ export class ExceptionHandler extends BaseHandler {
         }
         this.response.statusCode = 500;
         this.response.statusMessage = exception.message;
-        return ExceptionHandler.configuration.response;
+        throw ExceptionHandler.configuration.response;
 
       })
-      .then(returns => {
+      .catch(returns => {
 
         // default to `application/json` header
         if (!this.response.getHeader(CONTENT_TYPE)) {

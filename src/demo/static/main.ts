@@ -1,4 +1,4 @@
-import { GET, PathVariable, ResourceResponse, Rester, View } from '../../main';
+import { ExceptionHandler, GET, LoggerHandler, ParameterHandler, PathVariable, ResourceResponse, Rester, RouterHandler, SchemaHandler, View } from '../../main';
 
 @View()
 class StaticView {
@@ -12,5 +12,12 @@ class StaticView {
 }
 
 const rester = new Rester();
+rester.addHandlers(
+  ExceptionHandler,
+  SchemaHandler,
+  RouterHandler,
+  ParameterHandler,
+  LoggerHandler,
+);
 
 rester.bootstrap();

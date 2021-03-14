@@ -16,22 +16,6 @@ export class SchemaHandler extends BaseHandler {
       .then(
         value => {
 
-          // alreay has content type
-          if (this.response.getHeader(CONTENT_TYPE)) {
-            return value;
-          }
-
-          // value is undefined, return empty string
-          if (typeof value === 'undefined') {
-            return '';
-          }
-
-          // value is string, return string
-          if (typeof value === 'string') {
-            this.response.setHeader(CONTENT_TYPE, ContentType.TEXT);
-            return value;
-          }
-
           // value is object, should be stringify or boldify
           if (typeof value === 'object') {
 
@@ -66,6 +50,20 @@ export class SchemaHandler extends BaseHandler {
             return JSON.stringify(value);
 
           }
+
+          // value is undefined, return empty string
+          if (typeof value === 'undefined') {
+            return '';
+          }
+
+          // value is string, return string
+          if (typeof value === 'string') {
+            this.response.hasHeader(CONTENT_TYPE) || this.response.setHeader(CONTENT_TYPE, ContentType.TEXT);
+            return value;
+          }
+
+          // or just return
+          return value;
 
         },
       );
