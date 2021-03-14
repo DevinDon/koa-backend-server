@@ -28,7 +28,7 @@ export class ExceptionHandler extends BaseHandler {
         const trace = ExceptionHandler.configuration.trace;
 
         if (exception instanceof HTTPException) {
-          // if it is HTTP Exception, set code & return the content
+          // if it is HTTP Exception, set code & throw the content
           this.logger
             .error(`HTTP ${exception.code} Exception from '${this.request.method} ${this.request.url}': ${exception.message}\t${exception.content ? JSON.stringify(exception.content) : ''}`);
           // if trace is true, output stack info
@@ -37,7 +37,7 @@ export class ExceptionHandler extends BaseHandler {
           }
           this.response.statusCode = exception.code;
           this.response.statusMessage = exception.message;
-          return exception.content;
+          throw exception.content || ExceptionHandler.configuration.response;
         }
 
         // else, just throw 500 with `ExceptionHandler.configuration.response`
@@ -62,7 +62,7 @@ export class ExceptionHandler extends BaseHandler {
         // stringify without schema
         return typeof returns === 'string'
           ? returns
-          : JSON.stringify(returns);
+          : JSON.stringify(returns ?? '');
 
       });
 
