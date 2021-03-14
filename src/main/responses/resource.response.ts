@@ -1,5 +1,5 @@
 import { createReadStream, existsSync, lstatSync, ReadStream } from 'fs';
-import { contentType } from 'mime-types';
+import { lookup } from 'mime-types';
 import { ContentType, CONTENT_TYPE } from '../constants';
 import { HTTP400Exception, HTTP404Exception } from '../exceptions';
 import { BaseResponse, Response } from './base.response';
@@ -21,7 +21,7 @@ export class ResourceResponse extends BaseResponse<ReadStream> {
         throw new HTTP400Exception('Cannot get a directory');
       }
       this.data = createReadStream(file);
-      this.headers[CONTENT_TYPE] = type || contentType(file) || ContentType.STREAM;
+      this.headers[CONTENT_TYPE] = type || lookup(file) || ContentType.STREAM;
     } else {
       this.data = file;
     }
