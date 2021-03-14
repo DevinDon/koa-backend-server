@@ -101,11 +101,13 @@ export const DEFAULT_PROD_CONFIG: ResterConfig = {
     key: 'rester',
   }],
   handlerPool: {
-    max: 1024,
+    max: 4096,
   },
   logger: {
-    level: Level.ALL,
-    trace: true,
+    level: Level.INFO,
+    trace: false,
+    outputLog: 'output.log',
+    errorLog: 'error.log',
   },
 };
 
@@ -129,7 +131,6 @@ export const loadResterConfig: (inputConfig?: Partial<ResterConfig>) => ResterCo
       {},
       mode === 'PROD' ? DEFAULT_PROD_CONFIG : DEFAULT_DEV_CONFIG,
       productionConfig,
-      localConfig,
       inputConfig,
     );
   } catch (error) {
