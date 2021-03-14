@@ -2,7 +2,7 @@ import { Logger } from '@iinfinity/logger';
 
 export class BaseView {
 
-  private logger!: Logger;
+  public logger!: Logger;
 
   async init(): Promise<void> {
     this.logger.debug('View initial succeed');

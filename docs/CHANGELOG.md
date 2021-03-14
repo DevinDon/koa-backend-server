@@ -1,8 +1,8 @@
 # Change Log
 
-## 0.13.14 => 0.13.15
+## 0.13.15 => 0.13.16
 
-- perf(handlers): add handler zone for data
+- fix(core/base): fix private logger to public
 
 ## 0.13.13 => 0.13.14
 
