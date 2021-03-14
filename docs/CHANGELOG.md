@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.13.14 => 0.13.15
+
+- perf(handlers): add handler zone for data
+
 ## 0.13.13 => 0.13.14
 
 - perf(core/rester): remove default handlers

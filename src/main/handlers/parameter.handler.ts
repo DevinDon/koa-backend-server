@@ -84,11 +84,11 @@ const parameterInjectors: { [index in ParamInjectionType]: (handler: any, name: 
    */
   PARAM$REQUEST$HEADER: (handler, key: string): string | string[] | undefined => handler.request.headers[key.toLowerCase()],
   /**
-   * Inject handler configuration, allow to return configuration[key].
+   * Inject handler zone, allow to return zone[key].
    *
-   * @returns {any} Data of handler configuration.
+   * @returns {any} Data of handler zone.
    */
-  PARAM$HANDLER$CONFIGURATION: (handler, key?: string): any => key ? handler.configuration[key] : handler.configuration,
+  PARAM$HANDLER$ZONE: (handler, key?: string): any => key ? handler.zone[key] : handler.zone,
 };
 
 

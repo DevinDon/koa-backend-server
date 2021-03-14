@@ -24,6 +24,8 @@ export class BaseHandler<ZoneType = any> {
   protected response!: ServerResponse;
   /** Route get form RouterHandler.configuration.route. */
   public route!: Route;
+  /** Data zone. */
+  public zone!: ZoneType;
 
   /**
    * Config handler.
@@ -68,6 +70,7 @@ export class BaseHandler<ZoneType = any> {
     this.request = request!;
     this.response = response!;
     this.route = undefined as any;
+    this.zone = undefined as any;
     return this;
   }
 
@@ -83,6 +86,7 @@ export class BaseHandler<ZoneType = any> {
     this.request = handler.request;
     this.response = handler.response;
     this.route = handler.route;
+    this.zone = handler.zone;
     return this;
   }
 

@@ -1,4 +1,4 @@
-import { GET, Rester, View } from '../../main';
+import { ExceptionHandler, GET, LoggerHandler, ParameterHandler, Rester, RouterHandler, SchemaHandler, View } from '../../main';
 
 @View()
 class SimpleView {
@@ -11,5 +11,11 @@ class SimpleView {
 }
 
 const rester = new Rester();
-
+rester.addHandlers(
+  ExceptionHandler,
+  SchemaHandler,
+  RouterHandler,
+  ParameterHandler,
+  LoggerHandler,
+);
 rester.bootstrap();
