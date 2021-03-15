@@ -24,7 +24,7 @@
   "homepage": "https://github.com/DevinDon/rester-core",
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf dist out temp *.db",
+    "clean": "rm -rf dist out temp *.db *.log",
     "demo": "node -r ts-node/register src/demo/${DEMO}/main.ts",
     "lint": "eslint . --fix",
     "prepublishOnly": "npm run clean && npm run build",
