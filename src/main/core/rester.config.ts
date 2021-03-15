@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from 'fs';
 import { load } from 'js-yaml';
 import { ServerException } from '../exceptions';
 import { DatabaseConfig, HTTP2ServerConfig, HTTPSServerConfig } from '../interfaces';
+import { isProd } from '../utils';
 
 /**
  * Address config.
@@ -72,13 +73,7 @@ export const DEFAULT_DEV_CONFIG: ResterConfig = {
     host: 'localhost',
     port: 8080,
   }],
-  databases: [{
-    type: 'sqlite',
-    name: 'default',
-    database: 'dev.db',
-    synchronize: true,
-    logger: 'debug',
-  }],
+  databases: [],
   handlerPool: {
     max: 128,
   },
@@ -94,12 +89,7 @@ export const DEFAULT_PROD_CONFIG: ResterConfig = {
     host: 'localhost',
     port: 8080,
   }],
-  databases: [{
-    type: 'sqlite',
-    name: 'default',
-    database: 'rester.db',
-    key: 'rester',
-  }],
+  databases: [],
   handlerPool: {
     max: 4096,
   },
@@ -119,7 +109,6 @@ export const DEFAULT_PROD_CONFIG: ResterConfig = {
  * 3. assign `default config` & `rester.yaml` & `rester.local.yaml` & `input config`
  */
 export const loadResterConfig: (inputConfig?: Partial<ResterConfig>) => ResterConfig = (inputConfig = {}) => {
-  const mode = process.env.NODE_ENV || 'DEV';
   try {
     const productionConfig: Partial<ResterConfig> = existsSync(PROD_CONFIG_FILENAME)
       ? load(readFileSync(PROD_CONFIG_FILENAME).toString()) as ResterConfig
@@ -129,8 +118,9 @@ export const loadResterConfig: (inputConfig?: Partial<ResterConfig>) => ResterCo
       : {};
     return Object.assign(
       {},
-      mode === 'PROD' ? DEFAULT_PROD_CONFIG : DEFAULT_DEV_CONFIG,
+      isProd() ? DEFAULT_PROD_CONFIG : DEFAULT_DEV_CONFIG,
       productionConfig,
+      isProd() ? {} : localConfig,
       inputConfig,
     );
   } catch (error) {

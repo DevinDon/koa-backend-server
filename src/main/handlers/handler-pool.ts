@@ -42,7 +42,9 @@ export class HandlerPool {
    * @returns {number} Number of handlers in pool.
    */
   give(handler: BaseHandler): number {
-    const pool = this.pools.get(handler.constructor.name) || this.pools.set(handler.constructor.name, []).get(handler.constructor.name)!;
+    const pool = this.pools.has(handler.constructor.name)
+      ? this.pools.get(handler.constructor.name)!
+      : this.pools.set(handler.constructor.name, []).get(handler.constructor.name)!;
     return pool.length < this.max ? pool.push(handler.from()) : pool.length;
   }
 
@@ -79,8 +81,9 @@ export class HandlerPool {
       // 利用非立即执行函数的特性, 在 current.handle 调用 next 时再进行数据继承绑定
       // 才能正确的获取所有的属性（包括参数和已处理过的其他属性）
       // by the way, it will also make compose faster than before
-      return async () => current.handle(() => this.compose(this.take(handlers[++i]).inherit(current), i, handlers)())
-        .finally(() => this.give(current));
+      return async () => current.handle(
+        () => this.compose(this.take(handlers[++i]).inherit(current), i, handlers)(),
+      ).finally(() => this.give(current));
     } else if (handlers === this.rester.handlers && current.route?.handlers.length) {
       // global handlers has been composed, and handler.route.HandlerTypes should exist
       handlers = current.route.handlers;
