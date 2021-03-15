@@ -1,1 +1,1 @@
-export const isProd = () => process.env.NODE_ENV === 'PROD';
+export const isProd = () => process.env.MODE === 'PROD';
