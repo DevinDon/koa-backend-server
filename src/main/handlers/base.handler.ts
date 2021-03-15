@@ -70,7 +70,7 @@ export class BaseHandler<ZoneType = any> {
     this.request = request!;
     this.response = response!;
     this.route = undefined as any;
-    this.zone = undefined as any;
+    this.zone = {} as any;
     return this;
   }
 
