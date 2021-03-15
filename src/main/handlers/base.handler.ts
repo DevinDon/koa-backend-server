@@ -53,7 +53,9 @@ export class BaseHandler<ZoneType = any> {
    *
    * @param {Rester} rester The rester instance to which this handler belongs.
    */
-  constructor(protected rester: Rester) { }
+  constructor(protected rester: Rester) {
+    this.from();
+  }
 
   /**
    * Init handler from request & response.
