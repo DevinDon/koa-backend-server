@@ -4,8 +4,6 @@ export class BaseController {
 
   public logger!: Logger;
 
-  async init(): Promise<void> {
-    this.logger.debug('Controller initial succeed');
-  }
+  async init(): Promise<void> { }
 
 }

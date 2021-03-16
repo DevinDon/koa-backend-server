@@ -2,7 +2,7 @@ import { Logger } from '@iinfinity/logger';
 import { BaseEntity } from 'typeorm';
 import { MetadataKey } from '../constants';
 import { loadResterConfig, ResterConfig } from '../core/rester.config';
-import { HandlerType, InjectedType, Injector, VIEWS } from '../decorators';
+import { CONTROLLERS, HandlerType, InjectedType, Injector, VIEWS } from '../decorators';
 import { ServerException } from '../exceptions';
 import { HandlerPool } from '../handlers';
 import { createDatabaseConnections, createHTTPServer, DatabaseConnection, HTTP2Server, HTTPServer, HTTPSServer, Mapping, Route } from '../interfaces';
@@ -79,7 +79,7 @@ export class Rester {
    * Register all views.
    */
   private async registerViews() {
-    // push it into
+    // push them into rester
     this.views.push(...VIEWS.map(({ target }) => target));
     // call init
     VIEWS
@@ -112,6 +112,7 @@ export class Rester {
           this.logger.warn(`View instance init method call failed: ${instance.name}`);
         }
       });
+    this.logger.info('Views initial succeed');
   }
 
   /**
@@ -131,31 +132,27 @@ export class Rester {
     ].forEach(handler => handler.init(this));
     // freeze it to keep safe
     Object.freeze(this.handlers);
+    this.logger.info('Handlers initial succeed');
   }
 
   /**
    * Register all controller, after database connected.
    */
   private async registerControllers() {
-    // inject logger & rester
-    Injector.storage
-      .forEach((value, key) => value.type === InjectedType.CONTROLLER && this.controllers.push(key));
-    this.controllers.forEach(controller => {
-      controller.prototype.logger = Logger.getLogger('rester');
-      controller.prototype.rester = this;
-    });
-    // call init
-    Injector
-      .list()
-      .filter(({ type }) => type === InjectedType.CONTROLLER)
-      .map(({ instance }) => instance)
-      .forEach(instance => {
+    // push them into rester
+    this.controllers.push(...CONTROLLERS.map(({ target }) => target));
+    // call init & inject properties
+    CONTROLLERS
+      .forEach(({ target, instance }) => {
+        target.prototype.logger = Logger.getLogger('rester');
+        target.prototype.rester = this;
         try {
           typeof instance.init === 'function' && instance.init();
         } catch (error) {
           this.logger.warn(`Controller instance init method call failed: ${instance.name}`);
         }
       });
+    this.logger.info('Controllers initial succeed');
   }
 
   /**
@@ -171,6 +168,7 @@ export class Rester {
       const protocol = address.protocol === 'HTTP' ? 'http' : 'https';
       server.listen(port, host, () => this.logger.info(`Server online, listening on: ${protocol}://${host}:${port}`));
     }
+    this.logger.info('Servers initial succeed');
   }
 
   /**

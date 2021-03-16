@@ -4,8 +4,6 @@ export class BaseView {
 
   public logger!: Logger;
 
-  async init(): Promise<void> {
-    this.logger.debug('View initial succeed');
-  }
+  async init(): Promise<void> { }
 
 }

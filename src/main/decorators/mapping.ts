@@ -6,13 +6,13 @@ import { Mapping, Method } from '../interfaces';
  *
  * @param {Method} method Method name.
  */
-function baseMapping(method: Method) {
+const baseMapping = (method: Method) => {
   return (path: string = ''): MethodDecorator => (target: any, name, descriptor) => {
     const mapping: Mapping[] = Reflect.getMetadata(MetadataKey.Mapping, target, name) || [];
     mapping.push({ method, path });
     Reflect.defineMetadata(MetadataKey.Mapping, mapping, target, name);
   };
-}
+};
 
 /**
  * **CONNECT** Method decorator.

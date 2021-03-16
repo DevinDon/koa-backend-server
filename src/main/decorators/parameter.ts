@@ -34,7 +34,7 @@ export interface ParamInjection {
  * - HTTPResponse
  * - HTTPZone
  */
-export function baseParam(type: ParamInjectionType | any) {
+export const baseParam = (type: ParamInjectionType | any) => {
   return (value: string = ''): ParameterDecorator => (target: any, name, index) => {
     // get param declaration type
     const { name: declaration } = Reflect.getMetadata('design:paramtypes', target, name)[index];
@@ -45,7 +45,7 @@ export function baseParam(type: ParamInjectionType | any) {
     // and then, set it
     Reflect.defineMetadata(MetadataKey.Parameter, exist, target, name);
   };
-}
+};
 
 /**
  * Parameter decorator.

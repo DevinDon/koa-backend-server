@@ -9,7 +9,7 @@ export const VIEWS: { target: Function, prefix: string, instance: any }[] = [];
  *
  * @param {string} prefix View prefix, will add to all sub mapping.
  */
-export function View(prefix: string = ''): ClassDecorator {
+export const View = (prefix: string = ''): ClassDecorator => {
   prefix = '/' + prefix + '/';
   return target => {
     /** View instance. */
@@ -17,4 +17,4 @@ export function View(prefix: string = ''): ClassDecorator {
     /** Push view class into array. */
     VIEWS.push({ target, prefix, instance: view });
   };
-}
+};

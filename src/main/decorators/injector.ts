@@ -71,19 +71,19 @@ export class Injector {
  *
  * Generate instance & save to storage.
  */
-export function Injectable({ type }: { type: InjectedType } = { type: InjectedType.ANY }): ClassDecorator {
+export const Injectable = ({ type }: { type: InjectedType } = { type: InjectedType.ANY }): ClassDecorator => {
   return target => { Injector.create({ target, type }); };
-}
+};
 
 /**
  * Property Decorator.
  *
  * Inject target property, like `@Autowried`.
  */
-export function Inject(): PropertyDecorator {
+export const Inject = (): PropertyDecorator => {
   return (target, name) => {
     const instance = Injector.create({ target: target.constructor }).instance;
     const inner = Injector.create({ target: Reflect.getMetadata('design:type', target, name) }).instance;
     instance && (instance[name] = inner);
   };
-}
+};
