@@ -2,21 +2,17 @@ import { Logger } from '@iinfinity/logger';
 import { BaseEntity } from 'typeorm';
 import { MetadataKey } from '../constants';
 import { loadResterConfig, ResterConfig } from '../core/rester.config';
-import { HandlerType, InjectedType, Injector } from '../decorators';
+import { HandlerType, InjectedType, Injector, VIEWS } from '../decorators';
 import { ServerException } from '../exceptions';
 import { HandlerPool } from '../handlers';
-import { createDatabaseConnections, createHTTPServer, DatabaseConnection, HTTP2Server, HTTPServer, HTTPSServer, Route } from '../interfaces';
+import { createDatabaseConnections, createHTTPServer, DatabaseConnection, HTTP2Server, HTTPServer, HTTPSServer, Mapping, Route } from '../interfaces';
 
 /**
  * Rester server.
  *
  * **Usage:**
  *
- * `new Rester().listen()` // listening on http://localhost:8080
- *
- * `new Rester().listen(80, '0.0.0.0')` // listening on http://0.0.0.0:80
- *
- * `new Rester().configHandler.add(SomeHandler, AnotherHandler).end().listen()` // add handlers & listening
+ * `await new Rester().bootstrap()`
  *
  * See [FULL README DOCUMENT](https://github.com/DevinDon/rester/blob/master/docs/README.md) for more usage.
  */
@@ -83,19 +79,33 @@ export class Rester {
    * Register all views.
    */
   private async registerViews() {
-    // inject logger & rester
-    Injector.storage
-      .forEach((value, key) => value.type === InjectedType.VIEW && this.views.push(key));
-    this.views.forEach(view => {
-      view.prototype.logger = Logger.getLogger('rester');
-      view.prototype.rester = this;
-    });
+    // push it into
+    this.views.push(...VIEWS.map(({ target }) => target));
     // call init
-    Injector
-      .list()
-      .filter(({ type }) => type === InjectedType.VIEW)
-      .map(({ instance }) => instance)
-      .forEach(instance => {
+    VIEWS
+      .forEach(({ target, prefix, instance }) => {
+        /** Handler types on view. */
+        const handlersOnView: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target) || [];
+        /** Routes on methods of this view. */
+        const routes: Route[] = Object.getOwnPropertyNames(target.prototype)
+          // exclude constructor & method must be decorated by method decorator
+          .filter(name => name !== 'constructor' && Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name))
+          // map to a new array of Route
+          .map<Route[]>(name => {
+            const mapping: Mapping[] = Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name);
+            const handlersOnMethod: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target.prototype, name) || [];
+            const handlers: HandlerType[] = [...handlersOnMethod, ...handlersOnView];
+            return mapping.map(v => {
+              v.path = prefix + '/' + v.path;
+              return { view: instance, handlers, mapping: v, name, target };
+            });
+          }).flat();
+        // define metadata: key = MetadataKey.View, value = routes, on = class
+        Reflect.defineMetadata(MetadataKey.View, routes, target);
+        // set static properties
+        target.prototype.logger = Logger.getLogger('rester');
+        target.prototype.rester = this;
+        // call view.init()
         try {
           typeof instance.init === 'function' && instance.init();
         } catch (error) {
@@ -119,6 +129,8 @@ export class Rester {
         ).flat(),
       ),
     ].forEach(handler => handler.init(this));
+    // freeze it to keep safe
+    Object.freeze(this.handlers);
   }
 
   /**

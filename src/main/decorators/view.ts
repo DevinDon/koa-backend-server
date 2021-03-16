@@ -1,9 +1,6 @@
-import { MetadataKey } from '../constants';
-import { Mapping, Route } from '../interfaces';
-import { HandlerType } from './handler';
 import { InjectedType, Injector } from './injector';
 
-export const VIEWS: Function[] = [];
+export const VIEWS: { target: Function, prefix: string, instance: any }[] = [];
 
 /**
  * Class Decorator.
@@ -15,27 +12,9 @@ export const VIEWS: Function[] = [];
 export function View(prefix: string = ''): ClassDecorator {
   prefix = '/' + prefix + '/';
   return target => {
-    /** Push view class into array. */
-    VIEWS.push(target);
     /** View instance. */
-    const view = Injector.create({ target, type: InjectedType.VIEW })?.instance;
-    /** Handler types on view. */
-    const handlersOnView: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target) || [];
-    /** Routes on methods of this view. */
-    const routes: Route[] = Object.getOwnPropertyNames(target.prototype)
-      // exclude constructor & method must be decorated by method decorator
-      .filter(name => name !== 'constructor' && Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name))
-      // map to a new array of Route
-      .map<Route[]>(name => {
-        const mapping: Mapping[] = Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name);
-        const handlersOnMethod: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target.prototype, name) || [];
-        const handlers: HandlerType[] = handlersOnMethod.concat(handlersOnView);
-        return mapping.map(v => {
-          v.path = prefix + '/' + v.path;
-          return { view, handlers, mapping: v, name, target };
-        });
-      }).flat();
-    // define metadata: key = MetadataKey.View, value = routes, on = class
-    Reflect.defineMetadata(MetadataKey.View, routes, target);
+    const view = Injector.create({ target, type: InjectedType.VIEW }).instance;
+    /** Push view class into array. */
+    VIEWS.push({ target, prefix, instance: view });
   };
 }

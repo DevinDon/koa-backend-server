@@ -1,4 +1,4 @@
-import { GET, HTTP400Exception, HTTP401Exception, HTTP404Exception, HTTP418Exception, HTTPException, PathVariable, Rester, View } from '../../main';
+import { ExceptionHandler, GET, HTTP400Exception, HTTP401Exception, HTTP404Exception, HTTP418Exception, HTTPException, LoggerHandler, ParameterHandler, PathVariable, Rester, RouterHandler, SchemaHandler, View } from '../../main';
 
 @View()
 class ExceptionView {
@@ -36,5 +36,13 @@ class ExceptionView {
 }
 
 const rester = new Rester();
+
+rester.addHandlers(
+  ExceptionHandler,
+  SchemaHandler,
+  RouterHandler,
+  ParameterHandler,
+  LoggerHandler,
+);
 
 rester.bootstrap();

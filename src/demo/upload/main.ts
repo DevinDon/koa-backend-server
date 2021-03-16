@@ -1,7 +1,7 @@
 import { Logger } from '@iinfinity/logger';
 import { createWriteStream, existsSync, mkdirSync, writeFileSync } from 'fs';
 import { IncomingMessage } from 'http';
-import { CORSHandler, Handler, HTTPRequest, Part, partsToObject, PUT, RequestBody, Rester, View } from '../../main';
+import { CORSHandler, ExceptionHandler, Handler, HTTPRequest, LoggerHandler, ParameterHandler, Part, partsToObject, PUT, RequestBody, Rester, RouterHandler, SchemaHandler, View } from '../../main';
 import { CONTENT_TYPE } from '../../main/constants';
 import { BaseResponse } from '../../main/responses/base.response';
 
@@ -64,5 +64,13 @@ class UploadView {
 }
 
 const rester = new Rester();
+
+rester.addHandlers(
+  ExceptionHandler,
+  SchemaHandler,
+  RouterHandler,
+  ParameterHandler,
+  LoggerHandler,
+);
 
 rester.bootstrap();

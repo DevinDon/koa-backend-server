@@ -30,7 +30,7 @@ export class Injector {
    */
   static create<T = any>(
     { target, type, save = true }: { target: any, type?: InjectedType, save?: boolean },
-  ): Injected<T> | undefined {
+  ): Injected<T> {
     const providers = Reflect.getMetadata('design:paramtypes', target);
     if (this.storage.has(target)) { // if instance already exists
       const injected = this.storage.get(target)!;
@@ -82,8 +82,8 @@ export function Injectable({ type }: { type: InjectedType } = { type: InjectedTy
  */
 export function Inject(): PropertyDecorator {
   return (target, name) => {
-    const instance = Injector.create({ target: target.constructor })?.instance;
-    const inner = Injector.create({ target: Reflect.getMetadata('design:type', target, name) })?.instance;
+    const instance = Injector.create({ target: target.constructor }).instance;
+    const inner = Injector.create({ target: Reflect.getMetadata('design:type', target, name) }).instance;
     instance && (instance[name] = inner);
   };
 }

@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { pipeline, Readable } from 'stream';
+import { Readable } from 'stream';
 import { Rester } from '../core/rester';
 import { HandlerType } from '../decorators';
 import { pipelines, writes } from '../utils';
@@ -77,22 +77,21 @@ export class HandlerPool {
   compose(current: BaseHandler, i: number, handlers: HandlerType[]): () => Promise<any> {
     // 根据 handlers 的数量进行组合 compose
     if (i + 1 < handlers.length) {
-      // that is very very very, complex
-      // 利用非立即执行函数的特性, 在 current.handle 调用 next 时再进行数据继承绑定
-      // 才能正确的获取所有的属性（包括参数和已处理过的其他属性）
-      // by the way, it will also make compose faster than before
+      // next 继承当前的 handler 属性
       return async () => current.handle(
         () => this.compose(this.take(handlers[++i]).inherit(current), i, handlers)(),
       ).finally(() => this.give(current));
     } else if (handlers === this.rester.handlers && current.route?.handlers.length) {
-      // global handlers has been composed, and handler.route.HandlerTypes should exist
-      const handlersOnRoute = current.route.handlers;
-      return async () => current.handle(() => this.compose(this.take(handlersOnRoute[0]).inherit(current), 0, handlersOnRoute)())
-        .finally(() => this.give(current));
+      // 当前的 handler 为 global handler 的最后一个，且当前路由还存在局部 handler
+      const handlersOnRoute = [...current.route.handlers];
+      return async () => current.handle(
+        () => this.compose(this.take(handlersOnRoute[0]).inherit(current), 0, handlersOnRoute)(),
+      ).finally(() => this.give(current));
     } else {
-      // the last handler
-      return async () => current.handle(current.run.bind(current))
-        .finally(() => this.give(current));
+      // 最后一个 handler 执行 view 的对应方法
+      return async () => current.handle(
+        current.run.bind(current),
+      ).finally(() => this.give(current));
     }
   }
 
