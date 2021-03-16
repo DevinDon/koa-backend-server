@@ -28,7 +28,7 @@
     "demo": "node -r ts-node/register src/demo/${DEMO}/main.ts",
     "lint": "eslint . --fix",
     "prepublishOnly": "npm run clean && npm run build",
-    "postpublish": "curl https://npm.taobao.org/sync/@rester/core",
+    "postpublish": "sleep 1 && curl https://npm.taobao.org/sync/@rester/core",
     "test": "node node_modules/jasmine/bin/jasmine.js --config=src/test/jasmine.json --reporter=jasmine-console-reporter --require=ts-node/register",
     "watch": "tsc -w"
   },
