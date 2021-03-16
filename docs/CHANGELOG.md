@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.13.16 => 0.13.25
+
+- refactor(handlers): refactor view & pool
+
 ## 0.13.15 => 0.13.16
 
 - fix(core/base): fix private logger to public
