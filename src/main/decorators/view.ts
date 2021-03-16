@@ -1,6 +1,9 @@
-import { Mapping, MetadataKey, Route } from '../interfaces';
+import { MetadataKey } from '../constants';
+import { Mapping, Route } from '../interfaces';
 import { HandlerType } from './handler';
 import { InjectedType, Injector } from './injector';
+
+export const VIEWS: Function[] = [];
 
 /**
  * Class Decorator.
@@ -12,6 +15,8 @@ import { InjectedType, Injector } from './injector';
 export function View(prefix: string = ''): ClassDecorator {
   prefix = '/' + prefix + '/';
   return target => {
+    /** Push view class into array. */
+    VIEWS.push(target);
     /** View instance. */
     const view = Injector.create({ target, type: InjectedType.VIEW })?.instance;
     /** Handler types on view. */
@@ -27,7 +32,7 @@ export function View(prefix: string = ''): ClassDecorator {
         const handlers: HandlerType[] = handlersOnMethod.concat(handlersOnView);
         return mapping.map(v => {
           v.path = prefix + '/' + v.path;
-          return { view: view, handlers, mapping: v, name, target };
+          return { view, handlers, mapping: v, name, target };
         });
       }).flat();
     // define metadata: key = MetadataKey.View, value = routes, on = class

@@ -86,8 +86,8 @@ export class HandlerPool {
       ).finally(() => this.give(current));
     } else if (handlers === this.rester.handlers && current.route?.handlers.length) {
       // global handlers has been composed, and handler.route.HandlerTypes should exist
-      handlers = current.route.handlers;
-      return async () => current.handle(() => this.compose(this.take(handlers[0]).inherit(current), 0, handlers)())
+      const handlersOnRoute = current.route.handlers;
+      return async () => current.handle(() => this.compose(this.take(handlersOnRoute[0]).inherit(current), 0, handlersOnRoute)())
         .finally(() => this.give(current));
     } else {
       // the last handler

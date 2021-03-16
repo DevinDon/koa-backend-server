@@ -1,10 +1,11 @@
 import { Logger } from '@iinfinity/logger';
 import { BaseEntity } from 'typeorm';
+import { MetadataKey } from '../constants';
 import { loadResterConfig, ResterConfig } from '../core/rester.config';
 import { HandlerType, InjectedType, Injector } from '../decorators';
 import { ServerException } from '../exceptions';
 import { HandlerPool } from '../handlers';
-import { createDatabaseConnections, createHTTPServer, DatabaseConnection, HTTP2Server, HTTPServer, HTTPSServer, MetadataKey, Route } from '../interfaces';
+import { createDatabaseConnections, createHTTPServer, DatabaseConnection, HTTP2Server, HTTPServer, HTTPSServer, Route } from '../interfaces';
 
 /**
  * Rester server.

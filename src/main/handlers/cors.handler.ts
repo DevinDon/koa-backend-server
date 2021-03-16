@@ -1,6 +1,7 @@
+import { MetadataKey } from '../constants';
 import { Rester } from '../core/rester';
 import { HandlerType } from '../decorators';
-import { MetadataKey, Method, Route } from '../interfaces';
+import { Method, Route } from '../interfaces';
 import { BaseHandler } from './base.handler';
 import { RouterHandler } from './router.handler';
 

@@ -1,4 +1,4 @@
-import { MetadataKey } from '../interfaces';
+import { MetadataKey } from '../constants';
 
 /**
  * Param injection type.

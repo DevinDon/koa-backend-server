@@ -1,4 +1,5 @@
-import { Mapping, MetadataKey, Method } from '../interfaces';
+import { MetadataKey } from '../constants';
+import { Mapping, Method } from '../interfaces';
 
 /**
  * Generate a mapping decorator.

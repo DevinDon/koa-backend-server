@@ -12,6 +12,6 @@ export enum ContentType {
   XML = 'application/xml',
   JSON = 'application/json',
   PDF = 'application/pdf',
-  STREAM = 'application/octet-stream'
+  STREAM = 'application/octet-stream',
 
 }

@@ -1,8 +1,7 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { CONTENT_TYPE } from '../constants';
+import { CONTENT_TYPE, MetadataKey } from '../constants';
 import { ParamInjection, ParamInjectionType } from '../decorators';
 import { HTTP400Exception, HTTP404Exception } from '../exceptions';
-import { MetadataKey } from '../interfaces';
 import { BodyParser } from '../utils/body-parser';
 import { BaseHandler } from './base.handler';
 
