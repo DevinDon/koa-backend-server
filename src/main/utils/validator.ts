@@ -2,11 +2,11 @@ import { HTTP400Exception } from '../exceptions';
 
 export const requiredParam = <T = any>(param: T): void => {
   if (param === undefined || param === null) {
-    throw new HTTP400Exception('parameter are required');
+    throw new HTTP400Exception('parameters are required');
   }
 };
 
-export const requiredParams = <TArray extends []>(params: TArray): void => {
+export const requiredParams = <T extends Array<any>>(...params: T): void => {
   for (const param of params) {
     if (params === undefined || params === null) {
       throw new HTTP400Exception('parameters are required');
@@ -14,7 +14,10 @@ export const requiredParams = <TArray extends []>(params: TArray): void => {
   }
 };
 
-export const requiredParamsInFields = <TObject extends {}>(params: TObject, fields: (keyof TObject)[]): void => {
+export const requiredParamsInFields = <T>(params: T, fields?: (keyof T)[]): void => {
+  if (fields === undefined) {
+    fields = Object.keys(params) as (keyof T)[];
+  }
   for (const field of fields) {
     if (params[field] === undefined || params[field] === null) {
       throw new HTTP400Exception(`params '${fields.join(', ')}' are required`);
