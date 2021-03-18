@@ -68,7 +68,7 @@ export class Rester {
     try {
       this.logger.info('Database connecting...');
       this.connections = await createDatabaseConnections(this.config.databases);
-      this.logger.info('Database connected.');
+      this.logger.info('Database connected');
     } catch (error) {
       this.logger.error('Database connect failed, reason:', error);
       throw new ServerException(error);
