@@ -1,22 +1,18 @@
-import { Logger } from '@iinfinity/logger';
 import { createWriteStream, existsSync, mkdirSync, writeFileSync } from 'fs';
 import { IncomingMessage } from 'http';
-import { CORSHandler, ExceptionHandler, Handler, HTTPRequest, LoggerHandler, ParameterHandler, Part, partsToObject, PUT, RequestBody, Rester, RouterHandler, SchemaHandler, View } from '../../main';
+import { BaseView, CORSHandler, Handler, HTTPRequest, Part, partsToObject, PUT, RequestBody, Rester, ResterModule, View } from '../../main';
 import { CONTENT_TYPE } from '../../main/constants';
 import { BaseResponse } from '../../main/responses/base.response';
 
 @View()
 @Handler(CORSHandler)
-class UploadView {
-
-  private logger!: Logger;
+class UploadView extends BaseView {
 
   @PUT()
   index(
     @RequestBody() body: Part[],
   ) {
     this.logger.log(`Length: ${body.length}`);
-    // console.log(body);
     if (!existsSync('temp')) {
       mkdirSync('temp');
     }
@@ -63,14 +59,10 @@ class UploadView {
 
 }
 
-const rester = new Rester();
+const uploadModule: ResterModule = {
+  views: [UploadView],
+};
 
-rester.addHandlers(
-  ExceptionHandler,
-  SchemaHandler,
-  RouterHandler,
-  ParameterHandler,
-  LoggerHandler,
-);
+const rester = new Rester({ modules: [uploadModule] });
 
 rester.bootstrap();

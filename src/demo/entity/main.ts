@@ -1,16 +1,12 @@
-import { ExceptionHandler, LoggerHandler, ParameterHandler, Rester, RouterHandler, SchemaHandler } from '../../main';
+import { Rester, ResterModule } from '../../main';
 import { AccessEntity } from './access.entity';
-import './access.view';
+import { AccessView } from './access.view';
 
-const rester = new Rester();
+const AccessModule: ResterModule = {
+  entities: [AccessEntity],
+  views: [AccessView],
+};
 
-rester.addEntities(AccessEntity);
-rester.addHandlers(
-  ExceptionHandler,
-  SchemaHandler,
-  RouterHandler,
-  ParameterHandler,
-  LoggerHandler,
-);
+const rester = new Rester({ modules: [AccessModule] });
 
 rester.bootstrap();

@@ -1,7 +1,7 @@
-import { ExceptionHandler, GET, LoggerHandler, ParameterHandler, Rester, RouterHandler, SchemaHandler, View } from '../../main';
+import { BaseView, GET, Rester, ResterModule, View } from '../../main';
 
 @View()
-class SimpleView {
+class SimpleView extends BaseView {
 
   @GET()
   index() {
@@ -10,12 +10,10 @@ class SimpleView {
 
 }
 
-const rester = new Rester();
-rester.addHandlers(
-  ExceptionHandler,
-  SchemaHandler,
-  RouterHandler,
-  ParameterHandler,
-  LoggerHandler,
-);
+const indexModule: ResterModule = {
+  views: [SimpleView],
+};
+
+const rester = new Rester({ modules: [indexModule] });
+
 rester.bootstrap();

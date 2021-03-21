@@ -19,7 +19,7 @@ export const DEFAULT_HANDLERS = [
 
 export type ResterInitConfig<M = any> = Partial<ResterConfig> & Partial<{
   handlers: typeof BaseHandler[],
-  modules: ResterModule<M>[],
+  modules: ResterModule[],
 }>;
 
 /**
@@ -37,7 +37,7 @@ export class Rester {
   public config: ResterConfig;
 
   /** Modules. */
-  public readonly modules: ResterModule<any>[];
+  public readonly modules: ResterModule[];
   /** View classes. */
   public readonly views: { target: ViewType, prefix: string, instance: BaseView }[];
   /** Controller classes. */
