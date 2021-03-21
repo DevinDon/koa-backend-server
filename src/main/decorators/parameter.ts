@@ -39,11 +39,11 @@ export const baseParam = (type: ParamInjectionType | any) => {
     // get param declaration type
     const { name: declaration } = Reflect.getMetadata('design:paramtypes', target, name)[index];
     // get existing params array
-    const exist: ParamInjection[] = Reflect.getMetadata(MetadataKey.Parameter, target, name) || [];
+    const exists: ParamInjection[] = Reflect.getMetadata(MetadataKey.Parameter, target, name) || [];
     // put this param with special index
-    exist[index] = { type, value, declaration };
+    exists[index] = { type, value, declaration };
     // and then, set it
-    Reflect.defineMetadata(MetadataKey.Parameter, exist, target, name);
+    Reflect.defineMetadata(MetadataKey.Parameter, exists, target, name);
   };
 };
 

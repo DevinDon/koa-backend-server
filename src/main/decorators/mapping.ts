@@ -8,9 +8,8 @@ import { Mapping, Method } from '../interfaces';
  */
 const baseMapping = (method: Method) => {
   return (path: string = ''): MethodDecorator => (target: any, name, descriptor) => {
-    const mapping: Mapping[] = Reflect.getMetadata(MetadataKey.Mapping, target, name) || [];
-    mapping.push({ method, path });
-    Reflect.defineMetadata(MetadataKey.Mapping, mapping, target, name);
+    const mappings: Mapping[] = Reflect.getMetadata(MetadataKey.Mapping, target, name) || [];
+    Reflect.defineMetadata(MetadataKey.Mapping, [...mappings, { method, path }], target, name);
   };
 };
 

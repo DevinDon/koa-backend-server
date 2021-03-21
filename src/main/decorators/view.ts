@@ -1,6 +1,9 @@
+import { MetadataKey } from '../constants';
+import { BaseView } from '../core';
 import { InjectedType, Injector } from './injector';
 
-export const VIEWS: { target: Function, prefix: string, instance: any }[] = [];
+/** View class type. */
+export type ViewType = Function & typeof BaseView;
 
 /**
  * Class Decorator.
@@ -14,7 +17,7 @@ export const View = (prefix: string = ''): ClassDecorator => {
   return target => {
     /** View instance. */
     const view = Injector.create({ target, type: InjectedType.VIEW }).instance;
-    /** Push view class into array. */
-    VIEWS.push({ target, prefix, instance: view });
+    /** Define metadata on view class. */
+    Reflect.defineMetadata(MetadataKey.View, { target, prefix, instance: view }, target);
   };
 };

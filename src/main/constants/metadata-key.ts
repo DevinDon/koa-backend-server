@@ -4,9 +4,14 @@
 export enum MetadataKey {
 
   /**
-   * Metadata key in Parameter.
+   * Metadata key in Controller.
    */
-  Parameter = 'Parameter',
+  Controller = 'Controller',
+
+  /**
+   * Metadata key in Handler.
+   */
+  Handler = 'Handler',
 
   /**
    * Metadata key in Mapping.
@@ -14,13 +19,18 @@ export enum MetadataKey {
   Mapping = 'Mapping',
 
   /**
+   * Metadata key in Parameter.
+   */
+  Parameter = 'Parameter',
+
+  /**
    * Metadata key in View.
    */
   View = 'View',
 
   /**
-   * Metadata key in Handler.
+   * Metadata key for routes.
    */
-  Handler = 'Handler',
+  Route = 'Route',
 
 }

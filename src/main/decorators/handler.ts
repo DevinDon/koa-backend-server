@@ -19,14 +19,12 @@ export const Handler = <THandler extends typeof BaseHandler>(handler: THandler, 
   return (target: Function | Object, name: string | symbol, descriptor: PropertyDecorator) => {
     if (target instanceof Function) {
       // if on class
-      const result: HandlerType[] = (Reflect.getMetadata(MetadataKey.Handler, target) || []);
-      result.push(handler);
-      Reflect.defineMetadata(MetadataKey.Handler, result, target);
+      const handlers: HandlerType[] = (Reflect.getMetadata(MetadataKey.Handler, target) || []);
+      Reflect.defineMetadata(MetadataKey.Handler, [...handlers, handler], target);
     } else {
       // if on method
-      const result: HandlerType[] = (Reflect.getMetadata(MetadataKey.Handler, target, name) || []);
-      result.push(handler);
-      Reflect.defineMetadata(MetadataKey.Handler, result, target, name);
+      const handlers: HandlerType[] = (Reflect.getMetadata(MetadataKey.Handler, target, name) || []);
+      Reflect.defineMetadata(MetadataKey.Handler, [...handlers, handler], target, name);
     }
   };
 };

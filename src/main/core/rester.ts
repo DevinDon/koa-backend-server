@@ -1,11 +1,26 @@
 import { Logger } from '@iinfinity/logger';
-import { BaseEntity } from 'typeorm';
 import { MetadataKey } from '../constants';
 import { loadResterConfig, ResterConfig } from '../core/rester.config';
-import { CONTROLLERS, HandlerType, InjectedType, Injector, VIEWS } from '../decorators';
+import { ControllerType, HandlerType, ViewType } from '../decorators';
 import { ServerException } from '../exceptions';
-import { HandlerPool } from '../handlers';
+import { BaseHandler, ExceptionHandler, HandlerPool, LoggerHandler, ParameterHandler, RouterHandler, SchemaHandler } from '../handlers';
 import { createDatabaseConnections, createHTTPServer, DatabaseConnection, HTTP2Server, HTTPServer, HTTPSServer, Mapping, Route } from '../interfaces';
+import { BaseController } from './base.controller';
+import { BaseView } from './base.view';
+import { ResterModule } from './rester.module';
+
+export const DEFAULT_HANDLERS = [
+  ExceptionHandler,
+  SchemaHandler,
+  RouterHandler,
+  ParameterHandler,
+  LoggerHandler,
+];
+
+export type ResterInitConfig<M = any> = Partial<ResterConfig> & Partial<{
+  handlers: typeof BaseHandler[],
+  modules: ResterModule<M>[],
+}>;
 
 /**
  * Rester server.
@@ -21,27 +36,58 @@ export class Rester {
   /** Rester config. */
   public config: ResterConfig;
 
-  /** Views in this rester instance. */
-  public readonly views: Function[] = [];
-  /** Controllers in this rester instance. */
-  public readonly controllers: Function[] = [];
+  /** Modules. */
+  public readonly modules: ResterModule<any>[];
+  /** View classes. */
+  public readonly views: { target: ViewType, prefix: string, instance: BaseView }[];
+  /** Controller classes. */
+  public readonly controllers: { target: ControllerType, instance: BaseController }[];
   /** Typeorm connection. */
-  private connections?: DatabaseConnection[] = [];
+  private connections: DatabaseConnection[];
   /** Handler types. */
-  public handlers: HandlerType[] = [];
+  public handlers: HandlerType[];
   /** Logger instance. */
   public readonly logger: Logger;
   /** Handler pool. */
   private pool: HandlerPool;
   /** Node.js server. */
-  private servers: (HTTPServer | HTTP2Server | HTTPSServer)[] = [];
+  public readonly servers: (HTTPServer | HTTP2Server | HTTPSServer)[];
 
-  constructor(inputConfig: Partial<ResterConfig> = {}) {
+  constructor({ handlers = DEFAULT_HANDLERS, modules = [], ...config }: ResterInitConfig = {}) {
+    // modules
+    this.modules = modules;
     // config
-    this.config = loadResterConfig(inputConfig);
+    this.config = loadResterConfig(config);
+    this.modules
+      .map(m => m.entities ?? [])
+      .filter(entities => entities.length > 0)
+      .forEach(entities => {
+        const connection = typeof entities[0] === 'string' ? entities[0] : 'default';
+        typeof entities[0] === 'string' && entities.splice(0, 1);
+        const config = this.config.databases
+          .find(({ name }) => name === connection);
+        if (!config) {
+          throw new ServerException(`No such connection named ${connection}`);
+        }
+        (config as any)['entities'] = [...new Set([...(config.entities || []), ...entities])];
+        return this;
+      });
     // views
+    this.views = modules
+      .map(m => m.views ?? [])
+      .flat()
+      .map(view => Reflect.getMetadata(MetadataKey.View, view))
+      ?? [];
+    // controllers
+    this.controllers = modules
+      .map(m => m.controllers ?? [])
+      .flat()
+      .map(controller => Reflect.getMetadata(MetadataKey.Controller, controller))
+      ?? [];
     // connections
+    this.connections = [];
     // handlers
+    this.handlers = handlers;
     // logger
     Logger.setLogger(
       new Logger({
@@ -56,7 +102,8 @@ export class Rester {
     this.logger = Logger.getLogger('rester')!;
     // handler pool
     this.pool = new HandlerPool(this);
-    // server
+    // servers
+    this.servers = [];
   }
 
   /**
@@ -79,10 +126,8 @@ export class Rester {
    * Register all views.
    */
   private async registerViews() {
-    // push them into rester
-    this.views.push(...VIEWS.map(({ target }) => target));
     // call init
-    VIEWS
+    this.views
       .forEach(({ target, prefix, instance }) => {
         /** Handler types on view. */
         const handlersOnView: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target) || [];
@@ -100,8 +145,8 @@ export class Rester {
               return { view: instance, handlers, mapping: v, name, target };
             });
           }).flat();
-        // define metadata: key = MetadataKey.View, value = routes, on = class
-        Reflect.defineMetadata(MetadataKey.View, routes, target);
+        // define metadata: key = MetadataKey.Route, value = routes, on = class
+        Reflect.defineMetadata(MetadataKey.Route, routes, target);
         // set static properties
         target.prototype.logger = Logger.getLogger('rester');
         target.prototype.rester = this;
@@ -109,7 +154,7 @@ export class Rester {
         try {
           typeof instance.init === 'function' && instance.init();
         } catch (error) {
-          this.logger.warn(`View instance init method call failed: ${instance.name}`);
+          this.logger.warn(`View instance init method call failed: ${instance.constructor.name}`);
         }
       });
     this.logger.info('Views initial succeed');
@@ -124,7 +169,7 @@ export class Rester {
       ...new Set(
         this.views.map(
           view => {
-            const routes: Route[] = Reflect.getMetadata(MetadataKey.View, view) || [];
+            const routes: Route[] = Reflect.getMetadata(MetadataKey.Route, view) || [];
             return routes.map(route => route.handlers).flat();
           },
         ).flat(),
@@ -139,17 +184,15 @@ export class Rester {
    * Register all controller, after database connected.
    */
   private async registerControllers() {
-    // push them into rester
-    this.controllers.push(...CONTROLLERS.map(({ target }) => target));
     // call init & inject properties
-    CONTROLLERS
+    this.controllers
       .forEach(({ target, instance }) => {
         target.prototype.logger = Logger.getLogger('rester');
         target.prototype.rester = this;
         try {
           typeof instance.init === 'function' && instance.init();
         } catch (error) {
-          this.logger.warn(`Controller instance init method call failed: ${instance.name}`);
+          this.logger.warn(`Controller instance init method call failed: ${instance.constructor.name}`);
         }
       });
     this.logger.info('Controllers initial succeed');
@@ -169,58 +212,6 @@ export class Rester {
       server.listen(port, host, () => this.logger.info(`Server online, listening on: ${protocol}://${host}:${port}`));
     }
     this.logger.info('Servers initial succeed');
-  }
-
-  /**
-   * Reset all handlers.
-   *
-   * @returns this rester instance for chain call
-   */
-  resetHandlers(): Rester {
-    this.handlers = [];
-    return this;
-  }
-
-  /**
-   * Add global handlers.
-   *
-   * @param handlers global handlers
-   * @returns {Rester} rester instance
-   */
-  addHandlers(...handlers: HandlerType[]): Rester {
-    this.handlers = [...this.handlers, ...handlers];
-    return this;
-  }
-
-  /**
-   * Reset all entities.
-   *
-   * @returns this rester instance for chain call
-   */
-  resetEntities(): Rester {
-    for (const database of this.config.databases) {
-      (database as any).entities = [];
-    }
-    return this;
-  }
-
-  /**
-   * Add entities to special database.
-   *
-   * @param connectionName connection name for database
-   * @param entities database entity
-   * @returns {Rester} rester instance
-   */
-  addEntities<E extends typeof BaseEntity>(...entities: E[] | string[] | (E | string)[]): Rester {
-    const connection = typeof entities[0] === 'string' ? entities[0] : 'default';
-    typeof entities[0] === 'string' && entities.splice(0, 1);
-    const config = this.config.databases
-      .find(({ name }) => name === connection);
-    if (!config) {
-      throw new ServerException(`No such connection named ${connection}`);
-    }
-    (config as any)['entities'] = [...new Set([...(config.entities || []), ...entities])];
-    return this;
   }
 
   /**

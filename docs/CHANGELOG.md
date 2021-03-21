@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.13.25 => 0.14.0
+
+- refactor(core): add rester modules
+
 ## 0.13.16 => 0.13.25
 
 - refactor(handlers): refactor view & pool

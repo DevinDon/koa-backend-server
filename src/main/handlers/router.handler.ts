@@ -142,7 +142,7 @@ export class RouterHandler extends BaseHandler {
   static init(rester: Rester): typeof RouterHandler {
     RouterHandler.configuration.route = new Map();
     for (const view of rester.views) {
-      const routes: Route[] = Reflect.getMetadata(MetadataKey.View, view) || [];
+      const routes: Route[] = Reflect.getMetadata(MetadataKey.Route, view.target) || [];
       routes.forEach(route => RouterHandler.set(route, RouterHandler.configuration.route));
     }
     return RouterHandler;
