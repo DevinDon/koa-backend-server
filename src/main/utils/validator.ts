@@ -2,14 +2,14 @@ import { HTTP400Exception } from '../exceptions';
 
 export const requiredParam = <T = any>(param: T): void => {
   if (param === undefined || param === null) {
-    throw new HTTP400Exception('parameters are required');
+    throw new HTTP400Exception('Parameters are required.');
   }
 };
 
 export const requiredParams = <T extends Array<any>>(...params: T): void => {
   for (const param of params) {
     if (params === undefined || params === null) {
-      throw new HTTP400Exception('parameters are required');
+      throw new HTTP400Exception('Parameters are required.');
     }
   }
 };
@@ -20,9 +20,21 @@ export const requiredParamsInFields = <T>(params: T, fields?: (keyof T)[]): void
   }
   for (const field of fields) {
     if (params[field] === undefined || params[field] === null) {
-      throw new HTTP400Exception(`params '${fields.join(', ')}' are required`);
+      throw new HTTP400Exception(`Parameters '${fields.join(', ')}' are required.`);
     }
   }
+};
+
+export const requiredAtLeastOneParam = <T extends Array<any>>(...params: T) => {
+
+  const isAllUndefined = params
+    .map(param => param === undefined ? 1 : 0 as number)
+    .reduce((prev, curr) => prev + curr) === params.length;
+
+  if (isAllUndefined) {
+    throw new HTTP400Exception('There should be at least one parameter that is not undefined.');
+  }
+
 };
 
 export const numberInRange = (min: number, value: number, max: number) => {
