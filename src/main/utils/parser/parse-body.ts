@@ -1,6 +1,6 @@
 import { logger } from '@iinfinity/logger';
 import { URLSearchParams } from 'url';
-import { Part } from '../interfaces';
+import { Part } from '../../interfaces';
 
 export class BodyParser {
 

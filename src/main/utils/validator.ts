@@ -37,6 +37,18 @@ export const requiredAtLeastOneParam = <T extends Array<any>>(...params: T) => {
 
 };
 
+export const requiredAtMostOneParam = <T extends Array<any>>(...params: T) => {
+
+  const isMoreDefined = params
+    .map(param => param === undefined ? 0 : 1 as number)
+    .reduce((prev, curr) => prev + curr) > 1;
+
+  if (isMoreDefined) {
+    throw new HTTP400Exception('There should be at most one parameter that is defined.');
+  }
+
+};
+
 export const numberInRange = (min: number, value: number, max: number) => {
   return Math.min(Math.max(value, min), max);
 };
