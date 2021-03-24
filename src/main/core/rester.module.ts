@@ -1,4 +1,4 @@
-import { BaseEntity } from 'typeorm';
+import { BaseEntity } from '@rester/orm';
 import { ControllerType, ViewType } from '../decorators';
 
 type EntityType = Function & typeof BaseEntity;

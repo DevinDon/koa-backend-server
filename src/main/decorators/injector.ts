@@ -1,7 +1,7 @@
 export enum InjectedType {
   CONTROLLER = 'CONTROLLER',
   VIEW = 'VIEW',
-  ANY = 'ANY'
+  ANY = 'ANY',
 }
 
 export interface Injected<T = any> {

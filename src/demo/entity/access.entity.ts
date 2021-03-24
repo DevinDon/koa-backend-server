@@ -1,28 +1,41 @@
-import { IsDate, IsIP, Length } from 'class-validator';
-import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, MongoEntity, ObjectID } from '@rester/orm';
+import { IncomingHttpHeaders } from 'http';
+import { Access } from './access.model';
 
-@Entity('access')
-export class AccessEntity extends BaseEntity {
-
-  @ObjectIdColumn()
-  _id!: ObjectID;
-
-  @Length(3, 10)
-  @Column()
-  method!: string;
+@Entity({ name: 'access' })
+export class AccessEntity extends MongoEntity<Access> implements Access {
 
   @Column()
-  url!: string;
+  _id: ObjectID;
 
-  @Column({ nullable: true })
-  params?: string;
-
-  @IsDate()
   @Column()
-  datetime!: Date;
+  method: string;
 
-  @IsIP()
   @Column()
-  ip!: string;
+  path: string;
+
+  @Column()
+  query?: string;
+
+  @Column()
+  headers: IncomingHttpHeaders;
+
+  @Column()
+  timestamp: Date;
+
+  @Column()
+  ips: string[];
+
+  @Column()
+  version: string;
+
+  @Column()
+  statusCode: number;
+
+  @Column()
+  statusMessage: string;
+
+  @Column()
+  length: number;
 
 }

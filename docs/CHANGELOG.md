@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.14.0 => 0.15.0
+
+- feat(orm): use @rester/orm
+
 ## 0.13.25 => 0.14.0
 
 - refactor(core): add rester modules

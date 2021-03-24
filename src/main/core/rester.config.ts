@@ -1,8 +1,9 @@
 import { Level } from '@iinfinity/logger';
+import { ResterORMConfig } from '@rester/orm';
 import { existsSync, readFileSync } from 'fs';
 import { load } from 'js-yaml';
 import { ServerException } from '../exceptions';
-import { DatabaseConfig, HTTP2ServerConfig, HTTPSServerConfig } from '../interfaces';
+import { HTTP2ServerConfig, HTTPSServerConfig } from '../interfaces';
 import { isProd } from '../utils';
 
 /**
@@ -58,7 +59,7 @@ export interface ZoneConfig {
 export interface ResterConfig {
 
   addresses: AddressConfig[];
-  databases: DatabaseConfig[];
+  databases: ResterORMConfig[];
   handlerPool: HandlerPoolConfig;
   logger: LoggerConfig;
 

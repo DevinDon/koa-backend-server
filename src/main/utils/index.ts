@@ -1,7 +1,6 @@
 export * from './formatting';
 export * from './generator';
 export * from './is-prod';
-export * from './pagination';
 export * from './parser/parse-body';
 export * from './parser/parse-ips';
 export * from './parser/parse-token';

@@ -1,10 +1,11 @@
 import { Logger } from '@iinfinity/logger';
+import { ResterORM } from '@rester/orm';
 import { MetadataKey } from '../constants';
 import { loadResterConfig, ResterConfig } from '../core/rester.config';
 import { ControllerType, HandlerType, ViewType } from '../decorators';
 import { ServerException } from '../exceptions';
 import { BaseHandler, ExceptionHandler, HandlerPool, LoggerHandler, ParameterHandler, RouterHandler, SchemaHandler } from '../handlers';
-import { createDatabaseConnections, createHTTPServer, DatabaseConnection, HTTP2Server, HTTPServer, HTTPSServer, Mapping, Route } from '../interfaces';
+import { createHTTPServer, HTTP2Server, HTTPServer, HTTPSServer, Mapping, Route } from '../interfaces';
 import { BaseController } from './base.controller';
 import { BaseView } from './base.view';
 import { ResterModule } from './rester.module';
@@ -17,7 +18,7 @@ export const DEFAULT_HANDLERS = [
   LoggerHandler,
 ];
 
-export type ResterInitConfig<M = any> = Partial<ResterConfig> & Partial<{
+export type ResterInitConfig = Partial<ResterConfig> & Partial<{
   handlers: typeof BaseHandler[],
   modules: ResterModule[],
 }>;
@@ -42,8 +43,8 @@ export class Rester {
   public readonly views: { target: ViewType, prefix: string, instance: BaseView }[];
   /** Controller classes. */
   public readonly controllers: { target: ControllerType, instance: BaseController }[];
-  /** Typeorm connection. */
-  private connections: DatabaseConnection[];
+  /** Rester ORM. */
+  private orm: ResterORM;
   /** Handler types. */
   public handlers: HandlerType[];
   /** Logger instance. */
@@ -62,15 +63,14 @@ export class Rester {
       .map(m => m.entities ?? [])
       .filter(entities => entities.length > 0)
       .forEach(entities => {
-        const connection = typeof entities[0] === 'string' ? entities[0] : 'default';
+        const connection = typeof entities[0] === 'string' ? entities[0] : this.config.databases[0].database;
         typeof entities[0] === 'string' && entities.splice(0, 1);
         const config = this.config.databases
-          .find(({ name }) => name === connection);
+          .find(({ database }) => database === connection);
         if (!config) {
           throw new ServerException(`No such connection named ${connection}`);
         }
         (config as any)['entities'] = [...new Set([...(config.entities || []), ...entities])];
-        return this;
       });
     // views
     this.views = modules
@@ -84,8 +84,8 @@ export class Rester {
       .flat()
       .map(controller => Reflect.getMetadata(MetadataKey.Controller, controller))
       ?? [];
-    // connections
-    this.connections = [];
+    // orm
+    this.orm = new ResterORM(this.config.databases);
     // handlers
     this.handlers = handlers;
     // logger
@@ -114,7 +114,7 @@ export class Rester {
   private async registerDatabases() {
     try {
       this.logger.info('Database connecting...');
-      this.connections = await createDatabaseConnections(this.config.databases);
+      await this.orm.bootstrap();
       this.logger.info('Database connected');
     } catch (error) {
       this.logger.error('Database connect failed, reason:', error);
