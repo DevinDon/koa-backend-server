@@ -2,9 +2,9 @@ import { createReadStream, existsSync, lstatSync, ReadStream } from 'fs';
 import { lookup } from 'mime-types';
 import { ContentType, CONTENT_TYPE } from '../constants';
 import { HTTP400Exception, HTTP404Exception } from '../exceptions';
-import { BaseResponse, Response } from './base.response';
+import { BaseResponse, ResponseConfig } from './base.response';
 
-export type ResourceResponseConfig = Partial<Response> & {
+export type ResourceResponseConfig = Partial<ResponseConfig> & {
   file: string | ReadStream;
   type?: string;
   encoding?: BufferEncoding;

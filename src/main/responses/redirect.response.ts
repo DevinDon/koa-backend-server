@@ -1,6 +1,6 @@
-import { BaseResponse, Response } from './base.response';
+import { BaseResponse, ResponseConfig } from './base.response';
 
-export type RedirectResponseConfig = Partial<Response> & {
+export type RedirectResponseConfig = Partial<ResponseConfig> & {
   url: string;
   temporarily?: boolean;
 }
