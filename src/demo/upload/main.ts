@@ -2,7 +2,7 @@ import { createWriteStream, existsSync, mkdirSync, writeFileSync } from 'fs';
 import { IncomingMessage } from 'http';
 import { BaseView, CORSHandler, Handler, HTTPRequest, Part, partsToObject, PUT, RequestBody, Rester, ResterModule, View } from '../../main';
 import { CONTENT_TYPE } from '../../main/constants';
-import { BaseResponse } from '../../main/responses/base.response';
+import { ResterResponse } from '../../main/responses';
 
 @View()
 @Handler(CORSHandler)
@@ -24,7 +24,7 @@ class UploadView extends BaseView {
   async echo(
     @RequestBody() body: Part[],
   ) {
-    return new BaseResponse({
+    return new ResterResponse({
       headers: { [CONTENT_TYPE]: body[0].contentType! },
       data: body[0].buffer,
     });

@@ -112,6 +112,10 @@ export class Rester {
    * @throws {ServerException} throw a server exception
    */
   private async registerDatabases() {
+    if (this.config.databases.length === 0) {
+      this.logger.info('There is no data source in rester config.');
+      return;
+    }
     try {
       this.logger.info('Database connecting...');
       await this.orm.bootstrap();

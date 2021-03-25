@@ -1,6 +1,6 @@
 import { Stream } from 'stream';
 import { ContentType, CONTENT_TYPE } from '../constants';
-import { BaseResponse } from '../responses/base.response';
+import { ResterResponse } from '../responses';
 import { BufferStream } from '../utils';
 import { BaseHandler } from './base.handler';
 
@@ -20,7 +20,7 @@ export class SchemaHandler extends BaseHandler {
           if (typeof value === 'object') {
 
             // value is a rester response
-            if (value instanceof BaseResponse) {
+            if (value instanceof ResterResponse) {
               for (const key in value.headers) {
                 if (Object.prototype.hasOwnProperty.call(value.headers, key)) {
                   this.response.setHeader(key, value.headers[key]);
@@ -51,8 +51,8 @@ export class SchemaHandler extends BaseHandler {
 
           }
 
-          // value is undefined, return empty string
-          if (typeof value === 'undefined') {
+          // value is undefined or null, return empty string
+          if (value === undefined || value === null) {
             return '';
           }
 

@@ -1,11 +1,11 @@
-import { BaseResponse, ResponseConfig } from './base.response';
+import { ResterResponse, ResponseConfig } from './rester.response';
 
 export type RedirectResponseConfig = Partial<ResponseConfig> & {
   url: string;
   temporarily?: boolean;
 }
 
-export class RedirectResponse extends BaseResponse<string> {
+export class RedirectResponse extends ResterResponse<string> {
 
   constructor({ url, temporarily, ...rest }: RedirectResponseConfig) {
     super(rest as any);

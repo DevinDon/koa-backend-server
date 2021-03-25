@@ -1,11 +1,11 @@
 import { HTTP404Exception } from '../exceptions';
-import { BaseResponse, ResponseConfig } from './base.response';
+import { ResterResponse, ResponseConfig } from './rester.response';
 
 export type ExistResponseConfig = Partial<ResponseConfig> & {
   message?: string;
 };
 
-export class ExistResponse extends BaseResponse {
+export class ExistResponse extends ResterResponse {
 
   constructor({ data, message = 'Resource not found.', ...rest }: ExistResponseConfig) {
     if (!data) {

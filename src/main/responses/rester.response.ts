@@ -1,3 +1,5 @@
+import { HTTPException } from '../exceptions';
+
 interface Headers {
   [index: string]: number | string | string[];
 }
@@ -14,14 +16,14 @@ export interface ResponseConfig<T = any> {
   headers?: Headers;
 
   /** Response data. */
-  data: T;
+  data?: T;
 
 }
 
 /**
- * Rester base response.
+ * Rester base http response.
  */
-export class BaseResponse<T = any> implements ResponseConfig<T> {
+export class ResterResponse<T = any> implements ResponseConfig<T> {
 
   /** Response status code, default to 200. */
   statusCode: number = 200;
@@ -36,6 +38,9 @@ export class BaseResponse<T = any> implements ResponseConfig<T> {
   data: T;
 
   constructor({ statusCode, statusMessage, headers, data }: ResponseConfig) {
+    if (statusCode && statusCode >= 400) {
+      throw new HTTPException(statusCode, statusMessage, data);
+    }
     statusCode && (this.statusCode = statusCode);
     statusMessage && (this.statusMessage = statusMessage);
     headers && (this.headers = headers);
