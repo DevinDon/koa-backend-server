@@ -13,7 +13,7 @@ databases:
     password: password
     authSource: admin
     logger: debug
-    synchronize: true
+    sync: true
 
 handlerPool:
   max: 1024

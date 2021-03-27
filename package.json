@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@rester/logger": "0.1.0",
-    "@rester/orm": "0.1.4",
+    "@rester/orm": "0.1.6",
     "@types/jasmine": "3.6.9",
     "@types/js-yaml": "4.0.0",
     "@types/mime-types": "2.1.0",
