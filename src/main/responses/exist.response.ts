@@ -3,7 +3,7 @@ import { ResterResponse, ResponseConfig } from './rester.response';
 
 export type ExistResponseConfig<T> = Partial<ResponseConfig<T>> & {
   message?: string;
-  fields?: (keyof T)[];
+  fields?: (keyof Exclude<T, undefined | null>)[];
 };
 
 export class ExistResponse<T> extends ResterResponse<T> {
