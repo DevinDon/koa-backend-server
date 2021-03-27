@@ -1,4 +1,4 @@
-import { logger } from '@iinfinity/logger';
+import { logger } from '@rester/logger';
 import { MetadataKey } from '../constants';
 import { Rester } from '../core/rester';
 import { HTTP404Exception } from '../exceptions';

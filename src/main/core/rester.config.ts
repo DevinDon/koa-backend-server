@@ -1,4 +1,4 @@
-import { Level } from '@iinfinity/logger';
+import { Level } from '@rester/logger';
 import { ResterORMConfig } from '@rester/orm';
 import { existsSync, readFileSync } from 'fs';
 import { load } from 'js-yaml';

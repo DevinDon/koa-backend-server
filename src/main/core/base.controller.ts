@@ -1,4 +1,4 @@
-import { Logger } from '@iinfinity/logger';
+import { Logger } from '@rester/logger';
 import { Rester } from './rester';
 
 export class BaseController {

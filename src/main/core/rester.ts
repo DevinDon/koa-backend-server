@@ -1,5 +1,5 @@
-import { Logger } from '@iinfinity/logger';
-import { ResterORM } from '@rester/orm';
+import { Logger } from '@rester/logger';
+import { getEntity, ResterORM } from '@rester/orm';
 import { MetadataKey } from '../constants';
 import { loadResterConfig, ResterConfig } from '../core/rester.config';
 import { ControllerType, HandlerType, ViewType } from '../decorators';
@@ -119,6 +119,10 @@ export class Rester {
     try {
       this.logger.info('Database connecting...');
       await this.orm.bootstrap();
+      for (const entities of this.config.databases.flatMap(database => database.entities)) {
+        const entity = getEntity(entities);
+        console.log(entity);
+      }
       this.logger.info('Database connected');
     } catch (error) {
       this.logger.error('Database connect failed, reason:', error);

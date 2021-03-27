@@ -1,4 +1,4 @@
-import { logger } from '@iinfinity/logger';
+import { logger } from '@rester/logger';
 import { URLSearchParams } from 'url';
 import { Part } from '../../interfaces';
 

@@ -14,3 +14,10 @@ databases:
     authSource: admin
     logger: debug
     synchronize: true
+
+handlerPool:
+  max: 1024
+
+logger:
+  level: all
+  trace: true

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { logger } from '@iinfinity/logger';
+import { logger } from '@rester/logger';
 
 describe('index', () => {
 
