@@ -8,7 +8,7 @@ export const requiredParam = <T = any>(param: T): void => {
 
 export const requiredParams = <T extends Array<any>>(...params: T): void => {
   for (const param of params) {
-    if (params === undefined || params === null) {
+    if (param === undefined || param === null) {
       throw new HTTP400Exception('Parameters are required.');
     }
   }
