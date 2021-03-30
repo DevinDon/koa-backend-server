@@ -45,7 +45,7 @@ export class CORSHandler extends BaseHandler {
         /** If CORS handler on view. */
         const allCORSOnView = handlersOnView.includes(CORSHandler);
         /** Get routes. */
-        const routes: Route[] = Reflect.getMetadata(MetadataKey.Route, view) || [];
+        const routes: Route[] = Reflect.getMetadata(MetadataKey.Route, view.constructor) || [];
         // for each & set OPTIONS mapping
         routes
           .filter(route => allCORS || allCORSOnView || route.handlers.includes(CORSHandler))
