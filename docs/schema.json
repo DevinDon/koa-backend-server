@@ -1,0 +1,138 @@
+{
+  "type": "object",
+  "properties": {
+    "addresses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string",
+            "format": "hostname"
+          },
+          "port": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65534,
+            "exclusiveMaximum": false
+          },
+          "protocol": {
+            "type": "string",
+            "enum": [
+              "http",
+              "https"
+            ]
+          }
+        },
+        "required": [
+          "host",
+          "port",
+          "protocol"
+        ]
+      }
+    },
+    "databases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "default": "default"
+          },
+          "type": {
+            "type": "string",
+            "default": "mongodb",
+            "enum": [
+              "mongodb"
+            ]
+          },
+          "host": {
+            "type": "string",
+            "format": "hostname",
+            "default": "localhost"
+          },
+          "port": {
+            "type": "integer",
+            "default": 27017,
+            "minimum": 1,
+            "maximum": 65534
+          },
+          "database": {
+            "type": "string",
+            "default": "database"
+          },
+          "username": {
+            "type": "string",
+            "default": "username"
+          },
+          "password": {
+            "type": "string",
+            "default": "password"
+          },
+          "authSource": {
+            "type": "string",
+            "default": "admin"
+          },
+          "sync": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      }
+    },
+    "handlerPool": {
+      "type": "object",
+      "properties": {
+        "max": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1024
+        }
+      },
+      "required": [
+        "max"
+      ]
+    },
+    "logger": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": [
+            "all",
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "none"
+          ],
+          "default": "all"
+        },
+        "trace": {
+          "type": "boolean",
+          "default": true
+        },
+        "errorLog": {
+          "type": "string",
+          "default": "error.log"
+        },
+        "outputLog": {
+          "type": "string",
+          "default": "output.log"
+        }
+      },
+      "required": [
+        "level",
+        "trace",
+        "errorLog",
+        "outputLog"
+      ]
+    }
+  },
+  "required": [
+    "addresses",
+    "handlerPool",
+    "logger"
+  ]
+}
