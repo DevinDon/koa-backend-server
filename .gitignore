@@ -1,8 +1,9 @@
 /dist
 /node_modules
 /out
-/package-lock.json
 /temp
+/logs
+/package-lock.json
 /rester.local.yaml
 /rester.yaml
 /**/*.db

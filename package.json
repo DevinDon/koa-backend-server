@@ -29,7 +29,7 @@
     "lint": "eslint . --fix",
     "prepublishOnly": "npm run clean && npm run build",
     "postpublish": "sleep 1 && curl https://npm.taobao.org/sync/@rester/core",
-    "test": "node node_modules/jasmine/bin/jasmine.js --config=src/test/jasmine.json --reporter=jasmine-console-reporter --require=ts-node/register",
+    "test": "node node_modules/jasmine/bin/jasmine.js --config=jasmine.json --reporter=jasmine-console-reporter --require=ts-node/register",
     "watch": "tsc -w"
   },
   "repository": {
