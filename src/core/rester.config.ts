@@ -1,7 +1,7 @@
 import { Level } from '@rester/logger';
 import { ResterORMConfig } from '@rester/orm';
 import { existsSync, readFileSync } from 'fs';
-import { load } from 'js-yaml';
+import YAML from 'yaml';
 import { ServerException } from '../exceptions';
 import { HTTP2ServerConfig, HTTPSServerConfig } from '../interfaces';
 import { isProd } from '../utils';
@@ -47,8 +47,8 @@ export interface HandlerPoolConfig {
 export interface LoggerConfig {
   level: Level;
   trace: boolean;
-  outputLog?: string;
-  errorLog?: string;
+  logout?: string;
+  logerr?: string;
 }
 
 export interface ZoneConfig {
@@ -97,8 +97,8 @@ export const DEFAULT_PROD_CONFIG: ResterConfig = {
   logger: {
     level: Level.INFO,
     trace: false,
-    outputLog: 'output.log',
-    errorLog: 'error.log',
+    logout: 'output.log',
+    logerr: 'error.log',
   },
 };
 
@@ -112,10 +112,10 @@ export const DEFAULT_PROD_CONFIG: ResterConfig = {
 export const loadResterConfig: (inputConfig?: Partial<ResterConfig>) => ResterConfig = (inputConfig = {}) => {
   try {
     const productionConfig: Partial<ResterConfig> = existsSync(PROD_CONFIG_FILENAME)
-      ? load(readFileSync(PROD_CONFIG_FILENAME).toString()) as ResterConfig
+      ? YAML.parse(readFileSync(PROD_CONFIG_FILENAME).toString()) as ResterConfig
       : {};
     const localConfig: Partial<ResterConfig> = existsSync(LOCAL_CONFIG_FILENAME)
-      ? load(readFileSync(LOCAL_CONFIG_FILENAME).toString()) as ResterConfig
+      ? YAML.parse(readFileSync(LOCAL_CONFIG_FILENAME).toString()) as ResterConfig
       : {};
     return Object.assign(
       {},

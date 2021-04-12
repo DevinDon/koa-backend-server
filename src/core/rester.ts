@@ -95,8 +95,8 @@ export class Rester {
         level: this.config.logger.level,
         stdout: process.stdout,
         stderr: process.stderr,
-        fileout: this.config.logger.outputLog,
-        fileerr: this.config.logger.errorLog,
+        logout: this.config.logger.logout,
+        logerr: this.config.logger.logerr,
       }),
     );
     this.logger = Logger.getLogger('rester')!;
