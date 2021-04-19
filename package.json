@@ -1,6 +1,6 @@
 {
   "name": "@rester/core",
-  "version": "0.15.15",
+  "version": "0.15.16",
   "description": "A TypeScript framework, like Spring Boot.",
   "main": "dist/index.js",
   "directories": {
