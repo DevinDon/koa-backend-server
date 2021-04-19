@@ -49,6 +49,12 @@ export const requiredAtMostOneParam = <T extends Array<any>>(...params: T) => {
 
 };
 
-export const numberInRange = (min: number, value: number, max: number) => {
-  return Math.min(Math.max(value, min), max);
+export const requiredInRange = (min: number, value: number, max: number) => {
+
+  const isNotInRange = value < min || value > max;
+
+  if (isNotInRange) {
+    throw new HTTP400Exception(`The value ${value} is not in range [${min}, ${max}].`);
+  }
+
 };
