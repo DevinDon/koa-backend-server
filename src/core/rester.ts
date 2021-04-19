@@ -179,7 +179,10 @@ export class Rester {
           },
         ).flat(),
       ),
-    ].forEach(handler => handler.init(this));
+    ].forEach(handler => {
+      handler.init(this);
+      handler['key'] = Symbol(handler.name);
+    });
     // freeze it to keep safe
     Object.freeze(this.handlers);
     this.logger.debug('Handlers initial succeed');

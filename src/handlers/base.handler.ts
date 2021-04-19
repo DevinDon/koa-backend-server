@@ -12,6 +12,9 @@ import { Mapping, Route } from '../interfaces';
  */
 export class BaseHandler<ZoneType = any> {
 
+  /** Handler symbol. */
+  public static key: symbol;
+
   /** Handler config. */
   protected static configuration: any;
   /** Mapping method arguments of this view. */
@@ -111,7 +114,7 @@ export class BaseHandler<ZoneType = any> {
    */
   async run(): Promise<any> {
     if (this.route.view && this.route.view[this.route.name]) {
-      return this.route.view[this.route.name](...(this.args || []));
+      return this.route.view[this.route.name](...this.args);
     }
   }
 
