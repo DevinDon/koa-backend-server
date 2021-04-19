@@ -1,4 +1,4 @@
-import { Level } from '@rester/logger';
+import { LevelMap } from '@rester/logger';
 import { ResterORMConfig } from '@rester/orm';
 import { existsSync, readFileSync } from 'fs';
 import YAML from 'yaml';
@@ -45,7 +45,7 @@ export interface HandlerPoolConfig {
  * - trace: exception stack trace, default in production mode = `false`, else `true`
  */
 export interface LoggerConfig {
-  level: Level;
+  level: LevelMap;
   trace: boolean;
   logout?: string;
   logerr?: string;
@@ -57,12 +57,21 @@ export interface ZoneConfig {
 
 /** Rester config. */
 export interface ResterConfig {
-
   addresses: AddressConfig[];
   databases: ResterORMConfig[];
   handlerPool: HandlerPoolConfig;
   logger: LoggerConfig;
+}
 
+/** Rester input config, not strict. */
+interface ResterInputConfig {
+  addresses?: (Omit<AddressConfig, 'protocol'> & {
+    protocol: 'HTTP' | 'HTTPS' | 'HTTP2' | 'http' | 'https' | 'http2';
+  })[];
+  databases?: ResterORMConfig[];
+  handlerPool?: HandlerPoolConfig;
+  'handler-pool'?: HandlerPoolConfig;
+  logger?: LoggerConfig;
 }
 
 export const PROD_CONFIG_FILENAME = 'rester.yaml';
@@ -79,7 +88,7 @@ export const DEFAULT_DEV_CONFIG: ResterConfig = {
     max: 128,
   },
   logger: {
-    level: Level.ALL,
+    level: LevelMap.ALL,
     trace: true,
   },
 };
@@ -95,10 +104,10 @@ export const DEFAULT_PROD_CONFIG: ResterConfig = {
     max: 4096,
   },
   logger: {
-    level: Level.INFO,
+    level: LevelMap.INFO,
     trace: false,
-    logout: 'output.log',
-    logerr: 'error.log',
+    logout: 'logs/out.log',
+    logerr: 'logs/err.log',
   },
 };
 
@@ -111,12 +120,14 @@ export const DEFAULT_PROD_CONFIG: ResterConfig = {
  */
 export const loadResterConfig: (inputConfig?: Partial<ResterConfig>) => ResterConfig = (inputConfig = {}) => {
   try {
-    const productionConfig: Partial<ResterConfig> = existsSync(PROD_CONFIG_FILENAME)
+    const productionConfig: any = existsSync(PROD_CONFIG_FILENAME)
       ? YAML.parse(readFileSync(PROD_CONFIG_FILENAME).toString()) as ResterConfig
       : {};
-    const localConfig: Partial<ResterConfig> = existsSync(LOCAL_CONFIG_FILENAME)
+    formatConfig(productionConfig);
+    const localConfig: any = existsSync(LOCAL_CONFIG_FILENAME)
       ? YAML.parse(readFileSync(LOCAL_CONFIG_FILENAME).toString()) as ResterConfig
       : {};
+    formatConfig(localConfig);
     return Object.assign(
       {},
       isProd() ? DEFAULT_PROD_CONFIG : DEFAULT_DEV_CONFIG,
@@ -126,5 +137,15 @@ export const loadResterConfig: (inputConfig?: Partial<ResterConfig>) => ResterCo
     );
   } catch (error) {
     throw new ServerException('config loading failed, detail: ' + error);
+  }
+};
+
+const formatConfig = (config: ResterInputConfig) => {
+  if (config['handler-pool']) {
+    config.handlerPool = config['handler-pool'];
+    delete config['handler-pool'];
+  }
+  for (const address of config.addresses || []) {
+    address.protocol = address.protocol.toUpperCase() as any;
   }
 };

@@ -9,6 +9,7 @@ import { createHTTPServer, HTTP2Server, HTTPServer, HTTPSServer, Mapping, Route 
 import { BaseController } from './base.controller';
 import { BaseView } from './base.view';
 import { ResterModule } from './rester.module';
+import { isProd } from '../utils';
 
 export const DEFAULT_HANDLERS = [
   ExceptionHandler,
@@ -161,7 +162,7 @@ export class Rester {
           this.logger.warn(`View instance init method call failed: ${instance.constructor.name}`);
         }
       });
-    this.logger.info('Views initial succeed');
+    this.logger.debug('Views initial succeed');
   }
 
   /**
@@ -181,7 +182,7 @@ export class Rester {
     ].forEach(handler => handler.init(this));
     // freeze it to keep safe
     Object.freeze(this.handlers);
-    this.logger.info('Handlers initial succeed');
+    this.logger.debug('Handlers initial succeed');
   }
 
   /**
@@ -199,7 +200,7 @@ export class Rester {
           this.logger.warn(`Controller instance init method call failed: ${instance.constructor.name}`);
         }
       });
-    this.logger.info('Controllers initial succeed');
+    this.logger.debug('Controllers initial succeed');
   }
 
   /**
@@ -215,7 +216,7 @@ export class Rester {
       const protocol = address.protocol === 'HTTP' ? 'http' : 'https';
       server.listen(port, host, () => this.logger.info(`Server online, listening on: ${protocol}://${host}:${port}`));
     }
-    this.logger.info('Servers initial succeed');
+    this.logger.debug('Servers initial succeed');
   }
 
   /**
@@ -224,6 +225,7 @@ export class Rester {
    * @param callback callback after server started up
    */
   async bootstrap(callback?: (() => void | Promise<void>) | string): Promise<Rester> {
+    isProd() || this.logger.warn('Rester is running in development mode, you can set env MODE=PROD to enable production mode.');
     await this.registerDatabases();
     await this.registerViews();
     await this.registerHandlers();

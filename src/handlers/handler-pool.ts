@@ -77,7 +77,8 @@ export class HandlerPool {
   compose(current: BaseHandler, i: number, handlers: HandlerType[]): () => Promise<any> {
     // 根据 handlers 的数量进行组合 compose
     if (i + 1 < handlers.length) {
-      // next 继承当前的 handler 属性
+      // 如果存在下一个 handler
+      // next 继承 current 的属性
       return async () => current.handle(
         () => this.compose(this.take(handlers[++i]!).inherit(current), i, handlers)(),
       ).finally(() => this.give(current));
