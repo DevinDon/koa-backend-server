@@ -13,7 +13,7 @@ export class HandlerPool {
   /** Maximum number of handlers per category, default to 1024. */
   private max: number;
   /** Pools. */
-  private pools: Map<string, BaseHandler[]> = new Map();
+  private pools: Map<symbol, BaseHandler[]> = new Map();
 
   /**
    * Create a new handler pool.
@@ -31,7 +31,8 @@ export class HandlerPool {
    * @returns {T} A handler instance with special type.
    */
   take<T = BaseHandler>(handler: HandlerType): T {
-    const pool = this.pools.get(handler.name) || this.pools.set(handler.name, []).get(handler.name)!;
+    const key = handler.key;
+    const pool = this.pools.get(key) || this.pools.set(key, []).get(key)!;
     return pool.pop() || new handler(this.rester) as any;
   }
 
@@ -42,9 +43,10 @@ export class HandlerPool {
    * @returns {number} Number of handlers in pool.
    */
   give(handler: BaseHandler): number {
-    const pool = this.pools.has(handler.constructor.name)
-      ? this.pools.get(handler.constructor.name)!
-      : this.pools.set(handler.constructor.name, []).get(handler.constructor.name)!;
+    const key = (handler.constructor as typeof BaseHandler).key;
+    const pool = this.pools.has(key)
+      ? this.pools.get(key)!
+      : this.pools.set(key, []).get(key)!;
     return pool.length < this.max ? pool.push(handler.from()) : pool.length;
   }
 
