@@ -111,7 +111,7 @@ export class BaseHandler<ZoneType = any> {
    */
   async run(): Promise<any> {
     if (this.route.view && this.route.view[this.route.name]) {
-      return this.route.view[this.route.name](...this.args);
+      return this.route.view[this.route.name](...(this.args || []));
     }
   }
 
