@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+DEMO=${1}
+
+node -r ts-node/register demo/${DEMO}/main.ts

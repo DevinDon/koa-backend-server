@@ -23,14 +23,17 @@
   ],
   "homepage": "https://github.com/DevinDon/rester-core",
   "scripts": {
-    "build": "tsc",
-    "clean": "rm -rf dist out temp logs *.db *.log",
-    "demo": "node -r ts-node/register demo/${DEMO}/main.ts",
-    "lint": "eslint . --fix",
-    "prepublishOnly": "npm run clean && npm run build",
-    "postpublish": "sleep 1 && curl https://npm.taobao.org/sync/@rester/core",
-    "test": "node node_modules/jasmine/bin/jasmine.js --config=jasmine.json --reporter=jasmine-console-reporter --require=ts-node/register",
-    "watch": "tsc -w"
+    "build": "./scripts/build",
+    "clean": "./scripts/clean",
+    "debug": "./scripts/debug",
+    "postinstall": "npm run init",
+    "init": "./scripts/init",
+    "lint": "./scripts/lint",
+    "postpublish": "./scripts/push",
+    "start": "npm run start:dev",
+    "start:dev": "MODE=DEV ./scripts/start",
+    "start:prod": "MODE=PROD ./scripts/start",
+    "test": "./scripts/test"
   },
   "repository": {
     "type": "git",
