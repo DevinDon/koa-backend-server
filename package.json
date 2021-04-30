@@ -29,6 +29,7 @@
     "postinstall": "npm run init",
     "init": "./scripts/init",
     "lint": "./scripts/lint",
+    "prepublishOnly": "npm run clean && npm run build",
     "postpublish": "./scripts/push",
     "start": "npm run start:dev",
     "start:dev": "MODE=DEV ./scripts/start",
