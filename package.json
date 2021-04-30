@@ -1,6 +1,6 @@
 {
   "name": "@rester/core",
-  "version": "0.15.20",
+  "version": "0.15.19",
   "description": "A TypeScript framework, like Spring Boot.",
   "main": "dist/index.js",
   "directories": {
@@ -26,7 +26,7 @@
     "build": "./scripts/build",
     "clean": "./scripts/clean",
     "debug": "./scripts/debug",
-    "postinstall": "npm run init",
+    "init": "./scripts/init",
     "lint": "./scripts/lint",
     "prepublishOnly": "npm run clean && npm run build",
     "postpublish": "./scripts/push",
