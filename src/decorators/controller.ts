@@ -1,9 +1,15 @@
 import { MetadataKey } from '../constants';
-import { BaseController } from '../core';
+import type { BaseController } from '../core';
 import { InjectedType, Injector } from './injector';
+import { Metadata } from './metadata';
 
 /** Controller class type. */
 export type ControllerType = Function & typeof BaseController;
+
+export interface ControllerMetadata {
+  target: ControllerType;
+  instance: BaseController;
+}
 
 /**
  * Class Decorator.
@@ -15,6 +21,7 @@ export const Controller = (): ClassDecorator => {
     /** Controller instance. */
     const controller = Injector.create({ target, type: InjectedType.CONTROLLER }).instance;
     /** Define metadata on class. */
-    Reflect.defineMetadata(MetadataKey.Controller, { target, instance: controller }, target);
+    const metadata: ControllerMetadata = { target: target as any, instance: controller };
+    Metadata.set(target, Metadata.PROTOTYPE_CONSTRUCTOR, MetadataKey.Controller, metadata);
   };
 };

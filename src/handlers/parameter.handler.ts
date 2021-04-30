@@ -1,6 +1,7 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { CONTENT_TYPE, MetadataKey } from '../constants';
 import { ParamInjection, ParamInjectionType } from '../decorators';
+import { Metadata } from '../decorators/metadata';
 import { HTTP400Exception, HTTP404Exception } from '../exceptions';
 import { BodyParser } from '../utils';
 import { BaseHandler } from './base.handler';
@@ -114,7 +115,8 @@ export class ParameterHandler extends BaseHandler {
     // if route exist
     if (this.route) {
       /** Parameter injection array. */
-      const parameterInjections: ParamInjection[] | undefined = this.route.target && Reflect.getMetadata(MetadataKey.Parameter, this.route.target.prototype, this.route.name);
+      const parameterInjections: ParamInjection[] | undefined = this.route.target
+        && Metadata.get(this.route.target, this.route.name, MetadataKey.Parameter);
       /** Arguments, or undefined. */
       this.args = parameterInjections ? parameterInjections.map(v => parameterInjectors[v.type](this, v.value, v.declaration)) : [];
       try {

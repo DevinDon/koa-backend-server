@@ -6,3 +6,5 @@ export * from './handlers';
 export * from './interfaces';
 export * from './responses';
 export * from './utils';
+
+import 'reflect-metadata';

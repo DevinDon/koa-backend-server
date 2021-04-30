@@ -1,6 +1,7 @@
 import { logger } from '@rester/logger';
 import { MetadataKey } from '../constants';
 import { Rester } from '../core/rester';
+import { Metadata } from '../decorators/metadata';
 import { HTTP404Exception } from '../exceptions';
 import { Mapping, Method, Route } from '../interfaces';
 import { BaseHandler } from './base.handler';
@@ -141,8 +142,8 @@ export class RouterHandler extends BaseHandler {
    */
   static init(rester: Rester): typeof RouterHandler {
     RouterHandler.configuration.route = new Map();
-    for (const view of rester.views) {
-      const routes: Route[] = Reflect.getMetadata(MetadataKey.Route, view.target) || [];
+    for (const { target } of rester.views) {
+      const routes: Route[] = Metadata.get(target, Metadata.PROTOTYPE_CONSTRUCTOR, MetadataKey.Route) || [];
       routes.forEach(route => RouterHandler.set(route, RouterHandler.configuration.route));
     }
     return RouterHandler;

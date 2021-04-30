@@ -42,7 +42,7 @@ export class Injector {
       type = type ?? InjectedType.ANY;
       // recursive injection
       const args = providers && providers.map((provider: any) => this.create({ target: provider, type, save: false }));
-      const injected: Injected<T> = args ? { instance: new (target as any)(...args), type } : { instance: new (target as any)(), type };
+      const injected: Injected<T> = args ? { instance: new target(args), type } : { instance: new target(), type };
       if (save) {
         // save to instance storage
         this.storage.set(target, injected);

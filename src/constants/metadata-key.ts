@@ -1,36 +1,36 @@
 /**
- * Metadata key, symbol.
+ * Metadata key.
  */
 export enum MetadataKey {
 
   /**
    * Metadata key in Controller.
    */
-  Controller = 'Controller',
+  Controller = 'rester:controller',
 
   /**
    * Metadata key in Handler.
    */
-  Handler = 'Handler',
+  Handler = 'rester:handler',
 
   /**
    * Metadata key in Mapping.
    */
-  Mapping = 'Mapping',
+  Mapping = 'rester:mapping',
 
   /**
    * Metadata key in Parameter.
    */
-  Parameter = 'Parameter',
+  Parameter = 'rester:parameter',
 
   /**
    * Metadata key in View.
    */
-  View = 'View',
+  View = 'rester:view',
 
   /**
    * Metadata key for routes.
    */
-  Route = 'Route',
+  Route = 'rester:route',
 
 }

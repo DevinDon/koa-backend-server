@@ -1,6 +1,7 @@
 import { MetadataKey } from '../constants';
 import { Rester } from '../core/rester';
 import { HandlerType } from '../decorators';
+import { Metadata } from '../decorators/metadata';
 import { Method, Route } from '../interfaces';
 import { BaseHandler } from './base.handler';
 import { RouterHandler } from './router.handler';
@@ -39,13 +40,13 @@ export class CORSHandler extends BaseHandler {
     /** If CORS handler on global. */
     const allCORS = rester.handlers.includes(CORSHandler);
     // map all views
-    rester.views.map(({ instance }) => instance)
+    rester.views.map(({ target }) => target)
       .forEach(view => {
-        const handlersOnView: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, view) || [];
+        const handlersOnView: HandlerType[] = Metadata.get(view, Metadata.PROTOTYPE_CONSTRUCTOR, MetadataKey.Handler) || [];
         /** If CORS handler on view. */
         const allCORSOnView = handlersOnView.includes(CORSHandler);
         /** Get routes. */
-        const routes: Route[] = Reflect.getMetadata(MetadataKey.Route, view.constructor) || [];
+        const routes: Route[] = Metadata.get(view, Metadata.PROTOTYPE_CONSTRUCTOR, MetadataKey.Route) || [];
         // for each & set OPTIONS mapping
         routes
           .filter(route => allCORS || allCORSOnView || route.handlers.includes(CORSHandler))

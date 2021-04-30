@@ -1,5 +1,6 @@
 import { MetadataKey } from '../constants';
 import { Mapping, Method } from '../interfaces';
+import { Metadata } from './metadata';
 
 /**
  * Generate a mapping decorator.
@@ -7,9 +8,9 @@ import { Mapping, Method } from '../interfaces';
  * @param {Method} method Method name.
  */
 const baseMapping = (method: Method) => {
-  return (path: string = ''): MethodDecorator => (target: any, name, descriptor) => {
-    const mappings: Mapping[] = Reflect.getMetadata(MetadataKey.Mapping, target, name) || [];
-    Reflect.defineMetadata(MetadataKey.Mapping, [...mappings, { method, path }], target, name);
+  return (path: string = ''): MethodDecorator => ({ constructor: target }, prototype) => {
+    const mappings: Mapping[] = Metadata.get(target, prototype as string, MetadataKey.Mapping) || [];
+    Metadata.set(target, prototype as string, MetadataKey.Mapping, [...mappings, { method, path }]);
   };
 };
 

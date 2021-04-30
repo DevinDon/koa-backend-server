@@ -1,4 +1,5 @@
 import { MetadataKey } from '../constants';
+import { Metadata } from './metadata';
 
 /**
  * Param injection type.
@@ -35,15 +36,15 @@ export interface ParamInjection {
  * - HTTPZone
  */
 export const baseParam = (type: ParamInjectionType | any) => {
-  return (value: string = ''): ParameterDecorator => (target: any, name, index) => {
+  return (value: string = ''): ParameterDecorator => (target: any, prototype, index) => {
     // get param declaration type
-    const { name: declaration } = Reflect.getMetadata('design:paramtypes', target, name)[index];
+    const { name: declaration } = Reflect.getMetadata('design:paramtypes', target, prototype)[index];
     // get existing params array
-    const exists: ParamInjection[] = Reflect.getMetadata(MetadataKey.Parameter, target, name) || [];
+    const exists: ParamInjection[] = Metadata.get(target, prototype as string, MetadataKey.Parameter) || [];
     // put this param with special index
     exists[index] = { type, value, declaration };
     // and then, set it
-    Reflect.defineMetadata(MetadataKey.Parameter, exists, target, name);
+    Metadata.set(target, prototype as string, MetadataKey.Parameter, exists);
   };
 };
 

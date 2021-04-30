@@ -1,5 +1,6 @@
 import { MetadataKey } from '../constants';
 import { BaseHandler } from '../handlers';
+import { Metadata } from './metadata';
 
 /** Handler class type. */
 export type HandlerType = Function & typeof BaseHandler;
@@ -16,15 +17,11 @@ export type HandlerType = Function & typeof BaseHandler;
  */
 export const Handler = <THandler extends typeof BaseHandler>(handler: THandler, config?: any): ClassDecorator | MethodDecorator | any => {
   config && handler && handler.config(config);
-  return (target: Function | Object, name: string | symbol, descriptor: PropertyDecorator) => {
-    if (target instanceof Function) {
-      // if on class
-      const handlers: HandlerType[] = (Reflect.getMetadata(MetadataKey.Handler, target) || []);
-      Reflect.defineMetadata(MetadataKey.Handler, [...handlers, handler], target);
-    } else {
-      // if on method
-      const handlers: HandlerType[] = (Reflect.getMetadata(MetadataKey.Handler, target, name) || []);
-      Reflect.defineMetadata(MetadataKey.Handler, [...handlers, handler], target, name);
+  return (target: Function | Object, prototype: string | symbol) => {
+    if (target instanceof Function) { // if on class
+      prototype = Metadata.PROTOTYPE_CONSTRUCTOR;
     }
+    const handlers: HandlerType[] = Metadata.get(target, prototype as string, MetadataKey.Handler) || [];
+    Metadata.set(target, prototype as string, MetadataKey.Handler, [...handlers, handler]);
   };
 };

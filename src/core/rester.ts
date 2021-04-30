@@ -1,15 +1,14 @@
 import { Logger } from '@rester/logger';
 import { ResterORM } from '@rester/orm';
 import { MetadataKey } from '../constants';
-import { loadResterConfig, ResterConfig } from './rester.config';
-import { ControllerType, HandlerType, ViewType } from '../decorators';
+import { ControllerMetadata, HandlerType, ViewMetadata } from '../decorators';
+import { Metadata } from '../decorators/metadata';
 import { ServerException } from '../exceptions';
 import { BaseHandler, ExceptionHandler, HandlerPool, LoggerHandler, ParameterHandler, RouterHandler, SchemaHandler } from '../handlers';
 import { createHTTPServer, HTTP2Server, HTTPServer, HTTPSServer, Mapping, Route } from '../interfaces';
-import { BaseController } from './base.controller';
-import { BaseView } from './base.view';
-import { ResterModule } from './rester.module';
 import { isProd } from '../utils';
+import { loadResterConfig, ResterConfig } from './rester.config';
+import { ResterModule } from './rester.module';
 
 export const DEFAULT_HANDLERS = [
   ExceptionHandler,
@@ -41,9 +40,9 @@ export class Rester {
   /** Modules. */
   public readonly modules: ResterModule[];
   /** View classes. */
-  public readonly views: { target: ViewType, prefix: string, instance: BaseView }[];
+  public readonly views: ViewMetadata[];
   /** Controller classes. */
-  public readonly controllers: { target: ControllerType, instance: BaseController }[];
+  public readonly controllers: ControllerMetadata[];
   /** Rester ORM. */
   private orm: ResterORM;
   /** Handler types. */
@@ -77,13 +76,13 @@ export class Rester {
     this.views = modules
       .map(m => m.views ?? [])
       .flat()
-      .map(view => Reflect.getMetadata(MetadataKey.View, view))
+      .map(view => Metadata.get(view, Metadata.PROTOTYPE_CONSTRUCTOR, MetadataKey.View)!)
       ?? [];
     // controllers
     this.controllers = modules
       .map(m => m.controllers ?? [])
       .flat()
-      .map(controller => Reflect.getMetadata(MetadataKey.Controller, controller))
+      .map(controller => Metadata.get(controller, Metadata.PROTOTYPE_CONSTRUCTOR, MetadataKey.Controller)!)
       ?? [];
     // orm
     this.orm = new ResterORM(this.config.databases);
@@ -135,23 +134,23 @@ export class Rester {
     this.views
       .forEach(({ target, prefix, instance }) => {
         /** Handler types on view. */
-        const handlersOnView: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target) || [];
+        const handlersOnView: HandlerType[] = Metadata.get(target, Metadata.PROTOTYPE_CONSTRUCTOR, MetadataKey.Handler) || [];
         /** Routes on methods of this view. */
         const routes: Route[] = Object.getOwnPropertyNames(target.prototype)
           // exclude constructor & method must be decorated by method decorator
-          .filter(name => name !== 'constructor' && Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name))
+          .filter(prototype => prototype !== 'constructor' && Metadata.get(target, prototype, MetadataKey.Mapping))
           // map to a new array of Route
-          .map<Route[]>(name => {
-            const mapping: Mapping[] = Reflect.getMetadata(MetadataKey.Mapping, target.prototype, name);
-            const handlersOnMethod: HandlerType[] = Reflect.getMetadata(MetadataKey.Handler, target.prototype, name) || [];
+          .map<Route[]>(prototype => {
+            const mapping: Mapping[] = Metadata.get(target, prototype, MetadataKey.Mapping) || [];
+            const handlersOnMethod: HandlerType[] = Metadata.get(target, prototype, MetadataKey.Handler) || [];
             const handlers: HandlerType[] = [...handlersOnMethod, ...handlersOnView];
             return mapping.map(v => {
               v.path = prefix + '/' + v.path;
-              return { view: instance, handlers, mapping: v, name, target };
+              return { view: instance, handlers, mapping: v, name: prototype, target };
             });
           }).flat();
         // define metadata: key = MetadataKey.Route, value = routes, on = class
-        Reflect.defineMetadata(MetadataKey.Route, routes, target);
+        Metadata.set(target, Metadata.PROTOTYPE_CONSTRUCTOR, MetadataKey.Route, routes);
         // set static properties
         target.prototype.logger = Logger.getLogger('rester');
         target.prototype.rester = this;
@@ -173,8 +172,8 @@ export class Rester {
       ...this.handlers,
       ...new Set(
         this.views.map(
-          view => {
-            const routes: Route[] = Reflect.getMetadata(MetadataKey.Route, view) || [];
+          ({ target }) => {
+            const routes: Route[] = Metadata.get(target, Metadata.PROTOTYPE_CONSTRUCTOR, MetadataKey.Route) || [];
             return routes.map(route => route.handlers).flat();
           },
         ).flat(),
