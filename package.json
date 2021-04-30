@@ -27,7 +27,6 @@
     "clean": "./scripts/clean",
     "debug": "./scripts/debug",
     "postinstall": "npm run init",
-    "init": "./scripts/init",
     "lint": "./scripts/lint",
     "prepublishOnly": "npm run clean && npm run build",
     "postpublish": "./scripts/push",
