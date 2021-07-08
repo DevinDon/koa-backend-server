@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.15.23 => 0.15.24
+
+- fix(handler/router): fix regexp for path variable
+
 ## 0.14.0 => 0.15.0
 
 - feat(orm): use @rester/orm
