@@ -3,7 +3,6 @@
 /out
 /temp
 /logs
-/package-lock.json
 /rester.local.yaml
 /rester.yaml
 /**/*.db
