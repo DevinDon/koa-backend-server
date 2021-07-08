@@ -46,7 +46,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "mime-types": "2.1.30",
+    "mime-types": "2.1.31",
     "reflect-metadata": "0.1.13",
     "yaml": "2.0.0-4"
   },
